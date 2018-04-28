@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 39.1 (31720) - http://www.bohemiancoding.com/sketch -->
+    <title>user</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="1.0资讯" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1.1.1.3长文章编辑器-样式" transform="translate(-1500.000000, -25.000000)" fill="#FFFFFF">
+            <g id="顶栏">
+                <g id="后台管理员" transform="translate(1500.000000, 22.000000)">
+                    <path d="M5.97326172,11.0164844 C2.67431641,11.0164844 0,12.3283398 0,13.9466211 C0,14.5 0.508710937,14.7133008 2.00486328,14.875 C3.16144531,15 4.54230469,15 6,15 C7.49314453,15 8.97394531,15 10.0157227,14.875 C11.4894141,14.6981641 12,14.5 12,13.9466211 C12,12.3283398 9.27210938,11.0164844 5.97326172,11.0164844 Z M5.99996094,10 C7.47394531,10 8.834375,8.71232422 8.986875,6.8290625 C9.14632813,4.85855469 7.83769531,3 5.99996094,3 C4.16230469,3 2.85359375,4.85855469 3.01316406,6.8290625 C3.16560547,8.71232422 4.52607422,10 5.99996094,10 Z" id="user"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
