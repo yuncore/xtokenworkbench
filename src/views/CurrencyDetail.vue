@@ -1361,6 +1361,20 @@
                     legend: {
                         data:['Rank', 'Total']
                     },
+                    dataZoom: [
+                        {
+                            type: 'slider',
+                            yAxisIndex: 0,
+                            filterMode: 'empty',
+                            left: 20
+                        },
+                        {
+                            type: 'slider',
+                            xAxisIndex: 0,
+                            filterMode: 'empty',
+                            bottom: 0
+                        }
+                    ],
                     xAxis: [
                         {
                             type: 'time',
@@ -1382,20 +1396,20 @@
                         {
                             type: 'value',
                             position: 'left',
-                            //name: 'Rank',
+                            name: 'Rank',
                             splitLine: {
                                 show: false
                             },
                             inverse: true
                         },
-                        /*{
+                        {
                             type: 'value',
                             position: 'right',
                             name: 'Total',
                             splitLine: {
                                 show: false
                             },
-                        },*/
+                        },
                     ],
                     series: [
                         {
@@ -1413,7 +1427,7 @@
                             name:'Total',
                             type:'line',
                             data:total,
-                           /* yAxisIndex: 1,*/
+                            yAxisIndex: 1,
                             showSymbol: false,
                             lineStyle: {
                                 normal: {
