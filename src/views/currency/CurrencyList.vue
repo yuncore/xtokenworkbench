@@ -2,7 +2,7 @@
     <div>
         <div id="head">
             <router-link to="/index">
-                <img src="../../static/img/logo.svg" class="logo">
+                <img src="../../../static/img/logo.svg" class="logo">
             </router-link>
             <div class="right">
                 <el-select
@@ -150,7 +150,7 @@
                     {{$t('page.currencyList.b3')}}
                 </el-checkbox>
                 <el-button type="text" @click="toHistoryPrice" class="left history-price-btn">
-                    <img src="../../static/img/clock.png">
+                    <img src="../../../static/img/clock.png">
                     {{$t('page.currencyList.b2')}}
                 </el-button>
                 <el-pagination
@@ -428,10 +428,10 @@
     </div>
 </template>
 <script>
-    import net_util from '../assets/js/net_utils'
-    import config from '../assets/js/config'
-    import utils from '../assets/js/utils'
-    import consts from '../assets/js/consts'
+    import net_util from '../../assets/js/net_utils'
+    import config from '../../assets/js/config'
+    import utils from '../../assets/js/utils'
+    import consts from '../../assets/js/consts'
 
     export default {
         data: function () {

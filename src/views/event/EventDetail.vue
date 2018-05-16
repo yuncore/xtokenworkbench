@@ -2,7 +2,7 @@
     <div>
         <div id="head">
             <router-link to="/index">
-                <img src="../../static/img/logo.svg" class="logo">
+                <img src="../../../static/img/logo.svg" class="logo">
             </router-link>
             <div class="right">
                 <div class="menu-item">
@@ -27,7 +27,7 @@
                         </div>
                         <div class="content">
                             <p>
-                                <img src="../../static/img/chart.svg"/>
+                                <img src="../../../static/img/chart.svg"/>
                                 <span v-for="(item, index) in statType"
                                       v-if="item.show"
                                       :class='{active: statTypeActiveIndex == index}'
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                     <div class="card time-select-card">
-                        <p><img src="../../static/img/clock.png"/>投票时间</p>
+                        <p><img src="../../../static/img/clock.png"/>投票时间</p>
                         <div class="time-field">
                             <span class="title">开始时间:</span>
                             <span class="text" v-show="!startTimePickerShow">
@@ -141,11 +141,11 @@
     </div>
 </template>
 <script>
-    import net_util from '../assets/js/net_utils'
-    import config from '../assets/js/config'
-    import utils from '../assets/js/utils'
-    import consts from '../assets/js/consts'
-    import base64 from '../assets/js/base64'
+    import net_util from '../../assets/js/net_utils'
+    import config from '../../assets/js/config'
+    import utils from '../../assets/js/utils'
+    import consts from '../../assets/js/consts'
+    import base64 from '../../assets/js/base64'
     import echarts from 'echarts'
 
     export default {
@@ -463,7 +463,7 @@
         height 400px
         padding 35px 50px 15px 50px
         margin-top 0
-        background-image url("../../static/img/blue-angle.png")
+        background-image url("../../../static/img/blue-angle.png")
         background-position top left
         background-repeat no-repeat
         .head
@@ -532,7 +532,7 @@
         .head
             height 100px
             background-color #6c7486
-            background-image url('../../static/img/back_img_1.png')
+            background-image url('../../../static/img/back_img_1.png')
             background-repeat no-repeat
             background-position 3% 25%
             padding 10px 20px

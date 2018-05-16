@@ -2,7 +2,7 @@
     <div>
         <div id="head">
             <router-link :to="{name: 'currencyList', query: {page: this.$route.query.page}}">
-                <img src="../../static/img/logo.svg" class="logo">
+                <img src="../../../static/img/logo.svg" class="logo">
             </router-link>
         </div>
         <div id="content">
@@ -56,31 +56,31 @@
                                     <ul>
                                         <li>
                                             <a href="" target="_blank">
-                                                <img class="logo" src="../../static/img/website.png"/>
+                                                <img class="logo" src="../../../static/img/website.png"/>
                                                 <span>website</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="https://icorating.com/" target="_blank">
-                                                <img class="logo" src="../../static/img/icorating.png"/>
+                                                <img class="logo" src="../../../static/img/icorating.png"/>
                                                 <span>icorating</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="https://icorating.com/" target="_blank">
-                                                <img class="logo" src="../../static/img/icorating.png"/>
+                                                <img class="logo" src="../../../static/img/icorating.png"/>
                                                 <span>icorating</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="" target="_blank">
-                                                <img class="logo" src="../../static/img/normal.png"/>
+                                                <img class="logo" src="../../../static/img/normal.png"/>
                                                 <span>fira</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="http://www.github.com" target="_blank">
-                                                <img class="logo" src="../../static/img/github.png"/>
+                                                <img class="logo" src="../../../static/img/github.png"/>
                                                 <span>Github</span>
                                             </a>
                                         </li>
@@ -90,31 +90,31 @@
                                     <ul>
                                         <li>
                                             <a href="https://icobench.com/" target="_blank">
-                                                <img class="logo" src="../../static/img/icobench.png"/>
+                                                <img class="logo" src="../../../static/img/icobench.png"/>
                                                 <span>icobench</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="https://cryptorated.com/" target="_blank">
-                                                <img class="logo" src="../../static/img/cryptorated.png"/>
+                                                <img class="logo" src="../../../static/img/cryptorated.png"/>
                                                 <span>cryptorated</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="http://inwecrypto.com/en/home" target="_blank">
-                                                <img class="logo" src="../../static/img/inwecrypto.png"/>
+                                                <img class="logo" src="../../../static/img/inwecrypto.png"/>
                                                 <span>inwecrypto</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="http://www.reddit.com" target="_blank">
-                                                <img class="logo" src="../../static/img/reddit.png"/>
+                                                <img class="logo" src="../../../static/img/reddit.png"/>
                                                 <span>reddit</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="http://www.bitcointalk.com" target="_blank">
-                                                <img class="logo" src="../../static/img/normal.png"/>
+                                                <img class="logo" src="../../../static/img/normal.png"/>
                                                 <span>bitcointalk</span>
                                             </a>
                                         </li>
@@ -288,7 +288,7 @@
                  element-loading-background="rgba(0, 0, 0, 0.8)">
                 <div class="collapse-head" @click="toggleRedditSpan">
                     <div class="name">
-                        <img src="../../static/img/reddit_2.svg">Reddit
+                        <img src="../../../static/img/reddit_2.svg">Reddit
                         <a :href="'http://www.reddit.com'+subReddit[0]['url']"
                            target="_blank">({{'http://www.reddit.com' + subReddit[0]['url']}})</a>
                     </div>
@@ -505,7 +505,7 @@
                  element-loading-background="rgba(0, 0, 0, 0.8)">
                 <div class="collapse-head" @click="toggleGithubSpan">
                     <div class="name">
-                        <img src="../../static/img/github_2.svg">GitHub
+                        <img src="../../../static/img/github_2.svg">GitHub
                         <a :href="'http://www.github.com/'+githubProject[0]['full_name']"
                            target="_blank">({{'http://www.github.com/' + githubProject[0]['full_name']}})</a>
                     </div>
@@ -574,7 +574,7 @@
                  element-loading-background="rgba(0, 0, 0, 0.8)">
                 <div class="collapse-head" @click="toggleXtokenSpan">
                     <div class="name">
-                        <img src="../../static/img/guan.svg">Xtoken
+                        <img src="../../../static/img/guan.svg">Xtoken
                         <router-link :to="'/whitepaper/upload?id=' + id" style="font-size: 14px;">
                             {{$t('page.currencyDetail.t10')}}
                         </router-link>
@@ -662,10 +662,10 @@
     </div>
 </template>
 <script>
-    import net_util from '../assets/js/net_utils'
-    import config from '../assets/js/config'
-    import utils from '../assets/js/utils'
-    import consts from '../assets/js/consts'
+    import net_util from '../../assets/js/net_utils'
+    import config from '../../assets/js/config'
+    import utils from '../../assets/js/utils'
+    import consts from '../../assets/js/consts'
     import echarts from 'echarts'
 
     const REDDITDAYSDROPDOWN = [

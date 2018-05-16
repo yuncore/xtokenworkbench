@@ -2,7 +2,7 @@
     <div>
         <div id="head">
             <router-link to="/index">
-                <img src="../../static/img/logo.svg" class="logo">
+                <img src="../../../static/img/logo.svg" class="logo">
             </router-link>
         </div>
         <div id="content">
@@ -55,10 +55,10 @@
     </div>
 </template>
 <script>
-    import net_util from '../assets/js/net_utils'
-    import config from '../assets/js/config'
-    import utils from '../assets/js/utils'
-    import consts from '../assets/js/consts'
+    import net_util from '../../assets/js/net_utils'
+    import config from '../../assets/js/config'
+    import utils from '../../assets/js/utils'
+    import consts from '../../assets/js/consts'
 
     export default {
         data: function () {

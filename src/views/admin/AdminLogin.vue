@@ -37,8 +37,8 @@
     </div>
 </template>
 <script>
-    import net_util from '../assets/js/net_utils'
-    import config from '../assets/js/config'
+    import net_util from '../../assets/js/net_utils'
+    import config from '../../assets/js/config'
     export default {
         data: function () {
             return {

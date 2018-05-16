@@ -136,10 +136,10 @@
     </div>
 </template>
 <script>
-    import EPaper from '../components/EPaperAdmin.vue'
-    import net_util from '../assets/js/net_utils'
-    import config from '../assets/js/config'
-    import utils from '../assets/js/utils'
+    import EPaper from '../../components/EPaperAdmin.vue'
+    import net_util from '../../assets/js/net_utils'
+    import config from '../../assets/js/config'
+    import utils from '../../assets/js/utils'
 
     export default{
         data: function () {

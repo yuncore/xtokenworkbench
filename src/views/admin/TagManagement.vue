@@ -2,13 +2,13 @@
     <div>
         <div id="head">
             <router-link :to="{name: 'currencyList', query: {page: this.$route.query.page}}">
-                <img src="../../static/img/logo.svg" class="logo">
+                <img src="../../../static/img/logo.svg" class="logo">
             </router-link>
         </div>
         <div id="content">
             <div class="card">
                 <div class="collapse-head">
-                    <h3>分组管理</h3>
+                    <h3>{{$t('page.tagManage.t1')}}</h3>
                 </div>
                 <div class="collapse-body"
                      v-loading="loading"
@@ -17,20 +17,20 @@
                      element-loading-background="rgba(0, 0, 0, 0.8)"
                      header-cell-class-name='currency-table-head-cell'>
                     <div class="add-tag">
-                        <el-form :inline="true" :model="groupForm" label-width="80px">
-                            <el-form-item label="添加分组">
-                                <el-input v-model.trim="groupForm.groupName" placeholder="分组名称"></el-input>
+                        <el-form :inline="true" :model="tagAddForm" label-width="80px">
+                            <el-form-item :label="$t('page.tagManage.l1')">
+                                <el-input v-model.trim="tagAddForm.tag_name" :placeholder="$t('page.tagManage.ph1')"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="text" @click="addGroup">{{$t('create')}}</el-button>
+                                <el-button type="text" @click="addTag">{{$t('create')}}</el-button>
                             </el-form-item>
                         </el-form>
                     </div>
                     <div class="info-tag">
                         <ul>
-                            <li v-for="group in groups">
-                                <img src="../../static/img/red_error.svg" @click="deleteGroup(group)">
-                                {{group['groupName']}}
+                            <li v-for="tag in tags">
+                                <img src="../../../static/img/red_error.svg" @click="deleteTag(tag)">
+                                {{tag['tag_name']}}
                             </li>
                             <div style="display: none; clear: both"></div>
                         </ul>
@@ -41,39 +41,66 @@
     </div>
 </template>
 <script>
-    import net_util from '../assets/js/net_utils'
-    import config from '../assets/js/config'
-    import utils from '../assets/js/utils'
-    import consts from '../assets/js/consts'
+    import net_util from '../../assets/js/net_utils'
+    import config from '../../assets/js/config'
+    import utils from '../../assets/js/utils'
+    import consts from '../../assets/js/consts'
 
     export default {
         data: function () {
             return {
-                groupForm: {
-                    groupName: ''
+                tagAddForm: {
+                    tag_name: ''
                 },
-                groups: [],
+                tags: [],
                 loading: false
             }
         },
         methods:{
-            addGroup(){
-                if(this.groupForm.groupName === ''){
+            addTag(){
+                if(this.tagAddForm.tag_name === ''){
                     this.$message({type: 'warning', message: this.$t('page.tagManage.a1')})
                     return false
                 }
-                let url = config.JAVABASEDOMAIN + `/pros/group/create`;
+                let url = config.PYTHONBASEDOMAIN + `/currency/tags`
                 let data = {
-                    groupName: this.groupForm.groupName
-                };
+                    tag_name: this.tagAddForm.tag_name
+                }
                 let succ = res => {
-                    if (!res.errorMsg) {
-                        this.loading = false
-                        this.$message({type: 'success', message: this.$t('success')})
-                        this.getGroupList()
-                    } else {
-                        this.$message({type: 'error', message: res.errorMsg})
-                    }
+                    this.loading = false
+                    this.$message({type: 'success', message: this.$t('success')})
+                    this.getTagList()
+                }
+                let fail = res => {
+                    this.loading = false
+                    this.$message({type: 'error', message: res.responseJSON.message || this.$t('error')})
+                }
+                this.loading = true
+                net_util.postRequest(url, data, succ, fail)
+            },
+            deleteTag(tag){
+                let url = config.PYTHONBASEDOMAIN + `/currency/tags`
+                let data = {
+                    id: tag['id']
+                }
+                let succ = res => {
+                    this.loading = false
+                    this.$message({type: 'success', message: this.$t('success')})
+                    this.getTagList()
+                }
+                let fail = res => {
+                    this.loading = false
+                    this.$message({type: 'error', message: res.responseJSON.message || this.$t('error')})
+                }
+                this.loading = true
+                net_util.deleteRequest(url, data, succ, fail)
+            },
+            getTagList(){
+                let url = config.PYTHONBASEDOMAIN + `/currency/tags`
+                let data = {}
+                let succ = res => {
+                    this.loading = false
+                    this.tags = res
                 }
                 let fail = res => {
                     this.loading = false
@@ -81,48 +108,10 @@
                 }
                 this.loading = true
                 net_util.getRequest(url, data, succ, fail)
-            },
-            deleteGroup(group){
-                let url = config.JAVABASEDOMAIN + `/pros/group/del`
-                let data = {
-                    groupId: group['id']
-                };
-                let succ = res => {
-                    if (!res.errorMsg) {
-                        this.loading = false
-                        this.$message({type: 'success', message: this.$t('success')})
-                        this.getGroupList()
-                    } else {
-                        this.$message({type: 'error', message: res.errorMsg})
-                    }
-                }
-                let fail = res => {
-                    this.loading = false
-                    this.$message({type: 'error', message: res.responseJSON.message || this.$t('error')})
-                }
-                this.loading = true
-                net_util.getRequest(url, data, succ, fail)
-            },
-            getGroupList(){
-                let url = config.JAVABASEDOMAIN + `/pros/group/list`
-                let succ = res => {
-                    if (!res.errorMsg) {
-                        this.loading = false
-                        this.groups = res.result
-                    } else {
-                        this.$message({type: 'error', message: res.errorMsg})
-                    }
-                }
-                let fail = res => {
-                    this.loading = false
-                    this.$message({type: 'error', message: res.responseJSON.message || this.$t('error')})
-                }
-                this.loading = true
-                net_util.getRequest(url, {}, succ, fail)
             },
         },
         mounted(){
-            this.getGroupList()
+            this.getTagList()
         }
     }
 </script>

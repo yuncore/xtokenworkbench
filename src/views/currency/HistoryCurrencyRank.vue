@@ -2,7 +2,7 @@
     <div>
         <div id="head">
             <router-link :to="{name: 'currencyList', query: {page: this.$route.query.page}}">
-                <img src="../../static/img/logo.svg" class="logo">
+                <img src="../../../static/img/logo.svg" class="logo">
             </router-link>
         </div>
         <div id="content">
@@ -39,11 +39,11 @@
                                     </div>
                                 </div>
                                 <p class="intro">
-                                    <span class="title"><img src="../../static/img/cap.svg">market cap: </span>
+                                    <span class="title"><img src="../../../static/img/cap.svg">market cap: </span>
                                     <span class="text">{{'$' + customerParseFloat(market_cap_total)}}</span>
                                 </p>
                                 <p class="intro">
-                                    <span class="title"><img src="../../static/img/usd.svg">volume usd: </span>
+                                    <span class="title"><img src="../../../static/img/usd.svg">volume usd: </span>
                                     <span class="text">{{'$' + customerParseFloat(volume_usd_total)}}</span>
                                 </p>
                             </div>
@@ -132,10 +132,10 @@
     </div>
 </template>
 <script>
-    import net_util from '../assets/js/net_utils'
-    import config from '../assets/js/config'
-    import utils from '../assets/js/utils'
-    import consts from '../assets/js/consts'
+    import net_util from '../../assets/js/net_utils'
+    import config from '../../assets/js/config'
+    import utils from '../../assets/js/utils'
+    import consts from '../../assets/js/consts'
     import echarts from 'echarts'
 
     export default {

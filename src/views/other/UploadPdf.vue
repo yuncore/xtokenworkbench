@@ -3,7 +3,7 @@
         <div class="eventList" style="overflow: auto; height: 100%"><!--:style="{height: windowsHeight+'px'}"-->
             <div style="height: 100px; width:100%; background:#38435b; position: fixed; top: 0; z-index: 999;">
                 <router-link to="/index">
-                    <img src="../../static/img/logo.svg" style="margin-left: 30px;margin-top: 36px; cursor: pointer;-webkit-transition: width 0.5s;transition: width 0.5s;">
+                    <img src="../../../static/img/logo.svg" style="margin-left: 30px;margin-top: 36px; cursor: pointer;-webkit-transition: width 0.5s;transition: width 0.5s;">
                 </router-link>
             </div>
             <div style=" padding: 40px 50px; overflow: auto; margin-top: 100px"><!--height: calc(100% - 100px);-->
@@ -86,11 +86,11 @@
     </div>
 </template>
 <script>
-    import net_util from '../assets/js/net_utils'
-    import config from '../assets/js/config'
-    import utils from '../assets/js/utils'
-    import consts from '../assets/js/consts'
-    import RichEditor from '../components/editor/Editor.vue'
+    import net_util from '../../assets/js/net_utils'
+    import config from '../../assets/js/config'
+    import utils from '../../assets/js/utils'
+    import consts from '../../assets/js/consts'
+    import RichEditor from '../../components/editor/Editor.vue'
     import { Loading } from 'element-ui';
 
 
