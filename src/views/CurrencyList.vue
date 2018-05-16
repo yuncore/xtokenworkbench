@@ -84,10 +84,10 @@
                         <el-row v-for="(item, filter_index) in currencyFilter"
                                 :key="filter_index"
                                 class="line">
-                            <el-col :sm="3" :lg="2" class="title">
+                            <el-col :sm="4" :lg="3" class="title">
                                 {{$t('page.currencyList.' + item.i18n) + ':'}}
                             </el-col>
-                            <el-col :sm="21" :lg="22" class="select-item-group">
+                            <el-col :sm="20" :lg="21" class="select-item-group">
                                 <ul>
                                     <li v-for="(choice, choice_index) in item.choices"
                                         :key="choice_index"
@@ -103,10 +103,10 @@
                         </el-row>
                         <!--标签过滤-->
                         <el-row class="line">
-                            <el-col :sm="3" :lg="2" class="title">
+                            <el-col :sm="4" :lg="3" class="title">
                                 {{$t('page.currencyList.label')}}:
                             </el-col>
-                            <el-col :sm="21" :lg="22" class="select-item-group tag-filter">
+                            <el-col :sm="20" :lg="21" class="select-item-group tag-filter">
                                 <ul>
                                     <li v-for="(tag, index) in tagList"
                                         @click="filterTagLabelClick(tag['id'])"
@@ -125,10 +125,10 @@
                 <div class="selector">
                     <div class="body">
                         <el-row class="line">
-                            <el-col :sm="3" :lg="2" class="title">
+                            <el-col :sm="3" :lg="3" class="title">
                                 自定义分组:
                             </el-col>
-                            <el-col :sm="21" :lg="22" class="select-item-group tag-filter">
+                            <el-col :sm="21" :lg="21" class="select-item-group tag-filter">
                                 <ul>
                                     <li v-for="(group, index) in groupList"
                                         @click="filterGroupClick(group['id'])"
@@ -722,10 +722,11 @@
                 let url = config.PYTHONBASEDOMAIN + `/currency/tags`
                 let data = {}
                 let succ = res => {
-                    this.tagList = res
+                    this.tagList = (JSON.parse(res)).result
                 }
                 let fail = res => {
-                    this.$message({type: 'error', message: res.responseJSON.message || '未知错误'})
+//                    this.$message({type: 'error', message: res.responseJSON.message || '未知错误'})
+                    this.$message({type: 'error', message: '异常'})
                 }
                 net_util.getRequest(url, data, succ, fail)
             },
@@ -775,8 +776,9 @@
                 }
                 let succ = res => {
                     this.currencyTableLoading = false
-                    this.currencyList = res.data
-                    this.count = res.count
+                    let rs = JSON.parse(res)
+                    this.currencyList = rs.result.data
+                    this.count = rs.result.count
                     this.currentPage = page
                     this.currentNum = currentNum
                     this.currentOrder = order
@@ -1200,7 +1202,6 @@
                 line-height 32px
                 padding 5px 20px
                 font-size 16px
-                font-weight 600
             .select-item-group
                 padding 5px
                 line-height 32px

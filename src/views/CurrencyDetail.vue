@@ -14,9 +14,10 @@
                                 <div class="left name">
                                     {{currencyPrice['name']}}
                                 </div>
-                                <div class="right ico-info" v-if="currencyAdditionInfo.ico_raised">
-                                    <p>{{$t('page.currencyDetail.t2')}}: {{customerParseFloat(currencyAdditionInfo.ico_raised, '$')}}</p>
-                                    <p>{{getSmpFormatDateByLong(currencyAdditionInfo.ico_date_from*1000, false)}} ~ {{getSmpFormatDateByLong(currencyAdditionInfo.ico_date_to*1000, false)}}</p>
+                                <div class="right ico-info" v-if="currencyAdditionInfo_myToken">
+                                    <p>{{currencyAdditionInfo_myToken.ico_date_display}}</p>
+                                    <p>{{currencyAdditionInfo_myToken.exchange_rate_display}}</p>
+                                    <p>{{currencyAdditionInfo_myToken.raised_amount_display}}</p>
                                 </div>
                             </div>
                             <ul class="tag">
@@ -128,6 +129,7 @@
                         <div class="head">
                             <button @click="topCurrencyChartType = 1" :class="{active: topCurrencyChartType === 1}">Price</button>
                             <button @click="topCurrencyChartType = 2"  :class="{active: topCurrencyChartType === 2}">History Rank</button>
+                            <span @click="toPriceContrast" class="price_contrast">价格对比</span>
                         </div>
                         <div class="content">
                             <div class="currency-chart" ref="topCurrencyChart"></div>
@@ -690,7 +692,7 @@
                 id: null,
                 timeRadio: 1,
                 currencyPrice: '',
-                currencyAdditionInfo: '',
+                currencyAdditionInfo_myToken: '',
                 historyPrice: null,
                 priceList: [],
                 bttLink: [],
@@ -1187,7 +1189,9 @@
                     name: this.currencyPrice['name']
                 }
                 let succ = res => {
-                    this.currencyAdditionInfo = res
+                    if(res.mytoken){
+                        this.currencyAdditionInfo_myToken = res['mytoken']
+                    }
                 }
                 let fail = res => {
                     this.$message({type: 'error', message: res.responseJSON.message || this.$t('error')})
@@ -1396,7 +1400,7 @@
                         {
                             type: 'value',
                             position: 'left',
-                            name: 'Rank',
+                            //name: 'Rank',
                             splitLine: {
                                 show: false
                             },
@@ -1855,31 +1859,41 @@
             },
             // 绘制货币历史价格图
             drawPriceChart(){
-                let myChart = echarts.init(this.$refs.topCurrencyChart)
-                myChart.clear()
-                let price_btc = []
-                let price_usd = []
-                let history_price = JSON.parse(this.historyPrice)
-                history_price['price_btc'].forEach((item, index) => {
-                    let t = this.getGMT8Time(item[0])
-                    price_btc.push({
-                        name: t,
-                        value: [
-                            this.getSmpFormatDateByLong(t.getTime()),
-                            item[1]
-                        ]
-                    })
-                })
-                history_price['price_usd'].forEach((item, index) => {
-                    let t = this.getGMT8Time(item[0])
-                    price_usd.push({
-                        name: t,
-                        value: [
-                            this.getSmpFormatDateByLong(t.getTime()),
-                            item[1]
-                        ]
-                    })
-                })
+                let myChart = echarts.init(this.$refs.topCurrencyChart);
+                myChart.clear();
+                let price_btc = [];
+                let price_usd = [];
+                let time_data_btc = [];
+                let time_data_usd = [];
+                let history_price = JSON.parse(this.historyPrice);
+                history_price['price_btc'].forEach((item) => {
+                    let t = this.getGMT8Time(item[0]);
+                    let long_t = t.getTime();
+                    if(!(time_data_btc.indexOf(long_t) > -1)){
+                        time_data_btc.push(long_t);
+                        price_btc.push({
+                            name: t,
+                            value: [
+                                this.getSmpFormatDateByLong(long_t),
+                                item[1]
+                            ]
+                        })
+                    }
+                });
+                history_price['price_usd'].forEach((item) => {
+                    let t = this.getGMT8Time(item[0]);
+                    let long_t = t.getTime();
+                    if(!(time_data_usd.indexOf(long_t) > -1)){
+                        time_data_usd.push(long_t);
+                        price_usd.push({
+                            name: t,
+                            value: [
+                                this.getSmpFormatDateByLong(t.getTime()),
+                                item[1]
+                            ]
+                        })
+                    }
+                });
                 myChart.setOption({
                     tooltip: {
                         trigger: 'axis',
@@ -2023,6 +2037,12 @@
             toggleXtokenSpan () {
                 this.XtokenShow = !this.XtokenShow
             },
+            toPriceContrast(){
+                let query = {
+                    id: this.id,
+                };
+                this.$router.push({path: '/price_contrast', query: query})
+            },
             customerParseFloat: utils.customerParseFloat,
             getSmpFormatDateByLong: utils.getSmpFormatDateByLong,
             getDateDiff: utils.getDateDiff,
@@ -2055,9 +2075,8 @@
                         font-size:40px;
                         color:#4a4a4a;
                     .ico-info
-                        font-size:16px;
+                        font-size:14px;
                         color:#999999;
-                        line-height 20px
 
                 .tag
                     margin 20px 0
@@ -2098,6 +2117,13 @@
         .charts
             .head
                 padding 10px 40px
+                .price_contrast
+                    color #409eff
+                    border 1px solid #409eff
+                    border-radius 20px
+                    line-height 20px
+                    padding 5px 10px
+                    cursor pointer
                 button
                     margin-right 20px
                     position relative
