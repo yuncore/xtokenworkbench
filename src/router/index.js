@@ -20,18 +20,15 @@ import DummyPage from '../views/other/DummyPage.vue'
 import Predict from '../views/predict/PredictRankList.vue'
 import PredictDetail from '../views/predict/PredictDetailList.vue'
 import GroupManagement from '../views/admin/GroupManagement.vue'
+import Main from '../views/Main'
 
 Vue.use(Router)
 
 export default new Router({
     routes: [
         {
-          path: '/',
-          redirect: '/login'
-        },
-        {
-            path: '/admin',
-            component: Admin
+            path: '/',
+            redirect: '/login'
         },
         {
             path: '/adminLogin',
@@ -49,76 +46,89 @@ export default new Router({
             component: Register
         },
         {
-            path: '/index',
-            name: 'currencyList',
-            component: CurrencyList
+            path: '/main',
+            component: Main,
+            children: [
+                {
+                    path: '/index',
+                    name: 'currencyList',
+                    component: CurrencyList
+                },
+                {
+                    path: '/admin',
+                    component: Admin
+                },
+                {
+                    path: '/currency',
+                    name: 'CurrencyDetail',
+                    component: CurrencyDetail
+                },
+                {
+                    path: '/event/add',
+                    name: 'EventAdd',
+                    component: EventAdd
+                },
+                {
+                    path: '/event/detail',
+                    name: 'EventDetail',
+                    component: EventDetail
+                },
+                {
+                    path: '/event/list',
+                    name: 'EventList',
+                    component: EventList
+                },
+                {
+                    path: '/whitepaper/upload',
+                    name: 'whitePaperUpload',
+                    component: WhitePaperUpload
+                },
+                {
+                    path: '/keyword',
+                    name: 'keywords',
+                    component: KeyWordStat
+                },
+                {
+                    path: '/kol',
+                    name: 'kol',
+                    component: KolOverView
+                },
+                {
+                    path: '/btt/user/history',
+                    name: 'btt_user_history',
+                    component: BttUserHistory
+                },
+                {
+                    path: '/history/rank',
+                    name: 'history_rank',
+                    component: HistoryCurrencyRank
+                },
+                {
+                    path: '/tagManagement',
+                    name: 'tag_management',
+                    component: TagManagement
+                },
+                {
+                    path: '/dummy',
+                    component: DummyPage
+                },
+                {
+                    path: '/predict',
+                    name: 'predict',
+                    component: Predict
+                },
+                {
+                    path: '/predictDetail',
+                    name: 'predict_detail',
+                    component: PredictDetail
+                },
+                {
+                    path: '/groupManagement',
+                    name: 'group_management',
+                    component: GroupManagement
+                }
+            ]
         },
-        {
-            path: '/currency',
-            name: 'CurrencyDetail',
-            component: CurrencyDetail
-        },
-        {
-            path: '/event/add',
-            name: 'EventAdd',
-            component: EventAdd
-        },
-        {
-            path: '/event/detail',
-            name: 'EventDetail',
-            component: EventDetail
-        },
-        {
-            path: '/event/list',
-            name: 'EventList',
-            component: EventList
-        },
-        {
-            path: '/whitepaper/upload',
-            name: 'whitePaperUpload',
-            component: WhitePaperUpload
-        },
-        {
-            path: '/keyword',
-            name: 'keywords',
-            component: KeyWordStat
-        },
-        {
-            path: '/kol',
-            name: 'kol',
-            component: KolOverView
-        },
-        {
-            path: '/btt/user/history',
-            name: 'btt_user_history',
-            component: BttUserHistory
-        },
-        {
-            path: '/history/rank',
-            name: 'history_rank',
-            component: HistoryCurrencyRank
-        },
-        {
-            path: '/tagManagement',
-            name: 'tag_management',
-            component: TagManagement
-        },
-        {
-           path: '/dummy',
-           component: DummyPage
-        },
-        {
-            path: '/predict',
-            component: Predict
-        },
-        {
-            path: '/predictDetail',
-            component: PredictDetail
-        },
-        {
-            path: '/groupManagement',
-            name: 'group_management',
-            component: GroupManagement
-        }
+
     ]
 })

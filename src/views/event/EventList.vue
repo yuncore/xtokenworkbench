@@ -2,12 +2,8 @@
     <div>
         <div class="eventList">
             <div class="qiao" @click="qiaoClick"></div>
-            <div id="head">
-                <router-link :to="{name: 'currencyList', query: {page: this.$route.query.page}}">
-                    <img src="../../../static/img/logo.svg" class="logo">
-                </router-link>
-            </div>
-            <div style=" padding:26px; overflow: auto; margin-top: 100px; background: #fff;">
+
+            <div style=" padding:26px; overflow: auto; background: #fff;">
                 <div class="zhuti" style="width: 100%; height: 750px;">
                     <div
                         style="background:#38435b; height:60px; width: calc(100% - 20px); margin:10px 10px; border-radius: 10px; box-shadow: 0 2px 12px 0 #A0A1A2;">

@@ -100,7 +100,7 @@
                 let data = {}
                 let succ = res => {
                     this.loading = false
-                    this.tags = res
+                    this.tags = (JSON.parse(res)).result
                 }
                 let fail = res => {
                     this.loading = false

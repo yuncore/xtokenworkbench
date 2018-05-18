@@ -1,93 +1,17 @@
 <template>
     <div>
-        <div id="head">
-            <router-link to="/index">
-                <img src="../../../static/img/logo.svg" class="logo">
-            </router-link>
-            <div class="right">
-                <el-select
-                    v-model="chooseCurrencyList"
-                    multiple
-                    filterable
-                    remote
-                    reserve-keyword
-                    :placeholder="$t('page.currencyList.ph1')"
-                    :remote-method="headSearchMethod"
-                    :loading="headSearchLoading"
-                    @change="headSearchChange"
-                    class="search">
-                    <el-option
-                        v-for="item in headSearchOptions"
-                        :key="item.symbol"
-                        :label="item.name"
-                        :value="item.id">
-                    </el-option>
-                </el-select>
-                <div class="menu-item" v-if="isAdmin">
-                    <router-link :to="{name: 'EventAdd', query: {page: this.currentPage}}" style="color: #fff;font-size: 14px;">
-                        {{$t('nav.eventAdd')}}<i class="el-icon-plus"></i>
-                    </router-link>
-                </div>
-                <div class="menu-item">
-                    <router-link :to="{name: 'EventList', query: {page: this.currentPage}}" style="color: #fff;font-size: 14px;">
-                       {{ $t('nav.eventList') }}
-                    </router-link>
-                </div>
-                <div class="menu-item">
-                    <router-link :to="{name: 'kol', query: {page: this.currentPage}}" style="color: #fff;font-size: 14px;">
-                        {{ $t('nav.kolDatabase') }}
-                    </router-link>
-                </div>
-                <div class="menu-item">
-                    <el-dropdown @command="handleLangChange">
-                        <span class="el-dropdown-link">
-                            {{$i18n.locale === 'EN' ? $t('nav.en') : $t('nav.zh')}}<i class="el-icon-arrow-down el-icon--right"></i>
-                        </span>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="EN">{{$t('nav.en')}}</el-dropdown-item>
-                            <el-dropdown-item command="ZH">{{$t('nav.zh')}}</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </div>
-            </div>
-        </div>
-        <div id="content">
+        <div class="container">
             <!--top filters-->
-            <div class="card" style="padding: 0">
+            <div id="filter">
                 <div class="selector" :class="{block: filterActiveGroup.length > 0}">
-                    <div class="header" v-if="chooseFilterItems != null || filterActiveTag.length > 0">
-                        <div class="triangle-right">
-                        </div>
-                        <el-tag v-for="(item, index) in currencyFilter"
-                                v-if="item.active_index !== null"
-                                :key="index"
-                                @close="unSelectFilterItem(item)"
-                                class="tag"
-                                closable>
-                            <span style="font-size: 14px; font-weight: 600" v-if="item.active_index === -1">
-                                {{$t('page.currencyList.' + item.i18n) + ": " + item.custom_choice.text}}
-                            </span>
-                            <span v-else style="font-size: 14px; font-weight: 600">
-                                {{$t('page.currencyList.' + item.i18n) + ": " + item.choices[item.active_index]}}
-                            </span>
-                        </el-tag>
-                        <el-tag v-if="filterActiveTag.length > 0"
-                                @close="unSelectFilterTag"
-                                class="tag"
-                                closable>
-                            <span style="font-size: 14px; font-weight: 600">
-                                {{'Label: ' + calcTagNamesById(filterActiveTag)}}
-                            </span>
-                        </el-tag>
-                    </div>
-                    <div class="body">
-                        <el-row v-for="(item, filter_index) in currencyFilter"
-                                :key="filter_index"
-                                class="line">
-                            <el-col :sm="4" :lg="3" class="title">
-                                {{$t('page.currencyList.' + item.i18n) + ':'}}
-                            </el-col>
-                            <el-col :sm="20" :lg="21" class="select-item-group">
+                    <div class="content">
+                        <div v-for="(item, filter_index) in currencyFilter"
+                             :key="filter_index"
+                             class="row">
+                            <div class="label">
+                                {{item.name}}
+                            </div>
+                            <div class="choices">
                                 <ul>
                                     <li v-for="(choice, choice_index) in item.choices"
                                         :key="choice_index"
@@ -96,29 +20,11 @@
                                         {{choice}}
                                     </li>
                                     <el-button v-if="item.custom" size="mini" @click="showCustomChoice(item, filter_index)">
-                                        {{$t('page.currencyList.b1')}}
+                                        custom field
                                     </el-button>
                                 </ul>
-                            </el-col>
-                        </el-row>
-                        <!--标签过滤-->
-                        <el-row class="line">
-                            <el-col :sm="4" :lg="3" class="title">
-                                {{$t('page.currencyList.label')}}:
-                            </el-col>
-                            <el-col :sm="20" :lg="21" class="select-item-group tag-filter">
-                                <ul>
-                                    <li v-for="(tag, index) in tagList"
-                                        @click="filterTagLabelClick(tag['id'])"
-                                        :class="{active: filterActiveTag.indexOf(tag['id']) > -1}">
-                                        {{tag['tag_name']}}
-                                    </li>
-                                    <el-button v-if="isAdmin" style="margin-left: 20px" size="mini" @click="toTagManage">
-                                        {{$t('page.currencyList.b5')}}
-                                    </el-button>
-                                </ul>
-                            </el-col>
-                        </el-row>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!--自定义分组-->
@@ -295,7 +201,7 @@
                 </el-table>
             </div>
             <!--mask-->
-            <div class="cover" v-show="isShowCover">
+            <!--<div class="cover" v-show="isShowCover">
                 <header class="header">
                     <el-button type="primary" round class="btn" @click.stop="closeMask">{{$t('confirm')}}</el-button>
                 </header>
@@ -315,7 +221,7 @@
                         </li>
                     </ul>
                 </div>
-            </div>
+            </div>-->
             <!--自定义选择范围对话框-->
             <el-dialog
                 :title="$t('page.currencyList.t1') + ':'"
@@ -1092,6 +998,8 @@
     }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
+    @import "../../../static/css/base.styl"
+
     .cover
         position fixed
         left 0
@@ -1159,68 +1067,54 @@
                     right 0
                     top 0
 
-    #head
-        .search
-            width 400px
-            display inline-block
-            margin-right 20px
-            float left
-    .block
-        opacity .5
-    .selector
-        .header
-            line-height 40px
-            min-height 40px
-            border-bottom 1px solid #DCDFE6
-            position relative
-            padding 5px 20px
-            .triangle-right
-                width 0
-                height 0
-                border-top 15px solid transparent
-                border-left 15px solid #60acfc
-                border-bottom 15px solid transparent
-                position absolute
-                top 50%
-                left 0
-                transform translateY(-50%)
-            .searchBtn
-                float right
-            .tag
-                margin-left 10px
-                &:first-child
-                    margin-left 0
-        .body
-            .line
-                border-bottom 1px solid #EBEEF5
-            .split
-                border-top 1px solid #EBEEF5
-                height 1px
-            .title
-                min-width 100px
-                display inline-block
-                line-height 32px
-                padding 5px 20px
-                font-size 16px
-            .select-item-group
-                padding 5px
-                line-height 32px
-                display inline-block
-                li
-                    margin 0 5px
-                    padding: 0 10px
-                    position relative
-                    display inline-block
-                    cursor pointer
-                    font-size 14px
-                    color #4a4a4a
-                    &.active
-                        color #60acfc
-                        border 1px solid
-                        border-radius 5px
-                        background: rgba(42,154,225,0.05)
-                    &:hover
-                        color #60acfc
+
+
+    #filter
+        margin-top 20px
+        background-color #FFF
+        font-size 14px
+
+        .block
+            opacity .5
+
+        .selector
+
+            .content
+
+                .row
+
+                    .label
+                        min-width 100px
+                        float left
+                        line-height 32px
+                        padding 5px 20px
+                        color #999999
+
+                    .choices
+                        padding 5px
+                        line-height 32px
+                        margin-left 140px
+
+                        ul
+                            padding 0
+                            margin 0
+
+                            li
+                                margin 5px
+                                padding: 0 10px
+                                position relative
+                                display inline-block
+                                border-radius 20px
+                                cursor pointer
+                                font-size 14px
+                                color #333333
+                                transition .2s
+                                &.active
+                                    color #ffffff
+                                    background: #409eff
+                                &:hover
+                                    color #ffffff
+                                    background: #409eff
 
     .button-head
         position absolute
