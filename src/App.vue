@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <router-view/>
+    <div id="app" >
+        <router-view style="height: 100%" />
     </div>
 </template>
 
@@ -27,5 +27,6 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
     @import url('../static/css/base.styl');
-
+    #app
+        height 100%
 </style>

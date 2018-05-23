@@ -1,11 +1,6 @@
 <template>
     <div>
-        <div id="head">
-            <router-link :to="{name: 'currencyList', query: {page: this.$route.query.page}}">
-                <img src="../../../static/img/logo.svg" class="logo">
-            </router-link>
-        </div>
-        <div id="content">
+        <div class="container">
             <el-row :gutter="20">
                 <el-col :span="8">
                     <h1>Keyword</h1>
@@ -238,6 +233,8 @@
     }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
+    @import "../../../static/css/base.styl"
+
     .card
         padding: 0
 

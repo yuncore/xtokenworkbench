@@ -13,13 +13,15 @@ import Admin from '../views/admin/Admin.vue'
 import AdminLogin from '../views/admin/AdminLogin.vue'
 import KeyWordStat from '../views/kol-keyword/KeyWordStat.vue'
 import KolOverView from '../views/kol-keyword/KolOverView.vue'
-import BttUserHistory from '../views/other/BTTUserHistory.vue'
+import BttUserHistory from '../views/kol-keyword/BTTUserHistory.vue'
 import HistoryCurrencyRank from '../views/currency/HistoryCurrencyRank.vue'
 import TagManagement from '../views/admin/TagManagement.vue'
 import DummyPage from '../views/other/DummyPage.vue'
 import Predict from '../views/predict/PredictRankList.vue'
 import PredictDetail from '../views/predict/PredictDetailList.vue'
 import GroupManagement from '../views/admin/GroupManagement.vue'
+import TradeHistory from '../views/trade/TradeHistory'
+import Profile from '../views/profile/Profile'
 import Main from '../views/Main'
 
 Vue.use(Router)
@@ -126,6 +128,23 @@ export default new Router({
                     path: '/groupManagement',
                     name: 'group_management',
                     component: GroupManagement
+                },
+                {
+                    name: 'trade_history',
+                    path: '/tradeHistory',
+                    component: TradeHistory,
+                },
+                {
+                    name: 'profile',
+                    path: '/profile',
+                    component: Profile,
+                    children: [
+                        {
+                            name: 'binance',
+                            path: '/binance',
+                            component: '',
+                        }
+                    ]
                 }
             ]
         },

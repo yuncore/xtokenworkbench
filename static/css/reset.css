@@ -1,0 +1,44 @@
+/* v2.0 | 20110126
+  http://meyerweb.com/eric/tools/css/reset/
+  License: none (public domain)
+*/
+html, body, ul, ol, li, p{
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    background-color: #FAFAFA;
+    height: 100%;
+}
+
+body{
+    font-family: -apple-system, PingFangSC-Regular, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+
+ol, ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: #333333;
+}
+
+.left{
+    float: left;
+}
+
+.right{
+    float: right;
+}
+
+.cf:before, .cf:after{
+    content: " ";
+    display: table;
+}
+
+.cf:after{
+    clear: both;
+}

@@ -30,18 +30,29 @@
                 <li class="menu-item drop-down link">
                     <a>
                         More
-                        <i class="el-icon-caret-bottom"></i>
                     </a>
                     <ul class="drop-down-menu">
-                        <li>Nothing</li>
+                        <li>
+                            <router-link :to="{name: 'trade_history', query: {page: this.currentPage}}">
+                                Trade Record
+                            </router-link>
+                        </li>
                     </ul>
                 </li>
-
             </ul>
         </div>
         <div class="profile">
             <img src="../../static/img/ava-default.svg">
             yourName
+            <ul class="profile-drop-down-menu">
+                <li>
+                    <router-link :to="{name: 'profile', query: {page: this.currentPage}}">
+                        Profile
+                    </router-link>
+                </li>
+                <li>Message</li>
+                <li>Black List</li>
+            </ul>
         </div>
     </div>
 </template>
@@ -88,12 +99,16 @@
                 font-size 14px
                 padding 0 25px
                 z-index 1
+                min-width 50px
 
                 a
                     display inline-block
                     line-height 70px
                     color #999999
                     height 70px
+
+                    &:hover
+                        color #FFFFFF
 
             .drop-down
                 position relative
@@ -114,38 +129,17 @@
                     border-bottom-left-radius 5px
                     border-bottom-right-radius 5px
                     display none
+                    transition background-color .5s
                     animation .5s fadeInDown
                     z-index -1
-
+                    padding-bottom 5px
                     li
-                        margin 0
-                        padding 10px 0
                         height 35px
                         line-height 35px
-
-                        &:hover
-                            color #008aff
-
-            .link::after
-                position absolute
-                display block
-                content ""
-                top 0
-                left 0
-                bottom 100%
-                right 0
-                transition .2s
-                z-index -1
-
-
-            .link:hover, .link .active
-
-                &::after
-                    bottom 0
-                    background-color #008aff
-
-                a
-                    color #FFFFFF
+                        a
+                            color #999999
+                            height 35px
+                            line-height 35px
 
         .profile
             display inline-block
@@ -158,10 +152,40 @@
             padding-right 20px
             color #FFF
             cursor pointer
+            z-index 1
+
+            &:hover
+                .profile-drop-down-menu
+                    display block
+                    background-color #232a3a
 
             img
                 height 30px
                 width 30px
                 border-radius 50%
                 vertical-align middle
+
+            .profile-drop-down-menu
+                position absolute
+                background-color #999999
+                color #999999
+                list-style none
+                padding 0
+                left 0
+                width 100%
+                border-bottom-left-radius 5px
+                border-bottom-right-radius 5px
+                display none
+                transition background-color .5s
+                animation .5s fadeInDown
+                z-index -1
+                padding-bottom 5px
+                li
+                    line-height 35px
+                    height 35px
+                    a
+                        color #999999
+                        height 35px
+                        line-height 35px
+
 </style>

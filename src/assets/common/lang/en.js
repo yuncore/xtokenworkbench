@@ -10,7 +10,7 @@ module.exports = {
     confirm: 'confirm',
     confirm2: 'Confirm this operation? Will it continue?',
     prompt: 'prompt',
-    success: 'operation successful!',
+    success: 'operation success!',
     fail: 'operation failed!',
     noData: 'Temporarily no data',
     nav: {

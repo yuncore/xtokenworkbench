@@ -1,7 +1,7 @@
 <template>
     <div>
         <Head></Head>
-        <router-view/>
+        <router-view style="min-height: calc(100% - 70px * 2); padding: 20px 0; box-sizing: border-box" />
         <transition name="back-top-fade">
             <div
                 class="page-component-up"
@@ -13,12 +13,15 @@
                 <i class="el-icon-caret-top"></i>
             </div>
         </transition>
+        <Foot>
+        </Foot>
     </div>
 </template>
 
 <script>
     import throttle from 'throttle-debounce/throttle';
     import Head from '../views/Head'
+    import Foot from '../views/Foot'
 
     export default {
         name: 'app',
@@ -39,7 +42,8 @@
             }
         },
         components: {
-            Head
+            Head,
+            Foot
         },
         mounted() {
             this.throttledScrollHandler = throttle(300, this.handleScroll);
@@ -60,7 +64,7 @@
         opacity: 0;
     }
     .page-component-up {
-        background-color: #fff;
+        background-color: #FFF;
         position: fixed;
         right: 100px;
         bottom: 150px;

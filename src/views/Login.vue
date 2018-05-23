@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="login-bg">
         <div id="window" class="flip">
             <div class="page page-front">
                 <div class="page-content">
@@ -124,6 +124,13 @@
         -moz-box-sizing: border-box;
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
+    }
+
+    .login-bg{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(27, 33, 47);
     }
 
     .rotateplane-enter-active {

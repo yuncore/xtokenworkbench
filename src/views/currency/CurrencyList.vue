@@ -3,8 +3,8 @@
         <div class="container">
             <!--top filters-->
             <div id="filter">
-                <div class="selector" :class="{block: filterActiveGroup.length > 0}">
-                    <div class="content">
+                <div class="selector">
+                    <div class="content" :class="{block: filterActiveGroup.length > 0}">
                         <div v-for="(item, filter_index) in currencyFilter"
                              :key="filter_index"
                              class="row">
@@ -20,45 +20,67 @@
                                         {{choice}}
                                     </li>
                                     <el-button v-if="item.custom" size="mini" @click="showCustomChoice(item, filter_index)">
-                                        custom field
+                                        Custom Field
+                                    </el-button>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--标签过滤-->
+                        <div class="row">
+                            <div class="label">
+                                Tags
+                            </div>
+                            <div class="choices">
+                                <ul>
+                                    <li v-for="(tag, index) in tagList"
+                                        :key="index"
+                                        @click="filterTagLabelClick(tag['id'])"
+                                        :class="{active: filterActiveTag.indexOf(tag['id']) > -1}">
+                                        {{tag['tag_name']}}
+                                    </li>
+                                    <el-button v-if="isAdmin" size="mini" @click="toTagManage">
+                                        Edit
+                                    </el-button>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--Subscribe-->
+                        <div class="row">
+                            <div class="label">
+                                Subscribe
+                            </div>
+                            <div class="choices subscribe">
+                                <el-switch
+                                    v-model="showSubscribeOnly">
+                                </el-switch>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <!--自定义分组-->
+                        <div class="row">
+                            <div class="label">
+                                Group
+                            </div>
+                            <div class="choices">
+                                <ul>
+                                    <li v-for="(group, index) in groupList"
+                                        :key="index"
+                                        @click="filterGroupClick(group['id'])"
+                                        :class="{active: filterActiveGroup.indexOf(group['id']) > -1}">
+                                        {{group['groupName']}}
+                                    </li>
+                                    <el-button v-if="isAdmin" size="mini" @click="toGroupManage">
+                                        Edit
                                     </el-button>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!--自定义分组-->
-                <div class="selector">
-                    <div class="body">
-                        <el-row class="line">
-                            <el-col :sm="3" :lg="3" class="title">
-                                自定义分组:
-                            </el-col>
-                            <el-col :sm="21" :lg="21" class="select-item-group tag-filter">
-                                <ul>
-                                    <li v-for="(group, index) in groupList"
-                                        @click="filterGroupClick(group['id'])"
-                                        :class="{active: filterActiveGroup.indexOf(group['id']) > -1}">
-                                        {{group['groupName']}}
-                                    </li>
-                                    <el-button v-if="isAdmin" style="margin-left: 20px" size="mini" @click="toGroupManage">
-                                        {{$t('page.currencyList.b5')}}
-                                    </el-button>
-                                </ul>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </div>
             </div>
             <!--pagination area-->
-            <div class="Pagination">
-                <el-checkbox v-model="showSubscribeOnly" class="left btn">
-                    {{$t('page.currencyList.b3')}}
-                </el-checkbox>
-                <el-button type="text" @click="toHistoryPrice" class="left history-price-btn">
-                    <img src="../../../static/img/clock.png">
-                    {{$t('page.currencyList.b2')}}
-                </el-button>
+            <div id="pagination">
                 <el-pagination
                     background
                     v-if="showPagination"
@@ -71,12 +93,80 @@
                     @current-change="handlePageChange"
                     @size-change="handleSizeChange">
                 </el-pagination>
-                <el-button size="mini" @click="isShowCover = true">
-                    {{$t('page.currencyList.b4')}}
-                </el-button>
             </div>
             <!--table area-->
-            <div class="card" style="position: relative; padding: 0; margin: 0">
+            <div id="currency-table">
+                <el-table
+                    fit
+                    stripe
+                    :data="currencyList"
+                    v-loading="currencyTableLoading"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(0, 0, 0, 0.8)"
+                    @sort-change="sortChange">
+                    <el-table-column label="Rank" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.rank}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="Name" align="center" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            <span @click="toCurrencyDetail(scope.row)" class="link">
+                                 {{scope.row['name']}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="Symbol" align="center" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{scope.row['symbol']}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="Market Cap" align="center" sortable :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{customerParseFloat(scope.row['market_cap_usd'], '$')}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="Price" align="center" prop="price_usd" sortable :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{customerParseFloat(scope.row['price_usd'], '$')}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="Total" align="center" prop="available_supply" sortable :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{customerParseFloat(scope.row['available_supply'])}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="Change(24h)" prop="percent_change_24h" sortable align="center" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            <div v-if="scope.row['percent_change_24h'] == null">
+                                {{'- -'}}
+                            </div>
+                            <div v-else :style="{color: scope.row['percent_change_24h'] < 0 ? '#d14836' : '#019933'}">
+                                {{scope.row['percent_change_24h'] + '%'}}
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            <ul class="operate-items">
+                                <li @click="coinNameClick(scope.row)">
+                                    <img :src="subscribeCurrencyList.indexOf(scope.row['id']) > -1 ?'static/img/star_active.png' : 'static/img/star_not_active.png'">
+                                </li>
+                                <li @click="collectorDotClick(scope.row)">
+                                    <img src="../../../static/img/dot.svg" alt="predict" title="predict">
+                                </li>
+                                <li @click="groupChooseClick(scope.row)">
+                                    <img src="../../../static/img/self-group.png" alt="add to group" title="add to group">
+                                </li>
+                                <li @click="blackListButtonClick(scope.row)">
+                                    <img src="../../../static/img/black-list.png" alt="black list" title="black list">
+                                </li>
+                            </ul>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <!--<div>
                 <el-table
                     fit
                     stripe
@@ -166,7 +256,7 @@
                         <template slot-scope="scope">
                             <el-dropdown style="color: #409eff">
                               <span class="el-dropdown-link">
-                                {{$t('more')}}<i class="el-icon-arrow-down el-icon--right"></i>
+                                {{$t('more')}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
                               </span>
                                 <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item>
@@ -199,7 +289,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-            </div>
+            </div>-->
             <!--mask-->
             <!--<div class="cover" v-show="isShowCover">
                 <header class="header">
@@ -920,6 +1010,7 @@
 
             // 货币列表排序变化时的回调
             sortChange (obj) {
+                debugger
                 this.getCurrencyList(1, this.currentNum, obj.order, obj.prop)
             },
             // 分页改变的回调
@@ -1082,6 +1173,7 @@
             .content
 
                 .row
+                    margin 5px 0
 
                     .label
                         min-width 100px
@@ -1116,13 +1208,10 @@
                                     color #ffffff
                                     background: #409eff
 
-    .button-head
-        position absolute
-        z-index 9999
-        right 25px
-        top 10px
+                    .subscribe
+                        padding-left 15px
 
-    .Pagination
+    #pagination
         margin 10px
         text-align right
         .left
@@ -1138,6 +1227,17 @@
                 position absolute
                 top 10px
                 left -20px
+
+    #currency-table
+        .operate-items
+            li
+                display inline-block
+                cursor: pointer
+
+                img
+                    padding 0 5px
+                    width 15px
+                    height 15px
 
     .custom-filter-range
         p

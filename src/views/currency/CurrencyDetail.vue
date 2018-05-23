@@ -1,11 +1,6 @@
 <template>
     <div>
-        <div id="head">
-            <router-link :to="{name: 'currencyList', query: {page: this.$route.query.page}}">
-                <img src="../../../static/img/logo.svg" class="logo">
-            </router-link>
-        </div>
-        <div id="content">
+        <div class="container">
             <el-row :gutter="20" class="top">
                 <el-col :span="8">
                     <div class="details card">
@@ -2061,6 +2056,8 @@
     }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
+    @import "../../../static/css/base.styl"
+
     .top
         .card
             height 680px

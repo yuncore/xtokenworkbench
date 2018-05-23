@@ -1,11 +1,6 @@
 <template>
     <div>
-        <div id="head">
-            <router-link :to="{name: 'currencyList', query: {page: this.$route.query.page}}">
-                <img src="../../../static/img/logo.svg" class="logo">
-            </router-link>
-        </div>
-        <div id="content">
+        <div class="container">
             <h1 class="head-title">{{keyword}} / Bitcointalk</h1>
             <div class="card toggle-card chart"
                  v-show="chartCardShow"
@@ -337,6 +332,8 @@
     }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
+    @import "../../../static/css/base.styl"
+
     .chart
         height 680px
 

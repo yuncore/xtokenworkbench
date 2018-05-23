@@ -1,19 +1,14 @@
 <template>
     <div>
-        <div id="head">
-            <router-link :to="{name: 'currencyList', query: {page: this.$route.query.page}}">
-                <img src="../../../static/img/logo.svg" class="logo">
-            </router-link>
-        </div>
-        <div id="content">
+        <div id="history-rank" class="container">
             <div class="card market-cap-card">
                 <el-row :gutter="20">
                     <el-col :span="12">
-                        <div class="chart" ref="marketcap_chart" :style="{height: height + 'px'}">
+                        <div class="chart" ref="marketcap_chart" style="height: 600px">
                         </div>
                     </el-col>
                     <el-col :span="12">
-                        <div class="info" :style="{height: height}">
+                        <div class="info">
                             <div class="head">
                                 <div class="date">
                                     <div class="left">
@@ -55,10 +50,10 @@
                                     <span slot="label"><i class="el-icon-tickets"></i> 市值排名 </span>
                                     <el-table
                                         :data="currency_data"
-                                        :height="panel_content_height"
+                                        height="800px"
                                         :default-sort="{prop: 'market_cap', order: 'descending'}"
                                         @sort-change="sortChange"
-                                        style="width: 100%">
+                                        style="width: 100%; height: 800px">
                                         <el-table-column label="#" align="center">
                                             <template slot-scope="scope">
                                                 {{scope.$index + 1}}
@@ -151,8 +146,8 @@
                 volume_usd_altcoin: '',
                 market_cap_total: '',
                 volume_usd_total: '',
-                height: window.innerHeight - 100 - 100,
-                panel_content_height: window.innerHeight - 100 - 100 - 160
+                //height: window.innerHeight - 100 - 100,
+                //panel_content_height: window.innerHeight - 100 - 100 - 160
             }
         },
         watch:{
@@ -437,6 +432,8 @@
     }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
+    @import "../../../static/css/base.styl"
+
     .market-cap-card
         margin-top 0
         .head
