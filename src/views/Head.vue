@@ -1,43 +1,33 @@
 <template>
     <div id="head-nav">
         <h1 class="logo">
-            <router-link to="/index">
+            <router-link :to="{name: 'main'}">
                 <img src="../../static/img/logo.svg">
             </router-link>
         </h1>
         <div class="container">
             <ul class="items">
-                <li class="menu-item link">
-                    <router-link :to="{name: 'currencyList', query: {page: this.currentPage}}">
-                        Currency
-                    </router-link>
-                </li>
-                <li class="menu-item link">
-                    <router-link :to="{name: 'EventList', query: {page: this.currentPage}}">
-                        Event
-                    </router-link>
-                </li>
-                <li class="menu-item link">
-                    <router-link :to="{name: 'kol', query: {page: this.currentPage}}">
-                        KOL
-                    </router-link>
-                </li>
-                <li class="menu-item link">
-                    <router-link :to="{name: 'history_rank', query: {page: this.currentPage}}">
-                        History
-                    </router-link>
-                </li>
-                <li class="menu-item drop-down link">
-                    <a>
-                        More
+                <li v-for="(item, index) in MENUITEMS"
+                    :key="index"
+                    :class="{'drop-down': item.dropDown}"
+                    class="menu-item link">
+                    <a v-if="item.dropDown">
+                        {{item.text}}
+                        <ul class="drop-down-menu">
+                            <li v-for="(item2, index2) in item.dropDownItems"
+                                :key="index2">
+                                <router-link
+                                    :to="{name: item2.pathName}">
+                                    {{item2.text}}
+                                </router-link>
+                            </li>
+                        </ul>
                     </a>
-                    <ul class="drop-down-menu">
-                        <li>
-                            <router-link :to="{name: 'trade_history', query: {page: this.currentPage}}">
-                                Trade Record
-                            </router-link>
-                        </li>
-                    </ul>
+                    <router-link
+                        v-else
+                        :to="{name: item.pathName}">
+                        {{item.text}}
+                    </router-link>
                 </li>
             </ul>
         </div>
@@ -46,8 +36,8 @@
             yourName
             <ul class="profile-drop-down-menu">
                 <li>
-                    <router-link :to="{name: 'profile', query: {page: this.currentPage}}">
-                        Profile
+                    <router-link :to="{name: 'setting', query: {page: this.currentPage}}">
+                        Setting
                     </router-link>
                 </li>
                 <li>Message</li>
@@ -58,8 +48,43 @@
 </template>
 
 <script>
+    const MENUITEMS = [
+        {
+            pathName: 'currencyList',
+            text: 'Currency'
+        },
+        {
+            pathName: 'EventList',
+            text: 'Event'
+        },
+        {
+            pathName: 'kol',
+            text: 'KOL'
+        },
+        {
+            pathName: 'history_rank',
+            text: 'History'
+        },
+        {
+            pathName: '',
+            text: 'More',
+            dropDown: true,
+            dropDownItems: [
+                {
+                    pathName: 'trade_history',
+                    text: 'Trade Record'
+                }
+            ]
+        },
+    ];
+
     export default {
-        name: "Head"
+        name: "Head",
+        data(){
+            return {
+                MENUITEMS
+            }
+        }
     }
 </script>
 
@@ -113,6 +138,7 @@
             .drop-down
                 position relative
                 cursor pointer
+                color red
 
                 &:hover
                     .drop-down-menu
@@ -140,6 +166,8 @@
                             color #999999
                             height 35px
                             line-height 35px
+                            &:hover
+                                color #FFF
 
         .profile
             display inline-block
@@ -150,11 +178,12 @@
             height 70px
             line-height 70px
             padding-right 20px
-            color #FFF
             cursor pointer
             z-index 1
+            color #999999
 
             &:hover
+                color #FFF
                 .profile-drop-down-menu
                     display block
                     background-color #232a3a
@@ -187,5 +216,7 @@
                         color #999999
                         height 35px
                         line-height 35px
+                        &:hover
+                            color #FFF
 
 </style>

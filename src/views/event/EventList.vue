@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="eventList">
+        <div class="eventList container">
             <div class="qiao" @click="qiaoClick"></div>
 
             <div style=" padding:26px; overflow: auto; background: #fff;">
@@ -228,7 +228,9 @@
         return fmt
     }
 </script>
-<style>
+<style  lang="stylus" rel="stylesheet/stylus" scoped>
+    @import "../../../static/css/base.styl"
+
     .eventList * {
         overflow: hidden;
         margin: 0px;

@@ -79,7 +79,7 @@
                         }*/
                         sessionStorage.setItem('admin', true)
                         setTimeout( () => {
-                            this.$router.push({path: '/index'})
+                            this.$router.push({name: 'main'})
                         }, 1000)
                     }else{
                         this.$message({type: 'error', message: res.errorMsg})

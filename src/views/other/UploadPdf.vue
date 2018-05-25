@@ -296,7 +296,9 @@
     }
 
 </script>
-<style scoped>
+<style  lang="stylus" rel="stylesheet/stylus" scoped>
+    @import "../../../static/css/base.styl"
+
     .eventList *{overflow: hidden; margin: 0px; padding: 0px;}
     .eventList button, a{cursor:pointer;}
 

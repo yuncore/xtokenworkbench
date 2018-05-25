@@ -1,18 +1,6 @@
 <template>
     <div>
-        <div id="head">
-            <router-link to="/index">
-                <img src="../../../static/img/logo.svg" class="logo">
-            </router-link>
-            <div class="right">
-                <div class="menu-item">
-                    <router-link to="/event/list" style="color: #fff;font-size: 14px;">
-                        事件列表
-                    </router-link>
-                </div>
-            </div>
-        </div>
-        <div id="content">
+        <div class="container">
             <div>
                 <div style="width: 400px; float: right">
                     <div class="card stat-card">
@@ -459,6 +447,8 @@
     }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
+    @import "../../../static/css/base.styl"
+
     .event-card
         height 400px
         padding 35px 50px 15px 50px

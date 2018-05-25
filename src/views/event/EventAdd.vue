@@ -3,19 +3,7 @@
         <el-dialog title="" :visible.sync="richEditorOpened" fullscreen="true">
             <RichEditor ref="editor" @done="closeEditor($event)"></RichEditor>
         </el-dialog>
-        <div id="head">
-            <router-link :to="{name: 'currencyList', query: {page: this.$route.query.page}}">
-                <img src="../../../static/img/logo.svg" class="logo">
-            </router-link>
-            <div class="right">
-                <div class="menu-item">
-                    <router-link to="/event/list" style="color: #fff;font-size: 14px;">
-                        事件列表
-                    </router-link>
-                </div>
-            </div>
-        </div>
-        <div id="content">
+        <div class="container">
             <div class="card price" style="border-radius: 10px; overflow: auto; height: 680px;padding: 50px; margin: 0">
                 <div style="width: 75%; float: left;">
                     <p class="paramA" style="margin-top: 0px;float: left">类型</p>
@@ -243,7 +231,9 @@
         },
     }
 </script>
-<style scoped>
+<style lang="stylus" rel="stylesheet/stylus" scoped>
+    @import "../../../static/css/base.styl"
+
     .paramA {
         font-family: AvenirNext-Bold;
         font-size: 12px;

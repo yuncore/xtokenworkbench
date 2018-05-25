@@ -1,11 +1,6 @@
 <template>
     <div>
-        <div id="head">
-            <router-link :to="{name: 'currencyList', query: {}}">
-                <img src="../../../static/img/logo.svg" class="logo">
-            </router-link>
-        </div>
-        <div id="content">
+        <div class="container">
             <div class="card">
                 <div class="top cf">
                     <div class="left">

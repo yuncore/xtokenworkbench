@@ -84,7 +84,7 @@
                         let token = res.result.adminToken
                         sessionStorage.setItem('token', token)
                         setTimeout( () => {
-                            this.$router.push({path: '/admin'})
+                            this.$router.push({name: 'admin'})
                         }, 1000)
                     }else{
                         this.$message({type: 'error', message: res.errorMsg})

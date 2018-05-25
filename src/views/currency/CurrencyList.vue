@@ -81,6 +81,23 @@
             </div>
             <!--pagination area-->
             <div id="pagination">
+                <el-select
+                    v-model="chooseCurrencyList"
+                    multiple
+                    filterable
+                    remote
+                    reserve-keyword
+                    :remote-method="headSearchMethod"
+                    :loading="headSearchLoading"
+                    @change="headSearchChange"
+                    class="search-field">
+                    <el-option
+                        v-for="(item, index) in headSearchOptions"
+                        :key="index"
+                        :label="item.name"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
                 <el-pagination
                     background
                     v-if="showPagination"
@@ -1004,7 +1021,7 @@
             },
             // 前往排行榜列表
             toRankView(){
-                this.$router.push({path: '/predict'})
+                this.$router.push({name: 'predict'})
                 this.collectorDiaVisible = false
             },
 
@@ -1040,28 +1057,25 @@
                     id: row.id,
                     page: this.currentPage
                 }
-                this.$router.push({path: '/currency', query: query})
+                this.$router.push({name: 'CurrencyDetail', query: query})
             },
             toTagManage(){
                 let query = {
                     page: this.currentPage
                 }
-                this.$router.push({path: '/tagManagement',  query: query})
+                this.$router.push({name: 'tag_management',  query: query})
             },
             toHistoryPrice(){
                 let query = {
                     page: this.currentPage
                 }
-                this.$router.push({path: '/history/rank',  query: query})
+                this.$router.push({name: 'history_rank',  query: query})
             },
             toGroupManage(){
                 let query = {
                     page: this.currentPage
                 }
-                this.$router.push({path: '/groupManagement',  query: query})
-            },
-            handleLangChange(command){
-                this.$i18n.locale = command
+                this.$router.push({name: 'group_management',  query: query})
             },
             customerParseFloat: utils.customerParseFloat,
             getSmpFormatDateByLong: utils.getSmpFormatDateByLong,
@@ -1213,7 +1227,10 @@
 
     #pagination
         margin 10px
+        height 45px
         text-align right
+        .search-field
+            float left
         .left
             float left
         .btn

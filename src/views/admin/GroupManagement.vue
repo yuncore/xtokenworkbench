@@ -1,11 +1,6 @@
 <template>
     <div>
-        <div id="head">
-            <router-link :to="{name: 'currencyList', query: {page: this.$route.query.page}}">
-                <img src="../../../static/img/logo.svg" class="logo">
-            </router-link>
-        </div>
-        <div id="content">
+        <div class="container">
             <div class="card">
                 <div class="collapse-head">
                     <h3>分组管理</h3>
@@ -127,6 +122,8 @@
     }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
+    @import "../../../static/css/base.styl"
+
     .card
         padding 0
         .collapse-head

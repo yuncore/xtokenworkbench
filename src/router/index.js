@@ -21,7 +21,10 @@ import Predict from '../views/predict/PredictRankList.vue'
 import PredictDetail from '../views/predict/PredictDetailList.vue'
 import GroupManagement from '../views/admin/GroupManagement.vue'
 import TradeHistory from '../views/trade/TradeHistory'
-import Profile from '../views/profile/Profile'
+import Setting from '../views/profile/Setting'
+import APIKey from '../views/profile/children/APIKey'
+import Password from '../views/profile/children/Password'
+import Profile from '../views/profile/children/Profile'
 import Main from '../views/Main'
 
 Vue.use(Router)
@@ -48,101 +51,115 @@ export default new Router({
             component: Register
         },
         {
-            path: '/main',
+            path: '/index',
+            name: 'main',
             component: Main,
+            redirect: '/index/currency/list',
             children: [
                 {
-                    path: '/index',
+                    path: 'currency/list',
                     name: 'currencyList',
-                    component: CurrencyList
+                    component: CurrencyList,
                 },
                 {
-                    path: '/admin',
+                    path: 'admin',
+                    name: 'admin',
                     component: Admin
                 },
                 {
-                    path: '/currency',
+                    path: 'currency/detail',
                     name: 'CurrencyDetail',
                     component: CurrencyDetail
                 },
                 {
-                    path: '/event/add',
+                    path: 'event/add',
                     name: 'EventAdd',
                     component: EventAdd
                 },
                 {
-                    path: '/event/detail',
+                    path: 'event/detail',
                     name: 'EventDetail',
                     component: EventDetail
                 },
                 {
-                    path: '/event/list',
+                    path: 'event/list',
                     name: 'EventList',
                     component: EventList
                 },
                 {
-                    path: '/whitepaper/upload',
+                    path: 'whitepaper/upload',
                     name: 'whitePaperUpload',
                     component: WhitePaperUpload
                 },
                 {
-                    path: '/keyword',
+                    path: 'keyword',
                     name: 'keywords',
                     component: KeyWordStat
                 },
                 {
-                    path: '/kol',
+                    path: 'kol',
                     name: 'kol',
                     component: KolOverView
                 },
                 {
-                    path: '/btt/user/history',
+                    path: 'btt/user/history',
                     name: 'btt_user_history',
                     component: BttUserHistory
                 },
                 {
-                    path: '/history/rank',
+                    path: 'history/rank',
                     name: 'history_rank',
                     component: HistoryCurrencyRank
                 },
                 {
-                    path: '/tagManagement',
+                    path: 'tagManagement',
                     name: 'tag_management',
                     component: TagManagement
                 },
                 {
-                    path: '/dummy',
+                    path: 'dummy',
                     component: DummyPage
                 },
                 {
-                    path: '/predict',
+                    path: 'predict',
                     name: 'predict',
                     component: Predict
                 },
                 {
-                    path: '/predictDetail',
+                    path: 'predictDetail',
                     name: 'predict_detail',
                     component: PredictDetail
                 },
                 {
-                    path: '/groupManagement',
+                    path: 'groupManagement',
                     name: 'group_management',
                     component: GroupManagement
                 },
                 {
                     name: 'trade_history',
-                    path: '/tradeHistory',
+                    path: 'tradeHistory',
                     component: TradeHistory,
                 },
                 {
-                    name: 'profile',
-                    path: '/profile',
-                    component: Profile,
+                    name: 'setting',
+                    path: 'setting',
+                    component: Setting,
+                    redirect: '/index/setting/profile',
                     children: [
                         {
-                            name: 'binance',
-                            path: '/binance',
-                            component: '',
+                            name: 'setting-apiKey',
+                            path: 'apikey',
+                            component: APIKey,
+                        },
+                        {
+                            name: 'setting-index',
+                            path: 'profile',
+                            component: Profile,
+                        },
+                        {
+                            name: 'setting-password',
+                            path: 'password',
+                            component: Password,
                         }
                     ]
                 }

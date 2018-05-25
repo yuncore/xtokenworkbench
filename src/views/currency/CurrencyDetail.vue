@@ -570,7 +570,7 @@
                 <div class="collapse-head" @click="toggleXtokenSpan">
                     <div class="name">
                         <img src="../../../static/img/guan.svg">Xtoken
-                        <router-link :to="'/whitepaper/upload?id=' + id" style="font-size: 14px;">
+                        <router-link :to="'/index/whitepaper/upload?id=' + id" style="font-size: 14px;">
                             {{$t('page.currencyDetail.t10')}}
                         </router-link>
                     </div>
@@ -588,7 +588,7 @@
                                 min-width="500"
                                 :label="$t('page.currencyDetail.th6')">
                                 <template slot-scope="scope">
-                                    <router-link :to="'/event/detail?id='+ scope.row.id" style="font-size: 14px;">
+                                    <router-link :to="'/index/event/detail?id='+ scope.row.id" style="font-size: 14px;">
                                         {{scope.row.title}}
                                     </router-link>
                                 </template>
@@ -1714,7 +1714,7 @@
                         user_id: params['data']['id'],
                         user_name: params['data']['name']
                     }
-                    this.$router.push({path: '/btt/user/history', query: query})
+                    this.$router.push({name: 'btt_user_history', query: query})
                 })
             },
             // 使用echarts绘制btt中评论随时间的分布图

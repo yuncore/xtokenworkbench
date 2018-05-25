@@ -152,6 +152,7 @@
         },
         watch:{
             time(val){
+                debugger
                 this.getCurrencyData(val)
                 this.getCoindeskNews(val.getTime())
             }
@@ -174,6 +175,7 @@
                     time: time_long
                 }
                 let succ = res => {
+                    debugger
                     let data = []
                     try{
                         let price_btc = res['data']['price_btc']
@@ -201,6 +203,7 @@
                     }
                 }
                 let fail = res => {
+                    debugger
                     this.price_data_loading = false
                     this.$message({type: 'error', message: res.responseJSON.message || '未知错误'})
                 }
@@ -420,7 +423,7 @@
                 let query = {
                     id: row.currency_id,
                 }
-                this.$router.push({path: '/currency', query: query})
+                this.$router.push({name: 'CurrencyDetail', query: query})
             },
             customerParseFloat: utils.customerParseFloat,
             getSmpFormatDateByLong: utils.getSmpFormatDateByLong
