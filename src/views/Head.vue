@@ -11,12 +11,14 @@
                     :key="index"
                     :class="{'drop-down': item.dropDown}"
                     class="menu-item link">
-                    <a v-if="item.dropDown">
+                    <a v-if="item.dropDown"
+                       :class="{'active':item.dropDownItems.map(i => i.pathName).indexOf(routerName) > -1}">
                         {{item.text}}
                         <ul class="drop-down-menu">
                             <li v-for="(item2, index2) in item.dropDownItems"
                                 :key="index2">
                                 <router-link
+                                    :class="{'active': routerName === item2.pathName}"
                                     :to="{name: item2.pathName}">
                                     {{item2.text}}
                                 </router-link>
@@ -24,6 +26,7 @@
                         </ul>
                     </a>
                     <router-link
+                        :class="{'active': routerName === item.pathName}"
                         v-else
                         :to="{name: item.pathName}">
                         {{item.text}}
@@ -84,7 +87,12 @@
             return {
                 MENUITEMS
             }
-        }
+        },
+        computed:{
+            routerName(){
+                return this.$route.name
+            }
+        },
     }
 </script>
 
@@ -115,7 +123,6 @@
             font-size 0
             display inline-block
             color #999999
-
             .menu-item
                 display inline-block
                 position relative
@@ -125,14 +132,12 @@
                 padding 0 25px
                 z-index 1
                 min-width 50px
-
                 a
                     display inline-block
                     line-height 70px
                     color #999999
                     height 70px
-
-                    &:hover
+                    &:hover, &.active
                         color #FFFFFF
 
             .drop-down
@@ -166,8 +171,8 @@
                             color #999999
                             height 35px
                             line-height 35px
-                            &:hover
-                                color #FFF
+                            &:hover, &.active
+                                color #FFFFFF
 
         .profile
             display inline-block
@@ -218,5 +223,6 @@
                         line-height 35px
                         &:hover
                             color #FFF
+
 
 </style>

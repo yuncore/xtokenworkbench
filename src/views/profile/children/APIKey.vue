@@ -1,43 +1,74 @@
 <template>
     <div id="apiKey">
-        <h2>API Key</h2>
-        <div class="key-list">
-            <el-button @click="apiFormVisible = !apiFormVisible">add</el-button>
-        </div>
-        <transition name="el-zoom-in-top">
-            <el-form v-show="apiFormVisible" :model="APIForm" ref="APIForm" label-width="100px" class="api-form">
-                <el-form-item label="Name" prop="name">
-                    <el-input v-model="APIForm.name"></el-input>
-                </el-form-item>
-                <el-form-item label="API Key" prop="apiKey" required>
-                    <el-input v-model="APIForm.apiKey" required></el-input>
-                </el-form-item>
-                <el-form-item label="Secret Key" prop="secretKey" required>
-                    <el-input v-model="APIForm.secretKey"></el-input>
-                </el-form-item>
-                <el-form-item label="Exchange" prop="exchange" required>
-                    <el-select v-model="APIForm.exchange" placeholder="">
-                        <el-option
-                            v-for="item in exchangeList"
-                            :key="item.id"
-                            :label="item.bourseName"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm('APIForm', addAPIKey)">Save</el-button>
-                    <el-button @click="resetForm('APIForm')">Reset</el-button>
-                </el-form-item>
-            </el-form>
-        </transition>
+        <h3>Exchange API</h3>
+        <p>Third party accounts.</p>
+        <ul class="exchange-list">
+            <li v-for="(item, index) in exchangeDisplayList"
+                :key="index">
+               <h4>
+                   {{item.bourseName}}
+                   <div v-if="!item.hasKey" class="addform-button-group">
+                       <el-button v-if="!item.addFormVisiable"
+                                  @click="showAddForm(item, index)"
+                                  type="primary"
+                                  size="mini"
+                                  class="addform-button right">
+                           New
+                       </el-button>
+                       <el-button v-else
+                                  @click="hideAddForm(item, index)"
+                                  type="success"
+                                  class="addform-button right"
+                                  size="mini">
+                           Cancel
+                       </el-button>
+                   </div>
+               </h4>
+                <div v-if="item.hasKey" class="api-content">
+                    <div class="api-key-logo">
+                        <img src="../../../../static/img/api-key.png">
+                    </div>
+                    <p>{{item.name}}</p>
+                    <el-button type="danger"
+                               size="mini"
+                               @click="removeAPI(item.id)"
+                               class="unbind-button right">
+                        Unbind
+                    </el-button>
+                </div>
+                <p v-else>{{`There is no API bound to this Exchange`}}</p>
+                <transition name="el-zoom-in-top">
+                    <div v-show="item.addFormVisiable" class="form-content">
+                        <el-form
+                            ref="APIForm"
+                            :model="APIForm"
+                            label-position="top"
+                            status-icon
+                            class="api-form">
+                            <el-form-item label="Name" prop="name" required>
+                                <el-input v-model.trim="APIForm.name"></el-input>
+                            </el-form-item>
+                            <el-form-item label="API Key" prop="apiKey" required>
+                                <el-input v-model.trim="APIForm.apiKey"></el-input>
+                            </el-form-item>
+                            <el-form-item label="Secret Key" prop="secretKey" required>
+                                <el-input v-model.trim="APIForm.secretKey"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="submitForm(`APIForm`, index, addAPIKey)">Save</el-button>
+                                <el-button @click="resetForm(`APIForm`, index)">Reset</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                </transition>
+            </li>
+        </ul>
     </div>
 </template>
 
 <script>
     import net_util from '../../../assets/js/net_utils'
     import config from '../../../assets/js/config'
-    import utils from '../../../assets/js/utils'
 
     export default {
         name: "APIKey",
@@ -48,35 +79,31 @@
                     name: '',
                     apiKey: '',
                     secretKey: '',
-                    exchange: '',
+                    exchange: ''
                 },
-                exchangeList: []
+                currentExchange: '',
+                exchangeList: [],
+                bindAPIList: [],
+                exchangeDisplayList: [],
             }
         },
         methods:{
-            getExchangeList(){
-                let url = config.JAVABASEDOMAIN + `/user/bourse/list`;
-                let succ = res => {
-                    if (!res.errorMsg) {
-                        this.exchangeList = res.result
-                    }
-                };
-                let fail = res => {
-
-                };
-                net_util.getRequest(url, {}, succ, fail)
-            },
             addAPIKey(){
                 let url = config.JAVABASEDOMAIN + `/user/bourse/bind`;
+                if(!this.currentExchange){
+                    console.log('empty exchange');
+                    return
+                }
                 let data = {
-                    type: this.APIForm.exchange,
+                    type: this.currentExchange,
                     key: this.APIForm.apiKey,
                     secret: this.APIForm.secretKey,
                     name: this.APIForm.name
                 };
                 let succ = res => {
                     if (!res.errorMsg) {
-                        this.$message({type: 'success', message: this.$t('success')})
+                        this.$message({type: 'success', message: this.$t('success')});
+                        this.init()
                     }
                 };
                 let fail = res => {
@@ -84,8 +111,75 @@
                 };
                 net_util.getRequest(url, data, succ, fail)
             },
-            submitForm(name, cb){
-                this.$refs[name].validate((valid) => {
+            getBindAPIList(){
+                return new Promise((resolve, reject) => {
+                    let url = config.JAVABASEDOMAIN + `/user/bourse/bind/list`;
+                    let data = {};
+                    let succ = res => {
+                        if (!res.errorMsg) {
+                            this.bindAPIList = res.result;
+                            resolve(res.result);
+                        }
+                    };
+                    let fail = res => {
+                        reject(res)
+                    };
+                    net_util.getRequest(url, data, succ, fail)
+                });
+            },
+            getExchangeList(){
+                return new Promise((resolve, reject) => {
+                    let url = config.JAVABASEDOMAIN + `/user/bourse/list`;
+                    let succ = res => {
+                        if (!res.errorMsg) {
+                            this.exchangeList = res.result
+                            resolve(res)
+                        }
+                    };
+                    let fail = res => {
+                        reject(res)
+                    };
+                    net_util.getRequest(url, {}, succ, fail)
+                });
+            },
+            removeAPI(id){
+                let url = config.JAVABASEDOMAIN + `/user/bourse/remove`;
+                let data = {
+                    type: id,
+                };
+                let succ = res => {
+                    if (!res.errorMsg) {
+                        this.$message({type: 'success', message: this.$t('success')});
+                        this.init()
+                    }
+                };
+                let fail = res => {
+                    this.$message({type: 'error', message: this.$t('error')})
+                };
+                net_util.getRequest(url, data, succ, fail)
+            },
+            showAddForm(item, index){
+                this.exchangeList.forEach((item, index) => {
+                    if(item.addFormVisiable === true){
+                        let newItem = item;
+                        item.addFormVisiable = false;
+                        this.exchangeDisplayList.splice(index, 1, newItem)
+                    }
+                });
+                let newItem = item;
+                newItem.addFormVisiable = true;
+                this.exchangeDisplayList.splice(index, 1, newItem);
+                this.currentExchange = item.id
+            },
+            hideAddForm(item, index){
+                let newItem = item;
+                newItem.addFormVisiable = false;
+                this.exchangeDisplayList.splice(index, 1, newItem);
+                this.currentExchange = '';
+                this.resetForm('APIForm', index)
+            },
+            submitForm(name, index, cb){
+                this.$refs[name][index].validate((valid) => {
                     if (valid) {
                         cb()
                     } else {
@@ -93,16 +187,79 @@
                     }
                 });
             },
-            resetForm(name){
-                this.$refs[name].resetFields();
+            resetForm(name, index){
+                this.$refs[name][index].resetFields();
+            },
+            init(){
+                this.exchangeDisplayList = [];
+                this.getExchangeList().then(res => {
+                    return this.getBindAPIList()
+                }).then(res => {
+                    this.exchangeList.forEach(item1 => {
+                        let displayItem = item1;
+                        displayItem.addFormVisiable = false;
+                        this.bindAPIList.forEach(item2 => {
+                            if (item1.id === item2.type){
+                                displayItem.hasKey = true;
+                                displayItem.name = item2.name
+                            }
+                        });
+                        this.exchangeDisplayList.push(displayItem)
+                    })
+                })
             }
         },
         mounted(){
-            this.getExchangeList()
+            this.init()
         }
     }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-
+    #apiKey
+        h3
+            margin 0
+            font-size 30px
+            font-weight normal
+        h4
+            font-weight normal
+            line-height 40px
+            height 40px
+            border-bottom 1px solid #d8d8d8
+        p
+            margin-top 5px
+            margin-bottom 20px
+            font-size 14px
+        .exchange-list
+            li
+                margin-bottom 50px
+                &:last-child
+                    margin-bottom 0
+        .addform-button-group
+            display inline
+            .addform-button
+                margin-right 20px
+        .api-content
+            padding 10px 0
+            border 1px solid #DDDDDD
+            background #FFF
+            border-radius 3px
+            .api-key-logo
+                display inline-block
+                vertical-align middle
+                margin-left 20px
+                line-height 100%
+                img
+                    width 40px
+                    height 40px
+            p
+                display inline-block
+                margin 0
+                margin-left 20px
+            .unbind-button
+                margin-right 20px
+                margin-top 5px
+        .form-content
+            padding 10px 20px
+            background #FFF
 </style>

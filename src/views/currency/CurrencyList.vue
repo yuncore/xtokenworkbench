@@ -1,6 +1,28 @@
 <template>
     <div>
         <div class="container">
+            <!--top search-->
+            <div id="top-search">
+                <h2>Currency List</h2>
+                <el-select
+                    v-model="chooseCurrencyList"
+                    multiple
+                    filterable
+                    remote
+                    reserve-keyword
+                    :remote-method="headSearchMethod"
+                    :loading="headSearchLoading"
+                    placeholder="search"
+                    @change="headSearchChange"
+                    class="search-field">
+                    <el-option
+                        v-for="(item, index) in headSearchOptions"
+                        :key="index"
+                        :label="item.name"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
+            </div>
             <!--top filters-->
             <div id="filter">
                 <div class="selector">
@@ -45,7 +67,7 @@
                             </div>
                         </div>
                         <!--Subscribe-->
-                        <div class="row">
+                        <!--<div class="row">
                             <div class="label">
                                 Subscribe
                             </div>
@@ -54,7 +76,7 @@
                                     v-model="showSubscribeOnly">
                                 </el-switch>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="content">
                         <!--自定义分组-->
@@ -81,23 +103,12 @@
             </div>
             <!--pagination area-->
             <div id="pagination">
-                <el-select
-                    v-model="chooseCurrencyList"
-                    multiple
-                    filterable
-                    remote
-                    reserve-keyword
-                    :remote-method="headSearchMethod"
-                    :loading="headSearchLoading"
-                    @change="headSearchChange"
-                    class="search-field">
-                    <el-option
-                        v-for="(item, index) in headSearchOptions"
-                        :key="index"
-                        :label="item.name"
-                        :value="item.id">
-                    </el-option>
-                </el-select>
+                <div class="subscribe left">
+                    <el-switch
+                        v-model="showSubscribeOnly">
+                    </el-switch>
+                    <span>My Subscribe</span>
+                </div>
                 <el-pagination
                     background
                     v-if="showPagination"
@@ -121,39 +132,32 @@
                     element-loading-spinner="el-icon-loading"
                     element-loading-background="rgba(0, 0, 0, 0.8)"
                     @sort-change="sortChange">
-                    <el-table-column label="Rank" align="center">
+                    <el-table-column label="Rank" width="200px" align="center">
                         <template slot-scope="scope">
                             {{scope.row.rank}}
                         </template>
                     </el-table-column>
-                    <el-table-column label="Name" align="center" :show-overflow-tooltip="true">
+                    <!--<el-table-column label="Name" align="center" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <span @click="toCurrencyDetail(scope.row)" class="link">
                                  {{scope.row['name']}}
                             </span>
                         </template>
-                    </el-table-column>
-                    <el-table-column label="Symbol" align="center" :show-overflow-tooltip="true">
+                    </el-table-column>-->
+                    <el-table-column label="Name" align="left" width="150px" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{scope.row['symbol']}}
+                            <div class="link">
+                                <img class="currency-logo" style="width: 20px; height: 20px; vertical-align: text-bottom" :src="`../../../static/img/coinLogos/${scope.row.id}.png`">
+                                {{scope.row['symbol']}}
+                            </div>
                         </template>
                     </el-table-column>
-                    <el-table-column label="Market Cap" align="center" sortable :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            {{customerParseFloat(scope.row['market_cap_usd'], '$')}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="Price" align="center" prop="price_usd" sortable :show-overflow-tooltip="true">
+                    <el-table-column label="Price" width="150px" align="right" prop="price_usd" sortable :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{customerParseFloat(scope.row['price_usd'], '$')}}
                         </template>
                     </el-table-column>
-                    <el-table-column label="Total" align="center" prop="available_supply" sortable :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            {{customerParseFloat(scope.row['available_supply'])}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="Change(24h)" prop="percent_change_24h" sortable align="center" :show-overflow-tooltip="true">
+                    <el-table-column label="Change(24h)" prop="percent_change_24h" sortable align="right" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <div v-if="scope.row['percent_change_24h'] == null">
                                 {{'- -'}}
@@ -161,6 +165,16 @@
                             <div v-else :style="{color: scope.row['percent_change_24h'] < 0 ? '#d14836' : '#019933'}">
                                 {{scope.row['percent_change_24h'] + '%'}}
                             </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="Market Cap" align="right" sortable :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{customerParseFloat(scope.row['market_cap_usd'], '$')}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="Total" align="right" prop="available_supply" sortable :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{customerParseFloat(scope.row['available_supply'])}}
                         </template>
                     </el-table-column>
                     <el-table-column align="center" :show-overflow-tooltip="true">
@@ -182,6 +196,20 @@
                         </template>
                     </el-table-column>
                 </el-table>
+            </div>
+            <div id="pagination2">
+                <el-pagination
+                    background
+                    v-if="showPagination"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    style="display: inline-block; vertical-align: middle"
+                    :total="count"
+                    :current-page="currentPage"
+                    :page-size=currentNum
+                    :page-sizes="[10, 20, 50, 100]"
+                    @current-change="handlePageChange"
+                    @size-change="handleSizeChange">
+                </el-pagination>
             </div>
             <!--<div>
                 <el-table
@@ -461,7 +489,7 @@
                 showPagination: true,
                 count: '',
                 currentPage: 1,
-                currentNum: 10,
+                currentNum: 50,
                 currencyTableLoading: false,
                 // 货币列表，货币排序字段
                 currentOrder: null,
@@ -763,7 +791,7 @@
             },
 
             // 请求货币列表
-            getCurrencyList (page = 1, currentNum = 10, order = null, prop = null) {
+            getCurrencyList (page = 1, currentNum = this.currentNum, order = null, prop = null) {
                 let url = config.PYTHONBASEDOMAIN + '/currency/list'
                 let data = {
                     page: page,
@@ -1172,7 +1200,15 @@
                     right 0
                     top 0
 
-
+    #top-search
+        h2
+            margin 0
+            display inline-block
+            font-size 30px
+            font-weight normal
+        .search-field
+            float right
+            width 400px
 
     #filter
         margin-top 20px
@@ -1229,10 +1265,8 @@
         margin 10px
         height 45px
         text-align right
-        .search-field
-            float left
-        .left
-            float left
+        .subscribe
+            color #999999
         .btn
             line-height 40px
         .history-price-btn
@@ -1245,6 +1279,10 @@
                 top 10px
                 left -20px
 
+    #pagination2
+        text-align right
+        margin 10px
+
     #currency-table
         .operate-items
             li
@@ -1255,6 +1293,11 @@
                     padding 0 5px
                     width 15px
                     height 15px
+        .currency-logo
+            width 20px
+            height 20px
+            vertical-align text-bottom
+            margin-right 5px
 
     .custom-filter-range
         p

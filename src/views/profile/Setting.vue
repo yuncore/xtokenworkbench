@@ -74,20 +74,23 @@
 
             li
                 text-align left
-                height 60px
+                height 50px
                 padding 0 20px
-                line-height 60px
+                line-height 50px
                 cursor pointer
                 border-bottom 1px solid #f1f1f1
 
                 a
                     color #999999
+                    width 100%
+                    height 100%
+                    display block
 
                 i
                     display none
                     vertical-align middle
-                    height 60px
-                    line-height 60px
+                    height 50px
+                    line-height 50px
                     float right
 
                 &:last-child
@@ -95,4 +98,6 @@
 
         .content
             margin-left 320px
+            width 700px
+            color #333333
 </style>
