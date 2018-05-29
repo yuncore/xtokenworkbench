@@ -146,7 +146,7 @@
                     </el-table-column>-->
                     <el-table-column label="Name" align="left" width="150px" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <div class="link">
+                            <div @click="toCurrencyDetail(scope.row)" class="link">
                                 <img class="currency-logo" style="width: 20px; height: 20px; vertical-align: text-bottom" :src="`../../../static/img/coinLogos/${scope.row.id}.png`">
                                 {{scope.row['symbol']}}
                             </div>

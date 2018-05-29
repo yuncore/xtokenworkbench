@@ -71,13 +71,18 @@
                     this.loading = false
                     if(!res.errorMsg){
                         this.$message({type: 'success', message: this.$t('alert.a3')})
-                        let token = res.result.token
-                        let uid = res.result.id
-                        sessionStorage.setItem('token', token)
-                        /*if(res.result.admin){
+                        let token = res.result.token;
+                        let uid = res.result.id;
+                        sessionStorage.setItem('token', token);
+                        if(res.result.admin){
                             sessionStorage.setItem('admin', true)
-                        }*/
-                        sessionStorage.setItem('admin', true)
+                        }
+                        if(res.result.name){
+                            sessionStorage.setItem('name', res.result.name)
+                        }
+                        if(res.result.icon){
+                            sessionStorage.setItem('icon', res.result.icon)
+                        }
                         setTimeout( () => {
                             this.$router.push({name: 'main'})
                         }, 1000)

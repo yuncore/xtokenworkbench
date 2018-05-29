@@ -35,8 +35,8 @@
             </ul>
         </div>
         <div class="profile">
-            <img src="../../static/img/ava-default.svg">
-            yourName
+            <img :src="avatar">
+            {{name}}
             <ul class="profile-drop-down-menu">
                 <li>
                     <router-link :to="{name: 'setting', query: {page: this.currentPage}}">
@@ -51,6 +51,9 @@
 </template>
 
 <script>
+    import Headroom from 'headroom.js'
+    import config from '../assets/js/config'
+
     const MENUITEMS = [
         {
             pathName: 'currencyList',
@@ -85,14 +88,28 @@
         name: "Head",
         data(){
             return {
-                MENUITEMS
+                MENUITEMS,
+                name: sessionStorage.getItem('name') || 'yourName',
             }
         },
         computed:{
+            avatar(){
+                let path = sessionStorage.getItem('icon');
+                if(path){
+                    return config.IMGDOMAIN + path
+                }else {
+                    return `static/img/ava-default.svg`
+                }
+            },
             routerName(){
                 return this.$route.name
             }
         },
+        mounted(){
+            let el = document.querySelector('#head-nav');
+            let headroom = new Headroom(el);
+            headroom.init()
+        }
     }
 </script>
 
@@ -103,6 +120,9 @@
         background-color #232a3a
         height 70px
         text-align center
+        z-index 9999
+        width 100%
+        position fixed
 
         .logo
             display inline-block
@@ -185,6 +205,7 @@
             padding-right 20px
             cursor pointer
             z-index 1
+            min-width 100px
             color #999999
 
             &:hover
@@ -198,6 +219,7 @@
                 width 30px
                 border-radius 50%
                 vertical-align middle
+                margin-right 10px
 
             .profile-drop-down-menu
                 position absolute
@@ -224,5 +246,14 @@
                         &:hover
                             color #FFF
 
+    .headroom {
+        transition: transform 200ms linear;
+    }
+    .headroom--pinned {
+        transform: translateY(0%);
+    }
+    .headroom--unpinned {
+        transform: translateY(-100%);
+    }
 
 </style>

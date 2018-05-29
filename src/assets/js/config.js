@@ -8,9 +8,11 @@ const JAVABASEDOMAIN = 'http://1o746k7976.51mypc.cn:25010/xc'
 // const  JAVABASEDOMAIN = 'http://xtoken.com:5010/xc'
 const SCRAPYD = 'http://localhost:6800'
 const FILEDOMAIN = 'http://jsrelease-file.yunmaster.cn/store/doc/'
+const IMGDOMAIN = 'http://jsrelease-file.yunmaster.cn/store/img/'
 export default {
     PYTHONBASEDOMAIN,
     SCRAPYD,
     JAVABASEDOMAIN,
-    FILEDOMAIN
+    FILEDOMAIN,
+    IMGDOMAIN
 }

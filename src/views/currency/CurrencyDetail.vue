@@ -2036,7 +2036,7 @@
                 let query = {
                     id: this.id,
                 };
-                this.$router.push({path: '/price_contrast', query: query})
+                this.$router.push({name: 'price_contrast', query: query})
             },
             customerParseFloat: utils.customerParseFloat,
             getSmpFormatDateByLong: utils.getSmpFormatDateByLong,

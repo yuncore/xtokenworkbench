@@ -25,6 +25,7 @@ import Setting from '../views/profile/Setting'
 import APIKey from '../views/profile/children/APIKey'
 import Password from '../views/profile/children/Password'
 import Profile from '../views/profile/children/Profile'
+import PriceContrast from '../views/currency/PriceContrast'
 import Main from '../views/Main'
 
 Vue.use(Router)
@@ -139,6 +140,11 @@ export default new Router({
                     name: 'trade_history',
                     path: 'tradeHistory',
                     component: TradeHistory,
+                },
+                {
+                    name: 'price_contrast',
+                    path: 'priceContrast',
+                    component: PriceContrast
                 },
                 {
                     name: 'setting',

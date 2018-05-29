@@ -152,7 +152,6 @@
         },
         watch:{
             time(val){
-                debugger
                 this.getCurrencyData(val)
                 this.getCoindeskNews(val.getTime())
             }
@@ -175,7 +174,6 @@
                     time: time_long
                 }
                 let succ = res => {
-                    debugger
                     let data = []
                     try{
                         let price_btc = res['data']['price_btc']
@@ -203,7 +201,6 @@
                     }
                 }
                 let fail = res => {
-                    debugger
                     this.price_data_loading = false
                     this.$message({type: 'error', message: res.responseJSON.message || '未知错误'})
                 }

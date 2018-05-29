@@ -7,7 +7,10 @@ import ElementUI from 'element-ui'
 import VueI18n from 'vue-i18n'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en'
+import Croppa from 'vue-croppa'
+import 'vue-croppa/dist/vue-croppa.css'
 
+Vue.use(Croppa);
 Vue.use(VueI18n);
 Vue.use(ElementUI, {locale});
 Vue.config.productionTip = false;

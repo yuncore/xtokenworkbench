@@ -1,7 +1,7 @@
 <template>
     <div>
         <Head></Head>
-        <router-view style="min-height: calc(100% - 70px * 2); padding: 20px 0; box-sizing: border-box" />
+        <router-view class="wrap"/>
         <transition name="back-top-fade">
             <div
                 class="page-component-up"
@@ -76,6 +76,7 @@
         box-shadow: 0 0 6px rgba(0,0,0,.12);
         z-index: 5;
     }
+
     .page-component-up i {
         color: #409eff;
         display: block;
@@ -83,7 +84,15 @@
         text-align: center;
         font-size: 18px;
     }
+
     .page-component-up:hover {
         opacity: 1;
+    }
+
+    .wrap{
+        min-height: calc(100% - 70px);
+        padding: 20px 0;
+        box-sizing: border-box;
+        padding-top: 90px
     }
 </style>

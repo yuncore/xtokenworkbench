@@ -1,57 +1,59 @@
 <template>
-    <div id="history" class="container">
-        <div class="left sidebar-left">
-            <ul>
-                <li v-for="item in bindAPIList" class="active">
-                    <img :src="EXCHANGEIMGS[item.id] || EXCHANGEIMGS[0]">
-                    {{item.bourseName}}
-                </li>
-            </ul>
-        </div>
-        <div class="content">
-            <el-table :data="tradeHistoryList">
-                <el-table-column label="Time" align="center">
-                    <template slot-scope="scope">
-                        {{getSmpFormatDateByLong(scope.row.time)}}
-                    </template>
-                </el-table-column>
-                <el-table-column label="Pair" align="center">
-                    <template slot-scope="scope">
-                        {{scope.row.symbol}}
-                    </template>
-                </el-table-column>
-                <el-table-column label="Buy/Sell" align="center">
-                    <template slot-scope="scope">
+    <div>
+        <div id="history" class="container">
+            <div class="left sidebar-left">
+                <ul>
+                    <li v-for="item in bindAPIList" class="active">
+                        <img :src="EXCHANGEIMGS[item.id] || EXCHANGEIMGS[0]">
+                        {{item.bourseName}}
+                    </li>
+                </ul>
+            </div>
+            <div class="content">
+                <el-table :data="tradeHistoryList">
+                    <el-table-column label="Time" align="center">
+                        <template slot-scope="scope">
+                            {{getSmpFormatDateByLong(scope.row.time)}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="Pair" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.symbol}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="Buy/Sell" align="center">
+                        <template slot-scope="scope">
                         <span :style="{color: scope.row.buyer ? '#019933' : '#d14836'}">
                             {{scope.row.buyer ? 'Buy' : 'Sell'}}
                         </span>
-                    </template>
-                </el-table-column>
-                <el-table-column label="Price" align="center">
-                    <template slot-scope="scope">
-                        {{scope.row.price}}
-                    </template>
-                </el-table-column>
-                <el-table-column label="Filled" align="center">
-                    <template slot-scope="scope">
-                        {{scope.row.qty}}
-                    </template>
-                </el-table-column>
-                <el-table-column label="Fee" align="center">
-                    <template slot-scope="scope">
-                        {{`${scope.row.commission} ${scope.row.commissionAsset}`}}
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination
-                layout="total, prev, pager, next, jumper"
-                class="pagination"
-                :total="count"
-                :current-page="currentPage"
-                :page-size=currentNum
-                @current-change="handlePageChange"
-                @size-change="handleSizeChange">
-            </el-pagination>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="Price" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.price}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="Filled" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.qty}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="Fee" align="center">
+                        <template slot-scope="scope">
+                            {{`${scope.row.commission} ${scope.row.commissionAsset}`}}
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination
+                    layout="total, prev, pager, next, jumper"
+                    class="pagination"
+                    :total="count"
+                    :current-page="currentPage"
+                    :page-size=currentNum
+                    @current-change="handlePageChange"
+                    @size-change="handleSizeChange">
+                </el-pagination>
+            </div>
         </div>
     </div>
 </template>
