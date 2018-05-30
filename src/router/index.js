@@ -28,7 +28,7 @@ import Profile from '../views/profile/children/Profile'
 import PriceContrast from '../views/currency/PriceContrast'
 import Main from '../views/Main'
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
     routes: [

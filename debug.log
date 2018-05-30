@@ -58,3 +58,8 @@
 [0523/125615.777:ERROR:process_info.cc(625)] range at 0xff179000, size 0xf84 fully unreadable
 [0523/125615.777:ERROR:process_info.cc(625)] range at 0xff176000, size 0xf84 fully unreadable
 [0523/125615.777:ERROR:process_info.cc(625)] range at 0xff06f000, size 0xf84 fully unreadable
+[0529/164152.116:ERROR:process_info.cc(625)] range at 0xfe9b6000, size 0x230 fully unreadable
+[0529/164152.165:ERROR:process_info.cc(625)] range at 0xfe9bf000, size 0xf84 fully unreadable
+[0529/164152.285:ERROR:process_info.cc(625)] range at 0xfe74a000, size 0x230 fully unreadable
+[0529/164152.296:ERROR:process_info.cc(625)] range at 0xfe74e000, size 0xf84 fully unreadable
+[0529/164358.377:ERROR:http_transport_win.cc(50)] WinHttpSendRequest: ²Ù×÷³¬Ê±  (0x2EE2)

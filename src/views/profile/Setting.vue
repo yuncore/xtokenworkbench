@@ -1,7 +1,7 @@
 <template>
     <div id="profile" class="container">
         <div class="left sidebar-left">
-            <ul class="sidebar-nav">
+            <ul class="sidebar-nav pinned">
                 <li v-for="(item, index) in ROUTEITEMS"
                     :key="index"
                     :class="{active: routerName === item.pathName}">
@@ -48,6 +48,9 @@
                return this.$route.name
            }
         },
+        mounted(){
+            $(".pinned").pin({padding: {top: 90}})
+        }
     }
 </script>
 

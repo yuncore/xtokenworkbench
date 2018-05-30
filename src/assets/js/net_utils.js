@@ -119,10 +119,10 @@ function formDataRequest(url, data, succ, fail) {
             if(resMsg && resMsg.errorCode && resMsg.errorCode === 5101){
                 window.location.href = ""
             }
-            resolve(resMsg)
+            succ(resMsg)
         },
         error: function (resMsg) {
-            reject(resMsg)
+            fail(resMsg)
         }
     })
 }

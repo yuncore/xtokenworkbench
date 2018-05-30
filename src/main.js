@@ -9,6 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en'
 import Croppa from 'vue-croppa'
 import 'vue-croppa/dist/vue-croppa.css'
+import store from './store'
 
 Vue.use(Croppa);
 Vue.use(VueI18n);
@@ -28,6 +29,7 @@ new Vue({
     el: '#app',
     router,
     i18n,
+    store,
     template: '<App/>',
     components: {App}
 });

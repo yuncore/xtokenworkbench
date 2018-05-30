@@ -65,7 +65,7 @@ module.exports = {
             t1: 'Account',
             t2: 'Password ',
             t3: 'forget the password?',
-            t4: 'login',
+            t4: 'Login',
             t5: 'Admin Login'
         },
         admin:{

@@ -4,27 +4,31 @@
             <div class="page page-front">
                 <div class="page-content">
                     <div class="input-row" style="text-align: center">
-                            <img src="static/img/guan2.svg" :class="[{fadeIn: first}, {delay1: first}]"/>
-                        </div>
+                        <img src="static/img/guan2.svg" :class="[{fadeIn: first}, {delay1: first}]"/>
+                    </div>
                     <div class="input-row">
-                            <label :class="[{fadeIn: first} , 'label']">{{$t('page.login.t1')}}</label>
-                            <input v-model.trim="phone" type="text" :class="[{fadeIn: first}, {delay1: first}, 'input']">
-                        </div>
+                        <label :class="[{fadeIn: first} , 'label']">{{$t('page.login.t1')}}</label>
+                        <input v-model.trim="phone" type="text" :class="[{fadeIn: first}, {delay1: first}, 'input']">
+                    </div>
                     <div class="input-row password">
-                            <label :class="[{fadeIn: first}, {delay2: first} , 'label']">{{$t('page.login.t2')}}</label>
-                            <span class="btn label"  style="display:none;">{{$t('page.login.t3')}}</span>
-                            <input v-model.trim="password" type="password" :class="[{fadeIn: first}, {delay3: first} , 'input']">
-                        </div>
+                        <label :class="[{fadeIn: first}, {delay2: first} , 'label']">{{$t('page.login.t2')}}</label>
+                        <span class="btn label" style="display:none;">{{$t('page.login.t3')}}</span>
+                        <input v-model.trim="password"
+                               type="password"
+                               @keyup.enter="login"
+                               :class="[{fadeIn: first}, {delay3: first} , 'input']">
+                    </div>
                     <div class="input-row perspective">
-                            <button @click="login" :class="[{fadeIn: first}, {delay4: first}, {loading: loading}, 'button', 'load-btn']">
-                                <span class="default"><i class="ion-arrow-right-b"></i>{{$t('page.login.t4')}}</span>
-                                <div class="load-state">
-                                    <div class="ball"></div>
-                                    <div class="ball"></div>
-                                    <div class="ball"></div>
-                                </div>
-                            </button>
-                        </div>
+                        <button @click="login"
+                                :class="[{fadeIn: first}, {delay4: first}, {loading: loading}, 'button', 'load-btn']">
+                            <span class="default"><i class="ion-arrow-right-b"></i>{{$t('page.login.t4')}}</span>
+                            <div class="load-state">
+                                <div class="ball"></div>
+                                <div class="ball"></div>
+                                <div class="ball"></div>
+                            </div>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -37,6 +41,8 @@
 <script>
     import net_util from '../assets/js/net_utils'
     import config from '../assets/js/config'
+    import {mapMutations } from 'vuex'
+
     export default {
         data: function () {
             return {
@@ -48,45 +54,46 @@
                 loading: false,
             }
         },
-        methods:{
-            login(e){
-                e.preventDefault()
-                let url = config.JAVABASEDOMAIN + '/user/login'
-                if(this.phone === ''){
-                    this.$message({type: 'warning', message: this.$t('alert.a1')})
+        methods: {
+            ...mapMutations(['setUserName', 'setIcon']),
+            login(e) {
+                e.preventDefault();
+                let url = config.JAVABASEDOMAIN + '/user/login';
+                if (this.phone === '') {
+                    this.$message({type: 'warning', message: this.$t('alert.a1')});
                     return
                 }
-                if(this.password === ''){
-                    this.$message({type: 'warning', message: this.$t('alert.a2')})
+                if (this.password === '') {
+                    this.$message({type: 'warning', message: this.$t('alert.a2')});
                     return
                 }
-                if(!this.validateMobile(this.phone)){
+                if (!this.validateMobile(this.phone)) {
                     return
                 }
                 let data = {
-                    phone: this.phone ,
+                    phone: this.phone,
                     pwd: this.password,
-                }
+                };
                 let succ = res => {
-                    this.loading = false
-                    if(!res.errorMsg){
-                        this.$message({type: 'success', message: this.$t('alert.a3')})
+                    this.loading = false;
+                    if (!res.errorMsg) {
+                        this.$message({type: 'success', message: this.$t('alert.a3')});
                         let token = res.result.token;
                         let uid = res.result.id;
                         sessionStorage.setItem('token', token);
-                        if(res.result.admin){
+                        if (res.result.admin) {
                             sessionStorage.setItem('admin', true)
                         }
-                        if(res.result.name){
-                            sessionStorage.setItem('name', res.result.name)
+                        if (res.result.name) {
+                            this.setUserName({name: res.result.name});
                         }
-                        if(res.result.icon){
-                            sessionStorage.setItem('icon', res.result.icon)
+                        if (res.result.icon) {
+                            this.setIcon({icon: res.result.icon});
                         }
-                        setTimeout( () => {
+                        setTimeout(() => {
                             this.$router.push({name: 'main'})
                         }, 1000)
-                    }else{
+                    } else {
                         this.$message({type: 'error', message: res.errorMsg})
                     }
                 }
@@ -95,29 +102,29 @@
                     this.$message({type: 'error', message: this.$t('alert.a4')})
                 }
                 this.loading = true
-                setTimeout( () => {
+                setTimeout(() => {
                     net_util.getRequest(url, data, succ, fail)
                 }, 1000)
             },
-            validateMobile(mobile){
+            validateMobile(mobile) {
                 let msg = ''
-                if(mobile.length === 0){
+                if (mobile.length === 0) {
                     msg = this.$t('alert.a5')
-                }else if(mobile.length !== 11){
+                } else if (mobile.length !== 11) {
                     msg = this.$t('alert.a5')
-                }else{
+                } else {
                     var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
-                    if(!myreg.test(mobile)){
-                        msg =  this.$t('alert.a5')
+                    if (!myreg.test(mobile)) {
+                        msg = this.$t('alert.a5')
                     }
                 }
-                if(msg !== ''){
+                if (msg !== '') {
                     this.$message({type: 'warning', message: msg})
                 }
                 return msg === ''
             }
         },
-        mounted(){
+        mounted() {
             var win = $('#window');
             win.removeClass('flip');
         }
@@ -131,7 +138,7 @@
         box-sizing: border-box;
     }
 
-    .login-bg{
+    .login-bg {
         position: fixed;
         width: 100%;
         height: 100%;
@@ -141,37 +148,38 @@
     .rotateplane-enter-active {
         animation: rotateplane .5s;
     }
+
     .rotateplane-leave-active {
         animation: rotateplane .5s reverse;
     }
 
-    #window .page-content .tip{
+    #window .page-content .tip {
         text-align: center;
         color: #b2b2b2;
         font-size: 12px;
     }
 
-    #window .page-content .tip .btn{
+    #window .page-content .tip .btn {
         text-decoration: underline;
         cursor: pointer;
     }
 
-    #window .password .label{
+    #window .password .label {
         display: inline-block;
     }
 
-    #window .password .btn{
+    #window .password .btn {
         font-size: 12px;
         cursor: pointer;
         text-decoration: underline;
         color: #b2b2b2;
     }
 
-    #window .password .btn:hover{
+    #window .password .btn:hover {
         color: #ffffff;
     }
 
-    #window .page-content .tip .btn:hover{
+    #window .page-content .tip .btn:hover {
         color: #ffffff;
     }
 
@@ -196,31 +204,37 @@
         -webkit-transition-property: height, width;
         transition-property: height width;
     }
+
     #window, #window .page, #window .page-content {
         -moz-transition-duration: .3s;
         -o-transition-duration: .3s;
         -webkit-transition-duration: .3s;
         transition-duration: .3s;
     }
+
     #window.flip {
         height: 460px;
         width: 350px;
     }
+
     #window.flip .page-front {
         -moz-transform: rotateX(180deg);
         -ms-transform: rotateX(180deg);
         -webkit-transform: rotateX(180deg);
         transform: rotateX(180deg);
     }
+
     #window.flip .page-back {
         -moz-transform: rotateX(360deg);
         -ms-transform: rotateX(360deg);
         -webkit-transform: rotateX(360deg);
         transform: rotateX(360deg);
     }
+
     #window.flip .page-back .page-content {
         opacity: 1;
     }
+
     #window.flip .page-back .avatar, #window.flip .page-back .welcome, #window.flip .page-back .perspective {
         opacity: 1;
         -moz-transform: none;
@@ -232,24 +246,28 @@
         -webkit-transition-duration: 0.6s;
         transition-duration: 0.6s;
     }
+
     #window.flip .page-back .avatar {
         -moz-transition-delay: 0.8s;
         -o-transition-delay: 0.8s;
         -webkit-transition-delay: 0.8s;
         transition-delay: 0.8s;
     }
+
     #window.flip .page-back .welcome {
         -moz-transition-delay: 0.8s;
         -o-transition-delay: 0.8s;
         -webkit-transition-delay: 0.8s;
         transition-delay: 0.8s;
     }
+
     #window.flip .page-back .perspective {
         -moz-transition-delay: 0.9s;
         -o-transition-delay: 0.9s;
         -webkit-transition-delay: 0.9s;
         transition-delay: 0.9s;
     }
+
     #window .page {
         position: absolute;
         top: 20px;
@@ -273,6 +291,7 @@
         border-radius: 6px;
         padding: 60px;
     }
+
     #window .page-back {
         text-align: center;
         -moz-transform: rotateX(180deg);
@@ -280,9 +299,11 @@
         -webkit-transform: rotateX(180deg);
         transform: rotateX(180deg);
     }
+
     #window .page-back .page-content {
         opacity: 0;
     }
+
     #window .page-back .avatar {
         height: 150px;
         width: 150px;
@@ -298,10 +319,12 @@
         -webkit-border-radius: 1000px;
         border-radius: 1000px;
     }
+
     #window .page-back .welcome {
         font-size: 22px;
         margin-bottom: 40px;
     }
+
     #window .page-back .welcome, #window .page-back .perspective {
         opacity: 0;
         -moz-transform: translateY(-30px);
@@ -309,17 +332,21 @@
         -webkit-transform: translateY(-30px);
         transform: translateY(-30px);
     }
+
     #window .input-row {
         margin: 0 0 30px;
     }
+
     #window .input-row:last-of-type {
         margin-bottom: 0;
     }
+
     #window .perspective {
         -moz-perspective: 1000px;
         -webkit-perspective: 1000px;
         perspective: 1000px;
     }
+
     #window .label {
         font-family: sans-serif;
         text-transform: uppercase;
@@ -329,6 +356,7 @@
         display: block;
         cursor: pointer;
     }
+
     #window .input {
         padding: 0 15px;
         height: 40px;
@@ -346,11 +374,13 @@
         -webkit-transition-duration: 0.2s;
         transition-duration: 0.2s;
     }
+
     #window .input:focus, #window .input.fyll-focus {
         -moz-box-shadow: 0 0 0 3px #008aff;
         -webkit-box-shadow: 0 0 0 3px #008aff;
         box-shadow: 0 0 0 3px #008aff;
     }
+
     #window .button {
         height: 50px;
         line-height: 50px;
@@ -394,9 +424,11 @@
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
     }
+
     #window .button i {
         margin-right: 10px;
     }
+
     #window .button:active, #window .button.fyll-focus {
         background: #008aff;
         background-image: -moz-linear-gradient(bottom, #008aff, #008aff);
@@ -407,16 +439,19 @@
         -webkit-transform: rotateX(20deg);
         transform: rotateX(20deg);
     }
+
     #window .button.inline {
         width: auto;
         display: inline-block;
     }
+
     #window .button.load-btn .default, #window .button.load-btn .load-state {
         -moz-transition-duration: 0.2s;
         -o-transition-duration: 0.2s;
         -webkit-transition-duration: 0.2s;
         transition-duration: 0.2s;
     }
+
     #window .button.load-btn .load-state {
         position: absolute;
         top: -50px;
@@ -427,6 +462,7 @@
         line-height: 50px;
         pointer-events: none;
     }
+
     #window .button.load-btn .load-state .ball {
         height: 10px;
         width: 10px;
@@ -447,22 +483,27 @@
         -webkit-transition-duration: 0.3s;
         transition-duration: 0.3s;
     }
+
     #window .button.load-btn .load-state .ball:nth-child(2n) {
         -webkit-animation-delay: 0.05s;
         -moz-animation-delay: 0.05s;
         animation-delay: 0.05s;
     }
+
     #window .button.load-btn .load-state .ball:nth-child(3n) {
         -webkit-animation-delay: 0.1s;
         -moz-animation-delay: 0.1s;
         animation-delay: 0.1s;
     }
+
     #window .button.load-btn .load-state .ball:last-child {
         margin-right: 0;
     }
+
     #window .button.load-btn.done .ball {
         opacity: 0;
     }
+
     #window .button.load-btn.loading .default {
         -moz-transform: translateY(50px);
         -ms-transform: translateY(50px);
@@ -470,6 +511,7 @@
         transform: translateY(50px);
         opacity: 0;
     }
+
     #window .button.load-btn.loading .load-state {
         -moz-transform: translateY(50px);
         -ms-transform: translateY(50px);
@@ -512,27 +554,28 @@
 
     @-webkit-keyframes rotateplane {
         0% {
-            -webkit-transform:perspective(220px);
+            -webkit-transform: perspective(220px);
         }
         50% {
-            -webkit-transform:perspective(220px) rotateY(180deg);
+            -webkit-transform: perspective(220px) rotateY(180deg);
         }
         100% {
-            -webkit-transform:perspective(220px) rotateY(180deg) rotateX(180deg);
+            -webkit-transform: perspective(220px) rotateY(180deg) rotateX(180deg);
         }
     }
+
     @keyframes rotateplane {
         0% {
-            transform:perspective(120px) rotateY(0) rotateX(0);
-            -webkit-transform:perspective(220px) rotateY(0) rotateX(0);
+            transform: perspective(120px) rotateY(0) rotateX(0);
+            -webkit-transform: perspective(220px) rotateY(0) rotateX(0);
         }
         50% {
-            transform:perspective(120px) rotateY(0) rotateX(-180.1deg);
-            -webkit-transform:perspective(220px) rotateY(0) rotateX(-180.1deg);
+            transform: perspective(120px) rotateY(0) rotateX(-180.1deg);
+            -webkit-transform: perspective(220px) rotateY(0) rotateX(-180.1deg);
         }
         100% {
-            transform:perspective(120px) rotateY(-179.9deg) rotateX(-180deg);
-            -webkit-transform:perspective(220px) rotateY(-179.9deg) rotateX(-180deg);
+            transform: perspective(120px) rotateY(-179.9deg) rotateX(-180deg);
+            -webkit-transform: perspective(220px) rotateY(-179.9deg) rotateX(-180deg);
         }
     }
 
@@ -563,6 +606,7 @@
             width: 450px;
         }
     }
+
     @-moz-keyframes window {
         0% {
             -moz-transform: scale(0) rotateX(360deg);
@@ -590,6 +634,7 @@
             width: 450px;
         }
     }
+
     @keyframes window {
         0% {
             -moz-transform: scale(0) rotateX(360deg);
@@ -617,6 +662,7 @@
             width: 450px;
         }
     }
+
     @-webkit-keyframes fadeIn {
         0% {
             opacity: 0;
@@ -634,6 +680,7 @@
             transform: none;
         }
     }
+
     @-moz-keyframes fadeIn {
         0% {
             opacity: 0;
@@ -651,6 +698,7 @@
             transform: none;
         }
     }
+
     @keyframes fadeIn {
         0% {
             opacity: 0;
@@ -668,6 +716,7 @@
             transform: none;
         }
     }
+
     @-webkit-keyframes ballBounce {
         0% {
             -moz-transform: translateY(25%);
@@ -683,6 +732,7 @@
             transform: translateY(-75%);
         }
     }
+
     @-moz-keyframes ballBounce {
         0% {
             -moz-transform: translateY(25%);
@@ -698,6 +748,7 @@
             transform: translateY(-75%);
         }
     }
+
     @keyframes ballBounce {
         0% {
             -moz-transform: translateY(25%);

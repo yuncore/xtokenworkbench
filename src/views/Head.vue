@@ -35,7 +35,7 @@
             </ul>
         </div>
         <div class="profile">
-            <img :src="avatar">
+            <img :src="icon">
             {{name}}
             <ul class="profile-drop-down-menu">
                 <li>
@@ -51,8 +51,7 @@
 </template>
 
 <script>
-    import Headroom from 'headroom.js'
-    import config from '../assets/js/config'
+    import {mapGetters} from 'vuex'
 
     const MENUITEMS = [
         {
@@ -89,28 +88,14 @@
         data(){
             return {
                 MENUITEMS,
-                name: sessionStorage.getItem('name') || 'yourName',
             }
         },
         computed:{
-            avatar(){
-                let path = sessionStorage.getItem('icon');
-                if(path){
-                    return config.IMGDOMAIN + path
-                }else {
-                    return `static/img/ava-default.svg`
-                }
-            },
+            ...mapGetters(['name', 'icon']),
             routerName(){
                 return this.$route.name
-            }
-        },
-        mounted(){
-            let el = document.querySelector('#head-nav');
-            let headroom = new Headroom(el);
-            headroom.init()
-        }
-    }
+            },
+        },    }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>

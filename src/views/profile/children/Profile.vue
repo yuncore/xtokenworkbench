@@ -3,7 +3,7 @@
         <h3>Profile</h3>
         <p>Modifying your profile will be displayed on your business card and will allow more friends to get to know you.</p>
         <div class="avatar-setting">
-            <img class="avatar" src="../../../../static/img/ava-default.svg">
+            <img class="avatar" :src="avatar">
             <el-button @click="showCroppaDia"
                        type="primary"
                        size="mini"
@@ -13,6 +13,7 @@
         </div>
         <el-form :model="profileForm"
                  :rules="rules"
+                 ref="profileForm"
                  label-position="top"
                  class="profile-form">
             <el-form-item label="Name" prop="name">
@@ -34,7 +35,7 @@
                 </el-input>
             </el-form-item>
             <el-form-item class="operate-button-group">
-                <el-button type="primary" @click="submitForm('changePwdForm', updatePassword)">
+                <el-button type="primary" @click="submitForm('profileForm', updateUserDetail)">
                     Update Profile
                 </el-button>
             </el-form-item>
@@ -57,13 +58,23 @@
 <script>
     import config from '../../../assets/js/config'
     import net_util from '../../../assets/js/net_utils'
+    import { mapMutations } from 'vuex'
 
     export default {
         name: "Profile",
         data(){
+            let validateEmail = (rule, value, callback) => {
+                let reg = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$");
+                if(!reg.test(value)){
+                    callback(new Error('Incorrect email'))
+                }else{
+                    callback()
+                }
+            };
             return {
                 croppa: {},
                 avatarDialogVisible: false,
+                avatar: 'static/img/ava-default.svg',
                 profileForm:{
                     name: '',
                     email: '',
@@ -73,24 +84,65 @@
                 },
                 rules:{
                     name: [
-                        {max: 30, message: 'name is limited in 30 characters'}
+                        {max: 12, min: 0, message: 'name is limited in 12 characters', trigger: 'blur'}
                     ],
                     email: [
-
+                        {validator: validateEmail, trigger: 'blur'}
                     ]
                 },
             }
         },
         methods: {
+            ...mapMutations(['setUserName', 'setIcon']),
             getUserDetail(){
-                let url = config.JAVABASEDOMAIN + `/user/detail`;
+                return new Promise((resolve, reject) => {
+                    let url = config.JAVABASEDOMAIN + `/user/detail`;
+                    let succ = res => {
+                        if (!res.errorMsg) {
+                            let result = res.result;
+                            if(result.icon){
+                                this.avatar = config.IMGDOMAIN + result.icon;
+                                this.setIcon({icon: result.icon})
+                            }else{
+                                this.avatar = 'static/img/ava-default.svg';
+                                this.setIcon({icon: ''})
+                            }
+                            this.profileForm.name = result.name || '';
+                            this.setUserName({name: this.profileForm.name});
+                            this.profileForm.email = result.email || '';
+                            this.profileForm.address = result.address || '';
+                            this.profileForm.personalPage = result.homepage || '';
+                            this.profileForm.intro = result.details || '';
+                            resolve(result)
+                        }else{
+                            reject(res)
+                        }
+                    };
+                    let fail = res => {
+                        reject(res)
+                    };
+                    net_util.getRequest(url, {}, succ, fail)
+                });
+            },
+            updateUserDetail(){
+                let url = config.JAVABASEDOMAIN + '/user/update/detail';
+                let data = {
+                    name: this.profileForm.name,
+                    address: this.profileForm.address,
+                    email: this.profileForm.email,
+                    homepage: this.profileForm.personalPage,
+                    details: this.profileForm.intro
+                };
                 let succ = res => {
-                    if (!res.errorMsg) {
-                        console.log(res)
+                    if (!res.errorMsg){
+                        this.$message({type: 'success', message: this.$t('success')});
+                        this.getUserDetail()
                     }
                 };
-                let fail = res => {};
-                net_util.getRequest(url, {}, succ, fail)
+                let fail = res => {
+                    this.$message({type: 'error', message: this.$t('error')})
+                };
+                net_util.postRequest(url, data, succ, fail)
             },
             showCroppaDia(){
                 this.avatarDialogVisible = true
@@ -100,9 +152,12 @@
                     let formData = new FormData();
                     formData.append('icon', blob);
                     this.uploadImg(formData).then(res => {
-                        console.log(res)
+                        this.$message({type: 'success', message: this.$t('success')});
+                        this.avatarDialogVisible = false;
+                        this.croppa = {};
+                        this.getUserDetail()
                     }).catch(res => {
-                        console.log(res)
+                        this.$message({type: 'error', message: this.$t('error')})
                     })
                 })
             },
@@ -110,7 +165,7 @@
                 return new Promise((resolve, reject) => {
                     let url = config.JAVABASEDOMAIN + '/user/upload';
                     let data = formData;
-                    let succ = res  => {
+                    let succ = res => {
                         if (!res.errorMsg) {
                             resolve(res)
                         }else{
@@ -120,11 +175,20 @@
                     let fail = res => reject(res);
                     net_util.formDataRequest(url, data, succ, fail);
                 })
-            }
+            },
+            submitForm(name, cb){
+                this.$refs[name].validate((valid) => {
+                    if (valid) {
+                        cb()
+                    } else {
+                        return false;
+                    }
+                });
+            },
         },
         mounted(){
             this.getUserDetail()
-        }
+        },
     }
 </script>
 
@@ -144,6 +208,7 @@
             .avatar
                 width 100px
                 height 100px
+                border-radius 50%
             .upload-button
                 margin-left 10px
         .croppa
@@ -151,4 +216,7 @@
             width 200px
             height 200px
             display block
+
+        .croppa-container canvas
+            border-radius 50%!important
 </style>
