@@ -147,7 +147,7 @@
                     <el-table-column label="Name" align="left" width="150px" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <div @click="toCurrencyDetail(scope.row)" class="link">
-                                <img class="currency-logo" style="width: 20px; height: 20px; vertical-align: text-bottom" :src="`../../../static/img/coinLogos/${scope.row.id}.png`">
+                                <img class="currency-logo" style="width: 20px; height: 20px; vertical-align: text-bottom" :src="`static/img/coinLogos/${scope.row.id}.png`">
                                 {{scope.row['symbol']}}
                             </div>
                         </template>
@@ -1083,8 +1083,9 @@
             toCurrencyDetail (row) {
                 let query = {
                     id: row.id,
-                    page: this.currentPage
-                }
+                    page: this.currentPage,
+                    name: row.name
+                };
                 this.$router.push({name: 'CurrencyDetail', query: query})
             },
             toTagManage(){

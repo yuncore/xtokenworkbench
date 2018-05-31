@@ -1,31 +1,46 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import Login from '../views/Login.vue'
+import Register from '../views/Register.vue'
+/*admin*/
+import Admin from '../views/admin/Admin.vue'
+import AdminLogin from '../views/admin/AdminLogin.vue'
+import GroupManagement from '../views/admin/GroupManagement.vue'
+import TagManagement from '../views/admin/TagManagement.vue'
+/*currency detail*/
 import CurrencyList from '../views/currency/CurrencyList.vue'
+import HistoryCurrencyRank from '../views/currency/HistoryCurrencyRank.vue'
 import CurrencyDetail from '../views/currency/CurrencyDetail.vue'
+import TradeHistory from '../views/trade/TradeHistory'
+import PriceContrast from '../views/currency/PriceContrast'
+import Detail from '../views/details/Detail'
+import DetailOverview from '../views/details/children/Overview'
+import Topic from '../views/details/children/Topic'
+import Collector from '../views/details/children/Collector'
+import Group from '../views/details/children/Group'
+import Github from '../views/details/children/Github'
+import Reddit from '../views/details/children/Reddit'
+import Bitcointalk from '../views/details/children/Bitcointalk'
+import Other from '../views/details/children/Other'
+/*event*/
 import EventAdd from '../views/event/EventAdd.vue'
 import EventDetail from '../views/event/EventDetail.vue'
 import EventList from '../views/event/EventList.vue'
-import Login from '../views/Login.vue'
-import Register from '../views/Register.vue'
 import WhitePaperUpload from '../views/other/UploadPdf.vue'
-import Admin from '../views/admin/Admin.vue'
-import AdminLogin from '../views/admin/AdminLogin.vue'
-import KeyWordStat from '../views/kol-keyword/KeyWordStat.vue'
-import KolOverView from '../views/kol-keyword/KolOverView.vue'
-import BttUserHistory from '../views/kol-keyword/BTTUserHistory.vue'
-import HistoryCurrencyRank from '../views/currency/HistoryCurrencyRank.vue'
-import TagManagement from '../views/admin/TagManagement.vue'
-import DummyPage from '../views/other/DummyPage.vue'
+/*predict*/
 import Predict from '../views/predict/PredictRankList.vue'
 import PredictDetail from '../views/predict/PredictDetailList.vue'
-import GroupManagement from '../views/admin/GroupManagement.vue'
-import TradeHistory from '../views/trade/TradeHistory'
+import KeyWordStat from '../views/kol-keyword/KeyWordStat.vue'
+/*setting*/
 import Setting from '../views/profile/Setting'
 import APIKey from '../views/profile/children/APIKey'
 import Password from '../views/profile/children/Password'
 import Profile from '../views/profile/children/Profile'
-import PriceContrast from '../views/currency/PriceContrast'
+/*other*/
+import KolOverView from '../views/kol-keyword/KolOverView.vue'
+import BttUserHistory from '../views/kol-keyword/BTTUserHistory.vue'
+import DummyPage from '../views/other/DummyPage.vue'
 import Main from '../views/Main'
 
 Vue.use(Router);
@@ -58,19 +73,67 @@ export default new Router({
             redirect: '/index/currency/list',
             children: [
                 {
-                    path: 'currency/list',
-                    name: 'currencyList',
-                    component: CurrencyList,
-                },
-                {
                     path: 'admin',
                     name: 'admin',
                     component: Admin
                 },
                 {
+                    path: 'currency/list',
+                    name: 'currencyList',
+                    component: CurrencyList,
+                },
+                {
                     path: 'currency/detail',
                     name: 'CurrencyDetail',
                     component: CurrencyDetail
+                },
+                {
+                    path: 'detail',
+                    name: 'currency_detail',
+                    component: Detail,
+                    redirect: '/index/detail/overview',
+                    children: [
+                        {
+                            path: 'overview',
+                            name: 'currency_overview',
+                            component: DetailOverview
+                        },
+                        {
+                            path: 'topic',
+                            name: 'currency_topic',
+                            component: Topic
+                        },
+                        {
+                            path: 'collector',
+                            name: 'currency_collector',
+                            component: Collector
+                        },
+                        {
+                            path: 'group',
+                            name: 'currency_group',
+                            component: Group
+                        },
+                        {
+                            path: 'github',
+                            name: 'currency_github',
+                            component: Github
+                        },
+                        {
+                            path: 'reddit',
+                            name: 'currency_reddit',
+                            component: Reddit
+                        },
+                        {
+                            path: 'bitcointalk',
+                            name: 'currency_bitcointalk',
+                            component: Bitcointalk
+                        },
+                        {
+                            path: 'other',
+                            name: 'currency_other',
+                            component: Other
+                        }
+                    ]
                 },
                 {
                     path: 'event/add',
