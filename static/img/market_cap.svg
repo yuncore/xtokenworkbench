@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="28px" viewBox="0 0 30 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>项目详情-总市值</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="96.0395592%" id="linearGradient-1">
+            <stop stop-color="#FDAD68" offset="0%"></stop>
+            <stop stop-color="#FD4242" offset="100%"></stop>
+        </linearGradient>
+        <path d="M14.0517597,22.5415057 L3.47497607,9.72735239 C3.1611599,9.3453131 3.12252786,8.81206509 3.37811126,8.39030238 L6.90370581,2.56543308 C7.11524148,2.21457101 7.49771507,2 7.91081503,2 L22.0131932,2 C22.4262932,2 22.8080545,2.21457101 23.0210147,2.566132 L26.5466092,8.39030238 C26.8017909,8.81235105 26.7625895,9.34561495 26.4483199,9.72735239 L15.8715363,22.5415057 C15.6486048,22.8112921 15.3145636,22.967852 14.9620041,22.967852 C14.6094447,22.967852 14.2754035,22.8112921 14.0517597,22.5415057 Z M5.81825003,8.8858426 L14.9620041,19.9638578 L24.105046,8.8858426 L21.3472476,4.32952836 L8.57676067,4.32952836 L5.81896226,8.88654153 L5.81825003,8.8858426 Z M20.837995,10.1543977 L9.08601321,10.1543977 C8.43716136,10.1543977 7.91081503,9.63299706 7.91081503,8.989284 C7.91081503,8.34626987 8.43716136,7.82417035 9.08601321,7.82417037 L20.837995,7.82417037 C21.4868469,7.82417037 22.0131932,8.34626989 22.0131932,8.989284 C22.0131932,9.63229812 21.4868469,10.1543977 20.837995,10.1543977 Z" id="path-2"></path>
+        <filter x="-21.3%" y="-19.1%" width="142.5%" height="147.7%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 0.345098039   0 0 0 0 0.345098039  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-4" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Shape" fill-rule="nonzero">
+            <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+            <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+        </g>
+    </g>
+</svg>
