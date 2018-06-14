@@ -9,20 +9,19 @@ import AdminLogin from '../views/admin/AdminLogin.vue'
 import GroupManagement from '../views/admin/GroupManagement.vue'
 import TagManagement from '../views/admin/TagManagement.vue'
 /*currency detail*/
-import CurrencyList from '../views/currency/CurrencyList.vue'
+import CurrencyList from '../views/currency/CurrencyListNew.vue'
 import HistoryCurrencyRank from '../views/currency/HistoryCurrencyRank.vue'
 import CurrencyDetail from '../views/currency/CurrencyDetail.vue'
 import TradeHistory from '../views/trade/TradeHistory'
 import PriceContrast from '../views/currency/PriceContrast'
 import Detail from '../views/details/Detail'
 import DetailOverview from '../views/details/children/Overview'
-import Topic from '../views/details/children/Topic'
-import Collector from '../views/details/children/Collector'
-import Group from '../views/details/children/Group'
+import Charts from '../views/details/children/Charts'
 import Github from '../views/details/children/Github'
 import Reddit from '../views/details/children/Reddit'
 import Bitcointalk from '../views/details/children/Bitcointalk'
 import Other from '../views/details/children/Other'
+import Event from '../views/details/children/Events'
 /*event*/
 import EventAdd from '../views/event/EventAdd.vue'
 import EventDetail from '../views/event/EventDetail.vue'
@@ -37,6 +36,10 @@ import Setting from '../views/profile/Setting'
 import APIKey from '../views/profile/children/APIKey'
 import Password from '../views/profile/children/Password'
 import Profile from '../views/profile/children/Profile'
+/*manage*/
+import Manage from '../views/manage/Manage'
+import TagManage from '../views/manage/children/TagManage'
+import GroupManage from '../views/manage/children/GroupManage'
 /*other*/
 import KolOverView from '../views/kol-keyword/KolOverView.vue'
 import BttUserHistory from '../views/kol-keyword/BTTUserHistory.vue'
@@ -99,19 +102,9 @@ export default new Router({
                             component: DetailOverview
                         },
                         {
-                            path: 'topic',
-                            name: 'currency_topic',
-                            component: Topic
-                        },
-                        {
-                            path: 'collector',
-                            name: 'currency_collector',
-                            component: Collector
-                        },
-                        {
-                            path: 'group',
-                            name: 'currency_group',
-                            component: Group
+                            path: 'charts',
+                            name: 'currency_charts',
+                            component: Charts
                         },
                         {
                             path: 'github',
@@ -132,6 +125,11 @@ export default new Router({
                             path: 'other',
                             name: 'currency_other',
                             component: Other
+                        },
+                        {
+                            path: 'event',
+                            name: 'currency_event',
+                            component: Event
                         }
                     ]
                 },
@@ -229,6 +227,24 @@ export default new Router({
                             name: 'setting-password',
                             path: 'password',
                             component: Password,
+                        }
+                    ]
+                },
+                {
+                    name: 'manage',
+                    path: 'manage',
+                    redirect: '/index/manage/tag',
+                    component: Manage,
+                    children: [
+                        {
+                            name: 'tag-manage',
+                            path: 'tag',
+                            component: TagManage
+                        },
+                        {
+                            name: 'group-manage',
+                            path: 'group',
+                            component: GroupManage
                         }
                     ]
                 }

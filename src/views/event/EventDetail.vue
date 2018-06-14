@@ -17,6 +17,7 @@
                             <p>
                                 <img src="../../../static/img/chart.svg"/>
                                 <span v-for="(item, index) in statType"
+                                :key="index"
                                       v-if="item.show"
                                       :class='{active: statTypeActiveIndex == index}'
                                       @click="statTypeBtnClick(item.type, index)">

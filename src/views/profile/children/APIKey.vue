@@ -67,199 +67,228 @@
 </template>
 
 <script>
-    import net_util from '../../../assets/js/net_utils'
-    import config from '../../../assets/js/config'
+import net_util from "../../../assets/js/net_utils";
+import config from "../../../assets/js/config";
 
-    export default {
-        name: "APIKey",
-        data(){
-            return {
-                apiFormVisible: false,
-                APIForm: {
-                    name: '',
-                    apiKey: '',
-                    secretKey: '',
-                    exchange: ''
-                },
-                currentExchange: '',
-                exchangeList: [],
-                bindAPIList: [],
-                exchangeDisplayList: [],
-            }
-        },
-        methods:{
-            addAPIKey(){
-                let url = config.JAVABASEDOMAIN + `/user/bourse/bind`;
-                if(!this.currentExchange){
-                    console.log('empty exchange');
-                    return
-                }
-                let data = {
-                    type: this.currentExchange,
-                    key: this.APIForm.apiKey,
-                    secret: this.APIForm.secretKey,
-                    name: this.APIForm.name
-                };
-                let succ = res => {
-                    if (!res.errorMsg) {
-                        this.$message({type: 'success', message: this.$t('success')});
-                        this.init()
-                    }
-                };
-                let fail = res => {
-                    this.$message({type: 'error', message: this.$t('error')})
-                };
-                net_util.getRequest(url, data, succ, fail)
-            },
-            getBindAPIList(){
-                return new Promise((resolve, reject) => {
-                    let url = config.JAVABASEDOMAIN + `/user/bourse/bind/list`;
-                    let data = {};
-                    let succ = res => {
-                        if (!res.errorMsg) {
-                            this.bindAPIList = res.result;
-                            resolve(res.result);
-                        }
-                    };
-                    let fail = res => {
-                        reject(res)
-                    };
-                    net_util.getRequest(url, data, succ, fail)
-                });
-            },
-            getExchangeList(){
-                return new Promise((resolve, reject) => {
-                    let url = config.JAVABASEDOMAIN + `/user/bourse/list`;
-                    let succ = res => {
-                        if (!res.errorMsg) {
-                            this.exchangeList = res.result
-                            resolve(res)
-                        }
-                    };
-                    let fail = res => {
-                        reject(res)
-                    };
-                    net_util.getRequest(url, {}, succ, fail)
-                });
-            },
-            removeAPI(id){
-                let url = config.JAVABASEDOMAIN + `/user/bourse/remove`;
-                let data = {
-                    type: id,
-                };
-                let succ = res => {
-                    if (!res.errorMsg) {
-                        this.$message({type: 'success', message: this.$t('success')});
-                        this.init()
-                    }
-                };
-                let fail = res => {
-                    this.$message({type: 'error', message: this.$t('error')})
-                };
-                net_util.getRequest(url, data, succ, fail)
-            },
-            showAddForm(item, index){
-                this.exchangeList.forEach((item, index) => {
-                    if(item.addFormVisiable === true){
-                        let newItem = item;
-                        item.addFormVisiable = false;
-                        this.exchangeDisplayList.splice(index, 1, newItem)
-                    }
-                });
-                let newItem = item;
-                newItem.addFormVisiable = true;
-                this.exchangeDisplayList.splice(index, 1, newItem);
-                this.currentExchange = item.id
-            },
-            hideAddForm(item, index){
-                let newItem = item;
-                newItem.addFormVisiable = false;
-                this.exchangeDisplayList.splice(index, 1, newItem);
-                this.currentExchange = '';
-                this.resetForm('APIForm', index)
-            },
-            submitForm(name, index, cb){
-                this.$refs[name][index].validate((valid) => {
-                    if (valid) {
-                        cb()
-                    } else {
-                        return false;
-                    }
-                });
-            },
-            resetForm(name, index){
-                this.$refs[name][index].resetFields();
-            },
-            init(){
-                this.exchangeDisplayList = [];
-                this.getExchangeList().then(res => {
-                    return this.getBindAPIList()
-                }).then(res => {
-                    this.exchangeList.forEach(item1 => {
-                        let displayItem = item1;
-                        displayItem.addFormVisiable = false;
-                        this.bindAPIList.forEach(item2 => {
-                            if (item1.id === item2.type){
-                                displayItem.hasKey = true;
-                                displayItem.name = item2.name
-                            }
-                        });
-                        this.exchangeDisplayList.push(displayItem)
-                    })
-                })
-            }
-        },
-        mounted(){
-            this.init()
+export default {
+  name: "APIKey",
+  data() {
+    return {
+      apiFormVisible: false,
+      APIForm: {
+        name: "",
+        apiKey: "",
+        secretKey: "",
+        exchange: ""
+      },
+      currentExchange: "",
+      exchangeList: [],
+      bindAPIList: [],
+      exchangeDisplayList: []
+    };
+  },
+  methods: {
+    addAPIKey() {
+      let url = config.JAVABASEDOMAIN + `/user/bourse/bind`;
+      if (!this.currentExchange) {
+        console.log("empty exchange");
+        return;
+      }
+      let data = {
+        type: this.currentExchange,
+        key: this.APIForm.apiKey,
+        secret: this.APIForm.secretKey,
+        name: this.APIForm.name
+      };
+      let succ = res => {
+        if (!res.errorMsg) {
+          this.$message({ type: "success", message: this.$t("success") });
+          this.init();
         }
+      };
+      let fail = res => {
+        this.$message({ type: "error", message: this.$t("error") });
+      };
+      net_util.getRequest(url, data, succ, fail);
+    },
+    getBindAPIList() {
+      return new Promise((resolve, reject) => {
+        let url = config.JAVABASEDOMAIN + `/user/bourse/bind/list`;
+        let data = {};
+        let succ = res => {
+          if (!res.errorMsg) {
+            this.bindAPIList = res.result;
+            resolve(res.result);
+          }
+        };
+        let fail = res => {
+          reject(res);
+        };
+        net_util.getRequest(url, data, succ, fail);
+      });
+    },
+    getExchangeList() {
+      return new Promise((resolve, reject) => {
+        let url = config.JAVABASEDOMAIN + `/user/bourse/list`;
+        let succ = res => {
+          if (!res.errorMsg) {
+            this.exchangeList = res.result;
+            resolve(res);
+          }
+        };
+        let fail = res => {
+          reject(res);
+        };
+        net_util.getRequest(url, {}, succ, fail);
+      });
+    },
+    removeAPI(id) {
+      let url = config.JAVABASEDOMAIN + `/user/bourse/remove`;
+      let data = {
+        type: id
+      };
+      let succ = res => {
+        if (!res.errorMsg) {
+          this.$message({ type: "success", message: this.$t("success") });
+          this.init();
+        }
+      };
+      let fail = res => {
+        this.$message({ type: "error", message: this.$t("error") });
+      };
+      net_util.getRequest(url, data, succ, fail);
+    },
+    showAddForm(item, index) {
+      this.exchangeList.forEach((item, index) => {
+        if (item.addFormVisiable === true) {
+          let newItem = item;
+          item.addFormVisiable = false;
+          this.exchangeDisplayList.splice(index, 1, newItem);
+        }
+      });
+      let newItem = item;
+      newItem.addFormVisiable = true;
+      this.exchangeDisplayList.splice(index, 1, newItem);
+      this.currentExchange = item.id;
+    },
+    hideAddForm(item, index) {
+      let newItem = item;
+      newItem.addFormVisiable = false;
+      this.exchangeDisplayList.splice(index, 1, newItem);
+      this.currentExchange = "";
+      this.resetForm("APIForm", index);
+    },
+    submitForm(name, index, cb) {
+      this.$refs[name][index].validate(valid => {
+        if (valid) {
+          cb();
+        } else {
+          return false;
+        }
+      });
+    },
+    resetForm(name, index) {
+      this.$refs[name][index].resetFields();
+    },
+    init() {
+      this.exchangeDisplayList = [];
+      this.getExchangeList()
+        .then(res => {
+          return this.getBindAPIList();
+        })
+        .then(res => {
+          this.exchangeList.forEach(item1 => {
+            let displayItem = item1;
+            displayItem.addFormVisiable = false;
+            this.bindAPIList.forEach(item2 => {
+              if (item1.id === item2.type) {
+                displayItem.hasKey = true;
+                displayItem.name = item2.name;
+              }
+            });
+            this.exchangeDisplayList.push(displayItem);
+          });
+        });
     }
+  },
+  mounted() {
+    this.init();
+  }
+};
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-    #apiKey
-        h3
-            margin 0
-            font-size 30px
-            font-weight normal
-        h4
-            font-weight normal
-            line-height 40px
-            height 40px
-            border-bottom 1px solid #d8d8d8
-        p
-            margin-top 5px
-            margin-bottom 20px
-            font-size 14px
-        .exchange-list
-            li
-                margin-bottom 50px
-                &:last-child
-                    margin-bottom 0
-        .addform-button-group
-            display inline
-            .addform-button
-                margin-right 20px
-        .api-content
-            padding 10px 0
-            border 1px solid #DDDDDD
-            background #FFF
-            border-radius 3px
-            .api-key-logo
-                display inline-block
-                vertical-align middle
-                margin-left 20px
-                line-height 100%
-                img
-                    width 40px
-                    height 40px
-            p
-                display inline-block
-                margin 0
-                margin-left 20px
-            .unbind-button
-                margin-right 20px
-                margin-top 5px
-        .form-content
-            padding 10px 20px
-            background #FFF
+#apiKey {
+    h3 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+    h4 {
+        font-weight: normal;
+        line-height: 40px;
+        height: 40px;
+        border-bottom: 1px solid #d8d8d8;
+    }
+
+    p {
+        margin-top: 5px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .exchange-list {
+        li {
+            margin-bottom: 50px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .addform-button-group {
+        display: inline;
+
+        .addform-button {
+            margin-right: 20px;
+        }
+    }
+
+    .api-content {
+        padding: 10px 0;
+        border: 1px solid #DDDDDD;
+        background: #FFF;
+        border-radius: 3px;
+
+        .api-key-logo {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 20px;
+            line-height: 100%;
+
+            img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        p {
+            display: inline-block;
+            margin: 0;
+            margin-left: 20px;
+        }
+
+        .unbind-button {
+            margin-right: 20px;
+            margin-top: 5px;
+        }
+    }
+
+    .form-content {
+        padding: 10px 20px;
+        background: #FFF;
+    }
+}
 </style>

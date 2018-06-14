@@ -55,8 +55,8 @@
     }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
-    @import url('../../static/css/base.styl');
+<style lang="stylus" rel="stylesheet/stylus" scoped>
+    @import '../../static/css/base.styl'
 
     .back-top-fade-enter,
     .back-top-fade-leave-active {

@@ -13,7 +13,7 @@ html, body {
 }
 
 body{
-    font-family: -apple-system, PingFangSC-Regular, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: PingFangSC-Regular, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 
@@ -42,3 +42,5 @@ a {
 .cf:after{
     clear: both;
 }
+
+

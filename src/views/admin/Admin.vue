@@ -136,211 +136,211 @@
     </div>
 </template>
 <script>
-    import EPaper from '../../components/EPaperAdmin.vue'
-    import net_util from '../../assets/js/net_utils'
-    import config from '../../assets/js/config'
-    import utils from '../../assets/js/utils'
+import EPaper from "../../components/EPaperAdmin.vue";
+import net_util from "../../assets/js/net_utils";
+import config from "../../assets/js/config";
+import utils from "../../assets/js/utils";
 
-    export default{
-        data: function () {
-            return {
-                baseUrl:{
-                    first: config.JAVABASEDOMAIN + '/user/site/list',
-                    second :config.JAVABASEDOMAIN + '/user/site/list/audit',
-                    three :config.JAVABASEDOMAIN + '/code/list'
-                },
-                urlParams: {
-                    first: {
-                        page: 1,
-                        num: 10
-                    },
-                    second: {
-                        page: 1,
-                        num: 10
-                    },
-                    three: {
-                        page: 1,
-                        num: 10,
-                        isUse: true
-                    }
-
-                },
-                tableData: [],
-                ia: false,
-
-                info: {},
-
-                activeName: 'first',
-
-                arrZ: [],
-                iaZ: false
-            }
+export default {
+  data: function() {
+    return {
+      baseUrl: {
+        first: config.JAVABASEDOMAIN + "/user/site/list",
+        second: config.JAVABASEDOMAIN + "/user/site/list/audit",
+        three: config.JAVABASEDOMAIN + "/code/list"
+      },
+      urlParams: {
+        first: {
+          page: 1,
+          num: 10
         },
-        watch: {
-
+        second: {
+          page: 1,
+          num: 10
         },
-        methods:{
-            bindDataToGrid: function (event) {
-                if(event.data && event.data.result && event.data.result.list){
-                    this.tableData = event.data.result.list;
-                }else{
-                    this.tableData = null
-                }
-            },
-            handleClick(tab, event) {
-
-            },
-            add(){
-                sessionStorage.setItem("userPhoneBeifen", sessionStorage.getItem("userPhone"));
-                this.ia = true;
-            },
-            submit(row){
-
-            },
-            changeNum(row){
-                this.$prompt(this.$t('page.admin.a1'), this.$t('prompt'), {
-                    confirmButtonText: this.$t('confirm'),
-                    cancelButtonText: this.$t('cancel'),
-                    inputPattern: /^[1-9]*[1-9][0-9]*$/,
-                    inputErrorMessage: this.$t('alert.a1')
-                }).then(({ value }) => {
-                    /*this.$message({
-                        type: 'success',
-                        message: '你的邮箱是: ' + value
-                    });*/
-                    var self = this;
-                    var url =config.JAVABASEDOMAIN + '/user/site/set/invite';
-                    var data = {
-                        uId: row.id,
-                        num: value
-                    };
-                    var succ = data => {
-                        if(data.errorMsg == null || data.errorMsg == ""){
-                            self.$message({type: 'success', message: this.$t('success')});
-                            setTimeout(function(){
-                                for(var i=0; i<self.tableData.length; i++){
-                                    if(self.tableData[i].id == row.id){
-                                        self.tableData[i]["inviteNum"] = value;
-                                        break;
-                                    }
-                                }
-                            },1500);
-                        } else {
-                            self.$message({ type: 'error', message: data.errorMsg});
-                        }
-                    }
-                    var fail = data => {
-                        self.$message({ type: 'error', message: data.errorMsg});
-                    }
-                    net_util.getRequest(url, data, succ, fail, this, "admin");
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: this.$t('cancel2')
-                    });
-                });
-            },
-            createLink(){
-                this.$prompt(this.$t('page.admin.a2'), this.$t('prompt'), {
-                    confirmButtonText: this.$t('confirm'),
-                    cancelButtonText: this.$t('cancel'),
-                    inputPattern: /^[1-9]*[1-9][0-9]*$/,
-                    inputErrorMessage: this.$t('alert.a1')
-                }).then(({ value }) => {
-                    /*this.$message({
-                        type: 'success',
-                        message: '你的邮箱是: ' + value
-                    });*/
-                    var self = this;
-                    var url =config.JAVABASEDOMAIN + '/code/create';
-                    var data = {
-                        num: value
-                    };
-                    var succ =  data => {
-                        if(data.errorMsg == null || data.errorMsg == ""){
-                            self.$message({type: 'success', message: this.$t('success')});
-                            setTimeout(function(){
-                                self.arrZ = data.result
-                                self.iaZ =true;
-                            },1000);
-                        } else {
-                            self.$message({ type: 'error', message: data.errorMsg});
-                        }
-                    }
-                    var fail = data => {
-                        self.$message({ type: 'error', message: data.errorMsg});
-                    }
-                    net_util.getRequest(url, data, succ, fail, this, 'admin');
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: this.$t('cancel2')
-                    });
-                });
-            },
-            auditSucc(num){
-                this.$confirm(this.$t('confirm2'), this.$t('prompt'), {
-                    confirmButtonText: this.$t('confirm'),
-                    cancelButtonText: this.$t('cancel'),
-                    type: 'warning'
-                }).then(() => {
-                    var self = this;
-                    var url =config.JAVABASEDOMAIN + '/user/site/audit';
-                    var data = {
-                        uId: num
-                    };
-                    var succ =  data => {
-                        if(data.errorMsg == null || data.errorMsg == ""){
-                            self.$message({type: 'success', message: this.$t('success')});
-                            setTimeout(function(){
-                                for(var i=0; i<self.tableData.length; i++){
-                                    if(self.tableData[i].id == num){
-                                        self.tableData.splice(i , 1);
-                                        break;
-                                    }
-                                }
-                            },1500);
-                        } else {
-                            self.$message({ type: 'error', message: data.errorMsg});
-                        }
-                    }
-                    var fail = data => {
-                        self.$message({ type: 'error', message: data.errorMsg});
-                    }
-                    net_util.getRequest(url, data, succ, fail, this, 'admin');
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: this.$t('cancel3')
-                    });
-                });
-            },
-            getTimeForLong: function (longTime, flag) {
-                if(longTime == '' || longTime == null || longTime == undefined)
-                    return "- -"
-                else
-                    return utils.getSmpFormatDateByLong(longTime, true);
-            }
-        },
-        components:{
-            EPaper,
+        three: {
+          page: 1,
+          num: 10,
+          isUse: true
         }
+      },
+      tableData: [],
+      ia: false,
+
+      info: {},
+
+      activeName: "first",
+
+      arrZ: [],
+      iaZ: false
+    };
+  },
+  watch: {},
+  methods: {
+    bindDataToGrid: function(event) {
+      if (event.data && event.data.result && event.data.result.list) {
+        this.tableData = event.data.result.list;
+      } else {
+        this.tableData = null;
+      }
+    },
+    handleClick(tab, event) {},
+    add() {
+      sessionStorage.setItem(
+        "userPhoneBeifen",
+        sessionStorage.getItem("userPhone")
+      );
+      this.ia = true;
+    },
+    submit(row) {},
+    changeNum(row) {
+      this.$prompt(this.$t("page.admin.a1"), this.$t("prompt"), {
+        confirmButtonText: this.$t("confirm"),
+        cancelButtonText: this.$t("cancel"),
+        inputPattern: /^[1-9]*[1-9][0-9]*$/,
+        inputErrorMessage: this.$t("alert.a1")
+      })
+        .then(({ value }) => {
+          /*this.$message({
+                        type: 'success',
+                        message: '你的邮箱是: ' + value
+                    });*/
+          var self = this;
+          var url = config.JAVABASEDOMAIN + "/user/site/set/invite";
+          var data = {
+            uId: row.id,
+            num: value
+          };
+          var succ = data => {
+            if (data.errorMsg == null || data.errorMsg == "") {
+              self.$message({ type: "success", message: this.$t("success") });
+              setTimeout(function() {
+                for (var i = 0; i < self.tableData.length; i++) {
+                  if (self.tableData[i].id == row.id) {
+                    self.tableData[i]["inviteNum"] = value;
+                    break;
+                  }
+                }
+              }, 1500);
+            } else {
+              self.$message({ type: "error", message: data.errorMsg });
+            }
+          };
+          var fail = data => {
+            self.$message({ type: "error", message: data.errorMsg });
+          };
+          net_util.getRequest(url, data, succ, fail, this, "admin");
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: this.$t("cancel2")
+          });
+        });
+    },
+    createLink() {
+      this.$prompt(this.$t("page.admin.a2"), this.$t("prompt"), {
+        confirmButtonText: this.$t("confirm"),
+        cancelButtonText: this.$t("cancel"),
+        inputPattern: /^[1-9]*[1-9][0-9]*$/,
+        inputErrorMessage: this.$t("alert.a1")
+      })
+        .then(({ value }) => {
+          /*this.$message({
+                        type: 'success',
+                        message: '你的邮箱是: ' + value
+                    });*/
+          var self = this;
+          var url = config.JAVABASEDOMAIN + "/code/create";
+          var data = {
+            num: value
+          };
+          var succ = data => {
+            if (data.errorMsg == null || data.errorMsg == "") {
+              self.$message({ type: "success", message: this.$t("success") });
+              setTimeout(function() {
+                self.arrZ = data.result;
+                self.iaZ = true;
+              }, 1000);
+            } else {
+              self.$message({ type: "error", message: data.errorMsg });
+            }
+          };
+          var fail = data => {
+            self.$message({ type: "error", message: data.errorMsg });
+          };
+          net_util.getRequest(url, data, succ, fail, this, "admin");
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: this.$t("cancel2")
+          });
+        });
+    },
+    auditSucc(num) {
+      this.$confirm(this.$t("confirm2"), this.$t("prompt"), {
+        confirmButtonText: this.$t("confirm"),
+        cancelButtonText: this.$t("cancel"),
+        type: "warning"
+      })
+        .then(() => {
+          var self = this;
+          var url = config.JAVABASEDOMAIN + "/user/site/audit";
+          var data = {
+            uId: num
+          };
+          var succ = data => {
+            if (data.errorMsg == null || data.errorMsg == "") {
+              self.$message({ type: "success", message: this.$t("success") });
+              setTimeout(function() {
+                for (var i = 0; i < self.tableData.length; i++) {
+                  if (self.tableData[i].id == num) {
+                    self.tableData.splice(i, 1);
+                    break;
+                  }
+                }
+              }, 1500);
+            } else {
+              self.$message({ type: "error", message: data.errorMsg });
+            }
+          };
+          var fail = data => {
+            self.$message({ type: "error", message: data.errorMsg });
+          };
+          net_util.getRequest(url, data, succ, fail, this, "admin");
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: this.$t("cancel3")
+          });
+        });
+    },
+    getTimeForLong: function(longTime, flag) {
+      if (longTime == "" || longTime == null || longTime == undefined)
+        return "- -";
+      else return utils.getSmpFormatDateByLong(longTime, true);
     }
+  },
+  components: {
+    EPaper
+  }
+};
 </script>
 <style scoped>
-    .top-filter{
-        margin-top: 20px;
-    }
+.top-filter {
+  margin-top: 20px;
+}
 
-    .list-content{
-        margin-top: 20px;
-    }
+.list-content {
+  margin-top: 20px;
+}
 
-    .list-content::before{
-        clear: both;
-    }
+.list-content::before {
+  clear: both;
+}
 
-    .list-top{
-
-    }
+.list-top {
+}
 </style>

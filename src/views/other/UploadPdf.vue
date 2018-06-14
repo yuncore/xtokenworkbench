@@ -23,7 +23,7 @@
                                 <div class="upFileTitle">6</div>
                             </div>-->
                         <div style=" height: 100%; width: 100%;">
-                            <div v-for="(item, index) in dataList" :style="{'height': '100%','width':'20%', 'float': 'left'}"> <!--@click="submitA"-->
+                            <div v-for="(item, index) in dataList" :key='index' :style="{'height': '100%','width':'20%', 'float': 'left'}"> <!--@click="submitA"-->
                                 <div style="height: calc(100% - 40px); width: calc(100% - 26px); margin:20px 13px; border-radius: 4px;box-shadow: 0 2px 12px 0 black; float: left; border-radius: 1px; overflow: hidden; background-color: white;">
                                     <div style="height: 450px; width:100%; border: 1px white solid; border-bottom-color: black;">
                                       <div :class="'pdfIn' + index" style="width:calc(100% + 11px); height:calc(100% + 11px); background-color: white;"></div>
@@ -86,249 +86,310 @@
     </div>
 </template>
 <script>
-    import net_util from '../../assets/js/net_utils'
-    import config from '../../assets/js/config'
-    import utils from '../../assets/js/utils'
-    import consts from '../../assets/js/consts'
-    import RichEditor from '../../components/editor/Editor.vue'
-    import { Loading } from 'element-ui';
+import net_util from "../../assets/js/net_utils";
+import config from "../../assets/js/config";
+import utils from "../../assets/js/utils";
+import consts from "../../assets/js/consts";
+import RichEditor from "../../components/editor/Editor.vue";
+import { Loading } from "element-ui";
 
+export default {
+  data: function() {
+    return {
+      dialogK: false,
+      strK: "",
 
-    export default {
-        data: function () {
-            return {
-                dialogK: false,
-                strK: '',
+      currencyId: "",
+      dataList: [
+        /*{"jpgPrefix":"201801/bitcoin_en","language":"en","name":"tt","saveDir":"201801","source":"201801/xt151540555182510.pdf","time":1515413500521}*/
+      ],
+      obj: null,
 
-                currencyId: '',
-                dataList: [
-                    /*{"jpgPrefix":"201801/bitcoin_en","language":"en","name":"tt","saveDir":"201801","source":"201801/xt151540555182510.pdf","time":1515413500521}*/
-                ],
-                obj: null,
+      dialogZ: false
+    };
+  },
+  watch: {},
+  methods: {
+    showPdf(urlEnd) {
+      this.dialogZ = true;
+      setTimeout(function() {
+        PDFObject.embed(
+          "http://jsrelease-file.yunmaster.cn/store/doc/" + urlEnd,
+          ".pdfBig"
+        );
+      }, 360);
+    },
+    fileSubmit() {
+      this.strK = $("#fileA").val() + "   ";
+      this.dialogK = true;
+      this.run();
+    },
+    fileSubmitNext() {
+      var self = this;
+      var formData = new FormData(document.querySelector("#uploadFormA"));
+      $.ajax({
+        type: "post",
+        url: config.JAVABASEDOMAIN + "/upload/file",
+        data: formData,
+        processData: false,
+        contentType: false,
+        async: false,
+        success: function(res) {
+          console.log(JSON.stringify(res));
+          //alert("aa" + JSON.stringify(res))
+          self.runNext(res.responseText);
+        },
+        error: function(err) {
+          console.log(JSON.stringify(err));
+          //alert("bb"+JSON.stringify(err));
+          self.runNext(err.responseText);
+        }
+      });
+    },
+    getValue(str) {
+      return $("input[name=" + str + "]").val();
+    },
+    run() {
+      console.log("liuYuting");
+      var self = this;
+      setTimeout(function() {
+        var bar = document.getElementById("barK");
+        var total = document.getElementById("totalK");
+        bar.style.width =
+          parseInt(bar.style.width) + self.getRandomNum(10, 25) + "%";
+        total.innerHTML = bar.style.width;
+        if (Number(bar.style.width.replace("%", "")) >= 75) {
+          bar.style.width = "100%";
+          total.innerHTML = "100%";
+          window.clearTimeout(timeout);
+          this.dialogK = false;
+          self.fileSubmitNext();
+          return;
+        }
+        var timeout = window.setTimeout(self.run(), 100);
+      }, 500);
+    },
+    runNext(path) {
+      var bar = document.getElementById("barK");
+      var total = document.getElementById("totalK");
+      bar.style.width = "0%";
+      total.innerHTML = "0%";
+      this.dialogK = false;
+      //this.$message({type: 'success', message: '已上传!'});
+      var file = document.getElementById("fileA");
+      // for IE, Opera, Safari, Chrome
+      if (file.outerHTML) {
+        file.outerHTML = file.outerHTML;
+      } else {
+        // FF(包括3.5)
+        file.value = "";
+      }
+      this.eventAddSummit(path);
+    },
+    eventAddSummit(path) {
+      var loadingInstance = Loading.service({ fullscreen: true });
 
-                dialogZ: false
+      var self = this;
+      var url = config.JAVABASEDOMAIN + "/book/site/add";
+      var data = {
+        currencyId: this.currencyId,
+        name: this.obj.name,
+        source: path,
+        language: this.obj.language
+      };
+      var succ = function success(data) {
+        loadingInstance.close();
+        //alert("aa"+JSON.stringify(data));
+        if (data.errorCode == 0) {
+          self.$message({ type: "success", message: "已上传文件!" });
+          setTimeout(function() {
+            window.location.reload();
+          }, 1000);
+        } else {
+          self.$message({ type: "error", message: data.errorMsg });
+        }
+      };
+      var fail = function error(data) {
+        loadingInstance.close();
+        self.$message({ type: "error", message: JSON.stringify(data) });
+        //alert("bb"+JSON.stringify(data));
+      };
+      console.log(JSON.stringify(data));
+      net_util.getRequest(url, data, succ, fail, this);
+    },
+    getRandomNum(Min, Max) {
+      var Range = Max - Min;
+      var Rand = Math.random();
+      return Min + Math.round(Rand * Range);
+    },
+    submitA(item) {
+      this.obj = item;
+      $("#fileA").click();
+    },
+    getListData(id) {
+      var self = this;
+      var url = config.JAVABASEDOMAIN + "/book/site/list";
+      var data = {
+        currencyId: this.currencyId
+      };
+      var succ = function success(data) {
+        console.log(JSON.stringify(data));
+        //self.listData = data.result;
+        self.chuliRtnListData(data.result);
+      };
+      var fail = function error(data) {
+        //alert("bb"+JSON.stringify(data));
+      };
+      console.log(JSON.stringify(data));
+      net_util.getRequest(url, data, succ, fail, this);
+    },
+    chuliRtnListData(arr) {
+      var list = [
+        {
+          jpgPrefix: "",
+          language: "en",
+          name: "英文原版",
+          saveDir: "",
+          source: "",
+          time: null
+        },
+        {
+          jpgPrefix: "",
+          language: "ch1",
+          name: "中文翻译版（1）",
+          saveDir: "",
+          source: "",
+          time: null
+        },
+        {
+          jpgPrefix: "",
+          language: "ch2",
+          name: "中文翻译版（2）",
+          saveDir: "",
+          source: "",
+          time: null
+        },
+        {
+          jpgPrefix: "",
+          language: "ch3",
+          name: "中文翻译版（3）",
+          saveDir: "",
+          source: "",
+          time: null
+        },
+        {
+          jpgPrefix: "",
+          language: "ch4",
+          name: "中文翻译版（4）",
+          saveDir: "",
+          source: "",
+          time: null
+        }
+      ];
+      for (var i = 0; i < 5; i++) {
+        this.inForfindForKey(list[i].language, arr, list);
+      }
+      this.dataList = list;
+
+      var self = this;
+      setTimeout(function() {
+        for (var i = 0; i < self.dataList.length; i++) {
+          var urnEnd = self.dataList[i].source;
+          if (urnEnd != "" && urnEnd != null && urnEnd != undefined) {
+            PDFObject.embed(
+              "http://jsrelease-file.yunmaster.cn/store/doc/" + urnEnd,
+              ".pdfIn" + i
+            );
+          }
+        }
+      }, 500);
+      //alert(JSON.stringify(this.dataList));
+    },
+    inForfindForKey(key, arr, list) {
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i].language == key) {
+          for (var j = 0; j < 5; j++) {
+            if (list[j].language == arr[i].language) {
+              list[j] = arr[i];
+              return;
             }
-        },
-        watch: {
-
-        },
-        methods: {
-            showPdf(urlEnd){
-                this.dialogZ = true;
-                setTimeout(function () {
-                    PDFObject.embed("http://jsrelease-file.yunmaster.cn/store/doc/" + urlEnd, ".pdfBig");
-                }, 360);
-            },
-            fileSubmit(){
-                this.strK = $("#fileA").val()+"   "
-                this.dialogK = true;
-                this.run();
-            },
-            fileSubmitNext(){
-                var self = this;
-                var formData = new FormData(document.querySelector("#uploadFormA"));
-                $.ajax({
-                    type: "post",
-                    url: config.JAVABASEDOMAIN + "/upload/file",
-                    data: formData,
-                    processData:false,
-                    contentType:false,
-                    async:false,
-                    success:function(res){
-                        console.log(JSON.stringify(res))
-                        //alert("aa" + JSON.stringify(res))
-                        self.runNext(res.responseText);
-                    },
-                    error:function(err){
-                        console.log(JSON.stringify(err))
-                        //alert("bb"+JSON.stringify(err));
-                        self.runNext(err.responseText);
-                    }
-                });
-            },
-            getValue(str){
-                return $("input[name="+str +"]").val();
-            },
-            run(){
-                console.log("liuYuting")
-                var self = this;
-                setTimeout(function(){
-                    var bar = document.getElementById("barK");
-                    var total = document.getElementById("totalK");
-                    bar.style.width=parseInt(bar.style.width) + self.getRandomNum(10, 25) + "%";
-                    total.innerHTML = bar.style.width;
-                    if(Number(bar.style.width.replace("%","")) >= 75){
-                        bar.style.width= "100%";
-                        total.innerHTML = "100%";
-                        window.clearTimeout(timeout);
-                        this.dialogK = false;
-                        self.fileSubmitNext();
-                        return;
-                    }
-                    var timeout=window.setTimeout(self.run(),100);
-                },500);
-            },
-            runNext(path){
-                var bar = document.getElementById("barK");
-                var total = document.getElementById("totalK");
-                bar.style.width= "0%";
-                total.innerHTML = "0%";
-                this.dialogK = false;
-                //this.$message({type: 'success', message: '已上传!'});
-                var file = document.getElementById("fileA");
-                // for IE, Opera, Safari, Chrome
-                if (file.outerHTML) {
-                    file.outerHTML = file.outerHTML;
-                } else { // FF(包括3.5)
-                    file.value = "";
-                }
-                this.eventAddSummit(path);
-            },
-            eventAddSummit(path){
-                var loadingInstance = Loading.service({ fullscreen: true });
-
-                var self = this
-                var url = config.JAVABASEDOMAIN + '/book/site/add';
-                var data = {
-                    currencyId: this.currencyId,
-                    name: this.obj.name,
-                    source: path,
-                    language: this.obj.language
-                }
-                var succ = function success (data) {
-                    loadingInstance.close();
-                    //alert("aa"+JSON.stringify(data));
-                    if(data.errorCode == 0){
-                        self.$message({type: 'success', message: '已上传文件!'});
-                        setTimeout(function(){
-                            window.location.reload();
-                        },1000);
-                    } else {
-                        self.$message({type: 'error', message: data.errorMsg});
-                    }
-                }
-                var fail = function error (data) {
-                    loadingInstance.close();
-                    self.$message({type: 'error', message: JSON.stringify(data)});
-                    //alert("bb"+JSON.stringify(data));
-                }
-                console.log(JSON.stringify(data));
-                net_util.getRequest(url, data, succ, fail, this);
-            },
-            getRandomNum(Min,Max){
-                var Range = Max - Min;
-                var Rand = Math.random();
-                return(Min + Math.round(Rand * Range));
-            },
-            submitA(item){
-                this.obj = item;
-                $("#fileA").click();
-            },
-            getListData(id){
-                var self = this
-                var url = config.JAVABASEDOMAIN + '/book/site/list';
-                var data = {
-                    currencyId: this.currencyId
-                }
-                var succ = function success (data) {
-                    console.log(JSON.stringify(data))
-                    //self.listData = data.result;
-                    self.chuliRtnListData(data.result);
-
-                }
-                var fail = function error (data) {
-                    //alert("bb"+JSON.stringify(data));
-                }
-                console.log(JSON.stringify(data));
-                net_util.getRequest(url, data, succ, fail, this);
-            },
-            chuliRtnListData(arr){
-                var list = [
-                    {"jpgPrefix":"","language":"en","name":"英文原版","saveDir":"","source":"","time":null},
-                    {"jpgPrefix":"","language":"ch1","name":"中文翻译版（1）","saveDir":"","source":"","time":null},
-                    {"jpgPrefix":"","language":"ch2","name":"中文翻译版（2）","saveDir":"","source":"","time":null},
-                    {"jpgPrefix":"","language":"ch3","name":"中文翻译版（3）","saveDir":"","source":"","time":null},
-                    {"jpgPrefix":"","language":"ch4","name":"中文翻译版（4）","saveDir":"","source":"","time":null},
-                ]
-                for(var i = 0; i < 5; i++){
-                    this.inForfindForKey(list[i].language, arr, list)
-                }
-                this.dataList = list;
-
-                var self = this;
-                setTimeout(function () {
-                    for (var i = 0; i < self.dataList.length; i++) {
-                        var urnEnd = self.dataList[i].source;
-                        if (urnEnd != '' && urnEnd != null && urnEnd != undefined) {
-                            PDFObject.embed("http://jsrelease-file.yunmaster.cn/store/doc/" + urnEnd, ".pdfIn" + i);
-                        }
-                    }
-                }, 500);
-                //alert(JSON.stringify(this.dataList));
-            },
-            inForfindForKey(key, arr, list){
-                for(var i = 0; i < arr.length; i++){
-                    if(arr[i].language == key){
-                        for(var j = 0; j < 5; j++){
-                            if(list[j].language == arr[i].language){
-                                list[j] = arr[i];
-                                return;
-                            }
-                        }
-                    }
-                }
-            },
-            getTimeForLong: function (longTime, flag) {
-                //alert(longTime)
-                if(longTime == '' || longTime == null || longTime == undefined)
-                    return "- -"
-                else
-                    return utils.getSmpFormatDateByLong(longTime, true);
-            }
-        },
-        mounted () {
-            this.currencyId = this.$route.query.id
-            this.getListData(this.currencyId)
-        },
-        components: {
-
-        },
+          }
+        }
+      }
+    },
+    getTimeForLong: function(longTime, flag) {
+      //alert(longTime)
+      if (longTime == "" || longTime == null || longTime == undefined)
+        return "- -";
+      else return utils.getSmpFormatDateByLong(longTime, true);
     }
-
+  },
+  mounted() {
+    this.currencyId = this.$route.query.id;
+    this.getListData(this.currencyId);
+  },
+  components: {}
+};
 </script>
 <style  lang="stylus" rel="stylesheet/stylus" scoped>
-    @import "../../../static/css/base.styl"
+@import '../../../static/css/base.styl';
 
-    .eventList *{overflow: hidden; margin: 0px; padding: 0px;}
-    .eventList button, a{cursor:pointer;}
+.eventList * {
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+}
 
-    .eventList .cardleftTopIcon{height: 50px; width: 50px; border-radius: 50%; background-color: #4A90E2; margin-left: -22px; margin-top: -32px; display: block;}
+.eventList button, a {
+    cursor: pointer;
+}
 
-    .eventList .upFileTitle{text-align: center; width: 20%; height: 100px; line-height: 100px; vertical-align: middle; float: left;}
-    .eventList .upFileContent{}
+.eventList .cardleftTopIcon {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background-color: #4A90E2;
+    margin-left: -22px;
+    margin-top: -32px;
+    display: block;
+}
 
-    .containerK{
-        width:450px;
-        border:1px solid #6C9C2C;
-        height:25px;
-        float: left;
-    }
-     #barK{
-        background:#95CA0D;
-        float:left;
-        height:100%;
-        text-align:center;
-        line-height:150%;
-    }
+.eventList .upFileTitle {
+    text-align: center;
+    width: 20%;
+    height: 100px;
+    line-height: 100px;
+    vertical-align: middle;
+    float: left;
+}
 
-    /*滚动条垂直方向的宽度*/
-    ::-webkit-scrollbar{
-        width: 10px;
-    }
-    /* 垂直滚动条的滑动块 */
-    ::-webkit-scrollbar-thumb:vertical {
-        border-radius: 4px;
-        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-        background-color:rgba(129,129,129,0.5);
-    }
+.eventList .upFileContent {
+}
+
+.containerK {
+    width: 450px;
+    border: 1px solid #6C9C2C;
+    height: 25px;
+    float: left;
+}
+
+#barK {
+    background: #95CA0D;
+    float: left;
+    height: 100%;
+    text-align: center;
+    line-height: 150%;
+}
+
+/* 滚动条垂直方向的宽度 */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* 垂直滚动条的滑动块 */
+::-webkit-scrollbar-thumb:vertical {
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: rgba(129, 129, 129, 0.5);
+}
 </style>

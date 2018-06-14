@@ -1,10 +1,10 @@
 <template>
     <div id="currency-overview">
-        <el-row :gutter="30" class="market-part">
-            <el-col :span="8">
+        <el-row class="market-part">
+            <el-col style="width: 260px">
                 <div class="card market-card cap">
                     <div class="icon">
-                        <img src="../../../../static/img/github.png">
+                        <img src="../../../../static/img/market_cap.svg">
                     </div>
                     <div class="instruction">
                         <span>
@@ -15,10 +15,10 @@
                     </div>
                 </div>
             </el-col>
-            <el-col :span="8">
+            <el-col style="width: 260px; margin-left: 20px">
                 <div class="card market-card volume">
                     <div class="icon">
-                        <img src="../../../../static/img/github.png">
+                        <img src="../../../../static/img/volumn.svg">
                     </div>
                     <div class="instruction">
                         <span>
@@ -29,10 +29,10 @@
                     </div>
                 </div>
             </el-col>
-            <el-col :span="8">
+            <el-col style="width: 260px; margin-left: 20px">
                 <div class="card market-card volume">
                     <div class="icon">
-                        <img src="../../../../static/img/github.png">
+                        <img src="../../../../static/img/supply.svg">
                     </div>
                     <div class="instruction">
                         <span>
@@ -44,173 +44,584 @@
                 </div>
             </el-col>
         </el-row>
-        <el-row :gutter="30" class="basic-part">
-            <el-col :span="9">
+        <el-row class="basic-part">
+            <el-col style="width: 275px">
                 <div class="card basic-card info">
                     <div class="raise-info">
                         <p class="label">Project Info</p>
-                        <p class="name">{{currencyPrice.name}}<em>{{`(${currencyPrice.symbol})`}}</em></p>
-                        <div class="raise-detail"  v-if="currencyAdditionInfo_myToken">
-                            <p>{{currencyAdditionInfo_myToken.ico_date_display}}</p>
-                            <p>{{currencyAdditionInfo_myToken.exchange_rate_display}}</p>
-                            <p>{{currencyAdditionInfo_myToken.raised_amount_display}}</p>
+                        <p class="name">{{currencyPrice.name}}<em>{{` (${currencyPrice.symbol})`}}</em></p>
+                        <div class="raise-detail" v-if="currencyAdditionInfo_myToken">
+                            <p><span class="label">ICO Date </span>{{currencyAdditionInfo_myToken.ico_date_display || '- -'}}</p>
+                            <p><span class="label">ICO Price </span>{{currencyAdditionInfo_myToken.exchange_rate_display || '- -'}}</p>
+                            <p><span class="label">ICO Amount </span>{{currencyAdditionInfo_myToken.raised_amount_display || '- -'}}</p>
                         </div>
                         <div v-else>
                             Temporarily no data
                         </div>
                     </div>
                     <div class="website-button">
-                        website
+                        <img src="../../../../static/img/detail_website.svg">
+                        <span>Website</span>
                     </div>
                 </div>
             </el-col>
-            <el-col :span="9">
+            <el-col style="width: 275px; margin-left: 20px">
                 <div class="card basic-card trend">
-                    <p class="label">The price trend</p>
+                    <div class="top-wrap">
+                        <el-button @click="predictButtonClick"
+                                   type="primary"
+                                   size="mini"
+                                   class="right predict" round>
+                            Predict
+                        </el-button>
+                        <p class="label">Trend</p>
+                        <p class="price">{{customerParseFloat(currencyPrice['price_usd'], '$')}}</p>
+                        <p v-if="currencyPrice.percent_change_24h"
+                           class="change">
+                            <span :style="{color: currencyPrice['percent_change_24h'] < 0 ? '#d14836' : '#019933'}">
+                                {{`${currencyPrice['percent_change_24h']}(24H)`}}
+                            </span>
+                        </p>
+                    </div>
+                    <div class="charts" ref="priceTrend">
+                    </div>
                 </div>
             </el-col>
-            <el-col :span="6">
+            <el-col style="width: 230px; margin-left: 20px">
                 <div class="card basic-card tool">
-                    sss
+                    <div class="price-contrast-button">
+                        <img src="../../../../static/img/detail_price_contrast.svg">
+                        <router-link :to="{name: 'price_contrast', query: {id: this.id}}">
+                            Contrast
+                        </router-link>
+                    </div>
+                    <div class="tags">
+                        <ul class="tag-title">
+                            <li :class="{active: tagsOrGroup === 1}"
+                                @click="tagsOrGroup = 1"
+                                class="label">
+                                Tags
+                            </li>
+                            <li :class="{active: tagsOrGroup === 2}"
+                                @click="tagsOrGroup = 2"
+                                class="label">
+                                Group
+                            </li>
+                        </ul>
+                        <ul v-show="tagsOrGroup === 1" class="tag-content">
+                            <li v-for="(item, index) in tags"
+                                :key="index">
+                                {{item.tag_name}}
+                            </li>
+                        </ul>
+                        <ul v-show="tagsOrGroup === 2" class="tag-content">
+                            <li v-for="(item, index) in groups" :key="index">
+                                {{item.name}}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </el-col>
         </el-row>
+        <div class="card intro-part">
+            <p class="label">Introduce</p>
+            <div class="content">
+                柚子可以理解为Enterprise Operation System，即为商用分布式应用设计的一款区块链操作系统。EOS是EOS软件引入的一种新的区块链架构，旨在实现分布式应用的性能扩展。注意，它并不是像比特币和以太坊那样是货币，而是基于EOS软件项目之上发布的代币，被称为区块链3.0
+            </div>
+        </div>
+        <el-dialog
+            :title="$t('page.currencyList.t2') + ':'"
+            width="50%"
+            :visible.sync="collectorDiaVisible">
+            <el-input-number
+                min="1"
+                max="10000"
+                :controls="false"
+                v-model.trim="expectRank"
+                :placeholder="$t('page.currencyList.ph4')">
+            </el-input-number>
+            <el-checkbox v-model="smsAlert" style="margin-top: 20px; display: block">
+                {{$t('page.currencyList.t3')}}
+            </el-checkbox>
+            <span slot="footer" class="dialog-footer">
+                    <el-button @click="toRankView" style="float: left" type="danger">
+                        {{$t('page.currencyList.b6')}}
+                    </el-button>
+                    <el-button @click="collectorDiaVisible = false">{{$t('cancel')}}</el-button>
+                    <el-button type="primary" @click="collectorConfirm">{{$t('confirm')}}</el-button>
+                </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-    import net_util from '../../../assets/js/net_utils'
-    import config from '../../../assets/js/config'
-    import utils from '../../../assets/js/utils'
-    import consts from '../../../assets/js/consts'
-    import echarts from 'echarts'
+import net_util from "../../../assets/js/net_utils";
+import config from "../../../assets/js/config";
+import utils from "../../../assets/js/utils";
+import echarts from "echarts";
 
-    export default {
-        name: "overview",
-        data(){
-            return {
-                id: this.$route.query.id,
-                name: this.$route.query.name,
-                currencyPrice: '',
-                historyPrice: '',
-                currencyAdditionInfo_myToken: '',
-            }
-        },
-        methods: {
-            init(){
-                this.getCurrencyPrice().then(() => {
-                    this.getAdditionalInfo()
-                }).then(() => {
-                    console.log('completed')
-                }).catch(() => {
-                    console.log('fail')
-                })
-            },
-            // 获取货币的价格信息
-            getCurrencyPrice () {
-                return new Promise((resolve, reject) => {
-                    let url = config.PYTHONBASEDOMAIN + `/currency/price`;
-                    let data = {
-                        id: this.id,
-                        history: true
-                    };
-                    let succ = res => {
-                        this.currencyPrice = res['current_price'][0];
-                        this.historyPrice = res['history_price']['data'];
-                        resolve()
-                    };
-                    let fail = reject;
-                    net_util.getRequest(url, data, succ, fail)
-                });
-            },
-            //获取和货币相关的额外信息
-            getAdditionalInfo () {
-                return new Promise((resolve, reject) => {
-                    let url = config.PYTHONBASEDOMAIN + `/currency/addition/info`;
-                    let data = {
-                        name: this.currencyPrice['name']
-                    };
-                    let succ = res => {
-                        if(res.mytoken){
-                            this.currencyAdditionInfo_myToken = res['mytoken']
-                        }
-                        resolve()
-                    };
-                    let fail = reject;
-                    net_util.getRequest(url, data, succ, fail)
-                });
-            },
-            customerParseFloat: utils.customerParseFloat,
-        },
-        mounted(){
-            this.init()
+export default {
+  name: "overview",
+  data() {
+    return {
+      id: this.$route.query.id,
+      name: this.$route.query.name,
+      tags: "",
+      groups: "",
+      currencyPrice: "",
+      historyPrice: "",
+      oneDayPrice: "",
+      currencyAdditionInfo_myToken: "",
+      //点收集器
+      collectorDiaVisible: false,
+      predictCurrencyId: "",
+      expectRank: 0,
+      smsAlert: false,
+      tagsOrGroup: 1
+    };
+  },
+  methods: {
+    init() {
+      this.getCurrencyPrice()
+        .then(() => {
+          this.getCurrencyTags();
+          this.getAdditionalInfo();
+          this.getGroupByCurrencyId();
+        })
+        .then(() => {
+          this.drawPriceChart();
+        })
+        .then(() => {
+          console.log("complete");
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+    // 获取货币的价格信息
+    getCurrencyPrice() {
+      return new Promise((resolve, reject) => {
+        let url = config.PYTHONBASEDOMAIN + `/currency/price`;
+        let data = {
+          id: this.id,
+          history: true
+        };
+        let succ = res => {
+          this.currencyPrice = res["current_price"][0];
+          this.historyPrice = res["history_price"]["data"];
+          resolve();
+        };
+        net_util.getRequest(url, data, succ, reject);
+      });
+    },
+    //获取和货币相关的额外信息
+    getAdditionalInfo() {
+      return new Promise((resolve, reject) => {
+        let url = config.PYTHONBASEDOMAIN + `/currency/addition/info`;
+        let data = {
+          name: this.currencyPrice["name"]
+        };
+        let succ = res => {
+          if (res.mytoken) {
+            this.currencyAdditionInfo_myToken = res["mytoken"];
+          }
+          resolve();
+        };
+        net_util.getRequest(url, data, succ, reject);
+      });
+    },
+    getCurrencyTags() {
+      return new Promise((resolve, reject) => {
+        let url = config.PYTHONBASEDOMAIN + "/currency/tags/relation";
+        let data = {
+          currency_id: this.id
+        };
+        let succ = res => {
+          this.tags = res;
+        };
+        net_util.getRequest(url, data, succ, reject);
+      });
+    },
+    // 绘制30天内货币历史价格图
+    drawPriceChart(ahead = 30) {
+      let myChart = echarts.init(this.$refs.priceTrend);
+      myChart.clear();
+      let history_price_all = JSON.parse(this.historyPrice);
+      let cutoff = new Date() - ahead * 24 * 3600 * 1000;
+      let used_price = history_price_all["price_usd"].filter(
+        item => item[0] > cutoff
+      );
+      let price_usd = [];
+      let time_data_usd = [];
+      used_price.forEach(item => {
+        let t = this.getGMT8Time(item[0]);
+        let long_t = t.getTime();
+        if (!(time_data_usd.indexOf(long_t) > -1)) {
+          time_data_usd.push(long_t);
+          price_usd.push({
+            name: t,
+            value: [this.getSmpFormatDateByLong(t.getTime()), item[1]]
+          });
         }
-    }
+      });
+      myChart.setOption({
+        color: ["#409eff"],
+        tooltip: {
+          trigger: "axis"
+        },
+        grid: {
+          x: "0%",
+          y: "50%",
+          x2: "0%",
+          y2: "0%"
+        },
+        xAxis: [
+          {
+            show: false,
+            type: "time",
+            splitLine: {
+              show: false
+            },
+            min: "dataMin",
+            max: "dataMax",
+            axisPointer: {
+              z: 100
+            }
+          }
+        ],
+        yAxis: [
+          {
+            show: false,
+            type: "value",
+            name: "price_usd",
+            splitLine: {
+              show: false
+            }
+          }
+        ],
+        series: [
+          {
+            name: "price_usd",
+            type: "line",
+            data: price_usd,
+            showSymbol: false,
+            smooth: true,
+            lineStyle: {
+              normal: {
+                width: 3
+              }
+            },
+            areaStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    offset: 0,
+                    color: "#409eff"
+                  },
+                  {
+                    offset: 1,
+                    color: "#eaf4ff"
+                  }
+                ])
+              }
+            }
+          }
+        ]
+      });
+    },
+    // 点击预测排名按钮回调
+    predictButtonClick() {
+      this.expectRank = this.currencyPrice.rank;
+      this.predictCurrencyId = this.id;
+      this.collectorDiaVisible = true;
+    },
+    // 前往排行榜列表
+    toRankView() {
+      this.$router.push({ name: "predict" });
+      this.collectorDiaVisible = false;
+    },
+    // 点收集器对话框点击确定按钮
+    collectorConfirm() {
+      let url = config.JAVABASEDOMAIN + "/predict/add";
+      let data = {
+        currencyId: this.predictCurrencyId,
+        rank: this.expectRank,
+        sms: this.smsAlert ? 1 : 0
+      };
+      let succ = res => {
+        if (!res.errorMsg) {
+          this.$message({ type: "success", message: this.$t("success") });
+          this.collectorDiaVisible = false;
+        } else {
+          this.$message({ type: "error", message: res.errorMsg });
+        }
+      };
+      let fail = res => {
+        this.$message({ type: "error", message: this.$t("error") });
+      };
+      net_util.getRequest(url, data, succ, fail);
+    },
+    // 根据货币id获取该货币的所处分组
+    getGroupByCurrencyId() {
+      return new Promise((resolve, reject) => {
+        let url = config.JAVABASEDOMAIN + `/pros/group/cy/list`;
+        let data = {
+          currency: this.id
+        };
+        let succ = res => {
+          if (!res.errorMsg) {
+            this.groups = res.result;
+          } else {
+            reject();
+          }
+        };
+        net_util.getRequest(url, data, succ, reject);
+      });
+    },
+    getGMT8Time(t) {
+      let d = new Date(t);
+      d.setHours(8);
+      d.setMinutes(0);
+      d.setSeconds(0);
+      return d;
+    },
+    customerParseFloat: utils.customerParseFloat,
+    getSmpFormatDateByLong: utils.getSmpFormatDateByLong
+  },
+  mounted() {
+    this.init();
+  }
+};
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
+.card {
+    background: #FFF;
+}
 
-    .card
-        background #FFF
+.basic-part {
+    height: 300px;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 20px;
 
-    .basic-part
-        height 350px
-        margin-left 0!important
-        margin-right 0!important
-        margin-top 20px
-        .info
-            background none!important
-            padding 0!important
-            .raise-info
-                background #FFF
-                height 250px
-                padding 20px
-                .raise-detail
-                    margin-top 120px
-            .website-button
-                height 70px
-                margin-top 30px
-                background linear-gradient(-179deg, #78d25e 2%, #42bb77 94%)
-        .basic-card
-            height 350px
-            padding 20px
-            background #FFF
-            .label
-                font-size 16px
-                color #b7c4d4
-            .name
-                font-size 30px
-                margin 5px 0
-                em
-                    font-style normal
-                    font-size 16px
-                    color #b7c4d4
+    .info {
+        background: none !important;
+        padding: 0 !important;
 
-    .market-part
-        margin 0!important
-        height 140px
-        .market-card
-            height 140px
-            padding 0 30px
-            .icon
-                float left
-                line-height 140px
-                margin-right 10px
-                img
-                    width 30px
-                    height 30px
-                    vertical-align: middle;
-            .instruction
-                line-height 140px
-                margin-left 50px
-                span
-                    font-family PingFangSC-Regular
-                    display inline-block
-                    font-size 24px
-                    line-height 30px
-                    vertical-align middle
-                    em
-                        font-style normal
-                        font-size 16px
-                        color #999999
+        .raise-info {
+            background: #FFF;
+            height: 220px;
+            box-sizing: border-box;
+            padding: 13px 16px;
+            position: relative;
+
+            .raise-detail {
+                position: absolute;
+                font-size: 13px;
+                bottom: 10px;
+            }
+        }
+
+        .website-button {
+            font-family: PingFangSC-Regular;
+            height: 50px;
+            line-height: 50px;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #FFF;
+            cursor: pointer;
+            text-align: center;
+            background: linear-gradient(-179deg, #78d25e 2%, #42bb77 94%);
+
+            &:hover {
+                opacity: 0.8;
+            }
+
+            img {
+                width: 18px;
+                height: 18px;
+                transform: translateY(-3px);
+                vertical-align: middle;
+            }
+        }
+    }
+
+    .trend {
+        padding: 0 !important;
+
+        .top-wrap {
+            padding: 13px 16px;
+
+            .predict {
+                position: absolute;
+                right: 20px;
+                z-index: 99;
+            }
+        }
+
+        .price {
+            font-size: 26px;
+            color: #232a3a;
+        }
+
+        .charts {
+            top: 0;
+            height: 300px;
+            width: 100%;
+            position: absolute;
+        }
+    }
+
+    .tool {
+        background: none !important;
+        padding: 0 !important;
+
+        .price-contrast-button {
+            line-height: 50px;
+            font-size: 14px;
+            color: #FFF;
+            cursor: pointer;
+            text-align: center;
+            background-image: linear-gradient(-179deg, #5ebdf9 0%, #61a1f3 94%);
+
+            &:hover {
+                opacity: 0.8;
+            }
+
+            img {
+                width: 18px;
+                height: 18px;
+                transform: translateY(-3px);
+                vertical-align: middle;
+            }
+
+            a {
+                color #FFF
+            }
+        }
+
+        .tags {
+            margin-top: 30px;
+            height: 220px;
+            box-sizing: border-box;
+            background: #FFF;
+
+            .tag-title {
+                font-size: 0;
+
+                li {
+                    font-size: 13px;
+                    display: inline-block;
+                    width: 50%;
+                    text-align: center;
+                    background: #eee;
+                    cursor: pointer;
+                }
+
+                .active {
+                    background: #FFF;
+                    color: #61a1f3;
+                }
+            }
+
+            .tag-content {
+                padding: 0 13px;
+                font-size: 0;
+
+                li {
+                    font-size: 13px;
+                    padding: 5px 10px;
+                    margin-right: 10px;
+                    margin-top: 10px;
+                    background: #ebf5ff;
+                    color: #409eff;
+                    display: inline-block;
+                }
+            }
+        }
+    }
+
+    .basic-card {
+        height: 300px;
+        padding: 20px;
+        background: #FFF;
+        position: relative;
+
+        .label {
+            font-size: 13px;
+            line-height: 30px;
+            color: #b7c4d4;
+        }
+
+        .name {
+            font-size: 24px;
+            margin: 5px 0;
+
+            em {
+                font-style: normal;
+                font-size: 16px;
+                color: #b7c4d4;
+            }
+        }
+    }
+}
+
+.market-part {
+    margin: 0 !important;
+    height: 108px;
+
+    .market-card {
+        height: 108px;
+        padding: 0 20px;
+
+        .icon {
+            float: left;
+            line-height: 108px;
+            margin-right: 10px;
+
+            img {
+                width: 30px;
+                height: 30px;
+                vertical-align: middle;
+            }
+        }
+
+        .instruction {
+            line-height: 108px;
+            margin-left: 30px;
+
+            span {
+                font-family: PingFangSC-Regular;
+                display: inline-block;
+                font-size: 18px;
+                line-height: 25px;
+                vertical-align: middle;
+
+                em {
+                    font-style: normal;
+                    font-size: 13px;
+                    color: #999999;
+                }
+            }
+        }
+    }
+}
+
+.intro-part {
+    margin-top: 20px;
+    padding: 20px;
+    line-height: 26px;
+
+    .label {
+        line-height: 30px;
+        font-size: 13px;
+        color: #b7c4d4;
+    }
+
+    .content {
+        color: #333333;
+        font-size: 13px;
+    }
+}
 </style>

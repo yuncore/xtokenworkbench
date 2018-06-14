@@ -3,10 +3,10 @@
         <div class="eventList container">
             <div class="qiao" @click="qiaoClick"></div>
 
-            <div style=" padding:26px; overflow: auto; background: #fff;">
+            <div style="overflow: auto;">
                 <div class="zhuti" style="width: 100%; height: 750px;">
                     <div
-                        style="background:#38435b; height:60px; width: calc(100% - 20px); margin:10px 10px; border-radius: 10px; box-shadow: 0 2px 12px 0 #A0A1A2;">
+                        style="background:#232a3a; height:60px; width: calc(100% - 20px); margin:10px 10px; border-radius: 10px; box-shadow: 0 2px 12px 0 #A0A1A2;">
                         <div style="height:20px; width: 100%; font-size: 13px; margin-top: 20px;">
                             <p style="float: left; margin-left: 55px; height: 20px; line-height: 20px; vertical-align: middle; color: white; font-size: 14px; margin-right: 20px;">
                                 类型</p>
@@ -18,7 +18,8 @@
                     <div style="height:calc(100% - 90px); width:100%; margin-top: 30px;">
                         <div style="float: left; width:66%; max-height:100%;overflow: auto;">
                             <template v-if="listData.length > 0">
-                                <div v-for="item in listData"
+                                <div v-for="(item,index) in listData"
+                                :key='index'
                                      style="background-color: #FFFFFF; height: 183px; width: calc(100% - 20px); margin:10px 10px; border-radius: 10px; box-shadow: 0 2px 12px 0 #B2B2B2; margin-bottom: 18px;">
                                     <div class="cardleftTopIcon"
                                          :style="{backgroundColor: item.type === 'ICO' ? '#FF7474': '#4A90E2'}"></div>
@@ -200,10 +201,10 @@
                 return result
             },
             toAdd () {
-                this.$router.push('/event/add')
+                this.$router.push({name: 'EventAdd'})
             },
             toPageView (item) {
-                this.$router.push({path: '/event/detail', query: {id: item.id}})
+                this.$router.push({name: 'EventDetail', query: {id: item.id}})
             }
         },
         mounted () {

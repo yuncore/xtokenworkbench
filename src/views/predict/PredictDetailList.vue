@@ -42,56 +42,58 @@
     </div>
 </template>
 <script>
-    import net_util from '../../assets/js/net_utils'
-    import config from '../../assets/js/config'
-    import utils from '../../assets/js/utils'
-    import consts from '../../assets/js/consts'
+import net_util from "../../assets/js/net_utils";
+import config from "../../assets/js/config";
+import utils from "../../assets/js/utils";
+import consts from "../../assets/js/consts";
 
-    export default {
-        data: function () {
-            return {
-                id: '',
-                count: '',
-                predictDetailList: [],
-                currentPage: 1,
-                currentNum: 10,
-            }
-        },
-        methods:{
-            getCurrencyPredictDetail(){
-                let url = config.JAVABASEDOMAIN + '/predict/user/list'
-                let data = {
-                    currencyId: this.id,
-                    page: this.currentPage,
-                    num: this.currentNum
-                }
-                let succ = res => {
-                    if (!res.errorMsg) {
-                        this.predictDetailList = res.result.list
-                        this.count = res.result.total
-                    } else {
-                        this.$message({type: 'error', message: res.errorMsg})
-                    }
-                }
-                let fail = res => {
-                    this.$message({type: 'error', message: '获取列表失败！'})
-                }
-                net_util.getRequest(url, data, succ, fail)
-            }
-        },
-        mounted(){
-            this.id = this.$route.query.id;
-            this.getCurrencyPredictDetail()
+export default {
+  data: function() {
+    return {
+      id: "",
+      count: "",
+      predictDetailList: [],
+      currentPage: 1,
+      currentNum: 10
+    };
+  },
+  methods: {
+    getCurrencyPredictDetail() {
+      let url = config.JAVABASEDOMAIN + "/predict/user/list";
+      let data = {
+        currencyId: this.id,
+        page: this.currentPage,
+        num: this.currentNum
+      };
+      let succ = res => {
+        if (!res.errorMsg) {
+          this.predictDetailList = res.result.list;
+          this.count = res.result.total;
+        } else {
+          this.$message({ type: "error", message: res.errorMsg });
         }
+      };
+      let fail = res => {
+        this.$message({ type: "error", message: "获取列表失败！" });
+      };
+      net_util.getRequest(url, data, succ, fail);
     }
+  },
+  mounted() {
+    this.id = this.$route.query.id;
+    this.getCurrencyPredictDetail();
+  }
+};
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-    @import "../../../static/css/base.styl"
+@import '../../../static/css/base.styl';
 
-    .title
-        margin-bottom 30px
-        text-transform capitalize
+.title {
+    margin-bottom: 30px;
+    text-transform: capitalize;
+}
 
-    .breadcrumb
-        margin-bottom 20px
+.breadcrumb {
+    margin-bottom: 20px;
+}
 </style>

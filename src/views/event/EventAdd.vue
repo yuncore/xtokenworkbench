@@ -88,278 +88,279 @@
     </div>
 </template>
 <script>
-    import net_util from '../../assets/js/net_utils'
-    import config from '../../assets/js/config'
-    import utils from '../../assets/js/utils'
-    import consts from '../../assets/js/consts'
-    import RichEditor from '../../components/editor/Editor.vue'
+import net_util from "../../assets/js/net_utils";
+import config from "../../assets/js/config";
+import utils from "../../assets/js/utils";
+import consts from "../../assets/js/consts";
+import RichEditor from "../../components/editor/Editor.vue";
 
-    export default {
-        data: function () {
-            return {
-                title: '',
-                value: '',
-                checkList: [],
-                coinSearchContent: '',
-                selectedCurrencyList: [],
-                checkbox1: false,
-                checkbox2: false,
-                intro: null,
-                //富文本信息编辑器状态
-                richEditorOpened: false,
-                dateTimeA: '',
-                dateTimeB: ''
-            }
-        },
-        methods: {
-            coinSearch(value, cb){
-                let url = config.PYTHONBASEDOMAIN + '/currency/search'
-                let succ = res => {
-                    cb(res.data)
-                }
-                let fail = res => {
-                    this.$message({type: 'error', message: res.responseJSON.message || '未知错误'})
-                }
-                net_util.getRequest(url, {keyword: value}, succ, fail)
-            },
-            handleCoinSelect(coin){
-                let seleted = this.selectedCurrencyList.find(item => {
-                    return item.id === coin.id
-                })
-                if(seleted === undefined){
-                    this.coinSearchContent = ''
-                    if(this.selectedCurrencyList.length >= 5){
-                        this.$message({type: 'warning', message: '最多关联五个项目'})
-                    }else{
-                        this.selectedCurrencyList.push(coin)
-                    }
-                }
-            },
-            removeCoin(index){
-                this.selectedCurrencyList.splice(index, 1)
-            },
-            tijiao (tt) {
-                var self = this
-                var url = config.JAVABASEDOMAIN + '/event/add'
-                var data = {
-                    type: this.value,
-                    title: this.title,
-                    urlPath: tt,
-                    trueFalse: this.checkbox1 ? 1 : 0,
-                    roseFall: this.checkbox2 ? 1 : 0,
-                    voteStartTime: this.dateTimeA.getTime(),
-                    voteEndTime: this.dateTimeB.getTime()
-                }
-                data.proList = this.selectedCurrencyList.map(item =>{
-                    return item['id']
-                })
-                var succ = function success (data) {
-                    if (data.errorCode == 0) {
-                        self.$message({type: 'success', message: '已提交！'})
-                    } else {
-                        self.$message({type: 'error', message: '提交出现异常！'})
-                    }
-                }
-                var fail = function error (data) {
-                    self.$message({type: 'error', message: data.errorMsg})
-                }
-                net_util.postRequest(url, data, succ, fail, this)
-            },
-            up () {
-                if (!this.checkParams()) {
-                    return
-                }
-                var self = this
-                var url = config.JAVABASEDOMAIN + '/upload/file/txt'
-                var data = {
-                    textType: 'txt',
-                    content: this.intro
-                }
-                var succ = function success (data) {
-                    if(data.errorCode === 0){
-                        self.tijiao(data.result)
-                    }else{
-                        self.$message({type: 'error', message: '上传事件内容出错'})
-                    }
-                }
-                var fail = function error (data) {
-                    self.$message({type: 'error', message: '上传事件内容出错'})
-                }
-                net_util.postRequest(url, data, succ, fail, this)
-            },
-            checkParams () {
-                let msg = ''
-                if (this.type === '') {
-                    msg = '请选择事件类型'
-                } else if (this.title === '') {
-                    msg = '请填写title'
-                } else if (this.intro === null) {
-                    msg = '请填写事件内容'
-                } else if (this.checkbox1 === false && this.checkbox2 === false) {
-                    msg = '请选择权限'
-                } else if (this.dateTimeA === '' || this.dateTimeB === '') {
-                    msg = '请选择开始时间或结束时间'
-                } else if (this.selectedCurrencyList.length ===0 ){
-                    msg = '请选择关联项目'
-                }
-                if(msg !== ''){
-                    this.$message({type: 'warning', message: msg})
-                    return false
-                }
-                return true
-            },
-            //打开富文本编辑器
-            showEditor () {
-                this.richEditorOpened = true
-                this.$nextTick(() => {
-                    this.$refs.editor.setContent(this.intro)
-                })
-                setInterval(function () {
-                    $(' #edit-container .editor-tool li ').css('width', 'auto')
-                }, 300)
-            },
-            //关闭富文本编辑器
-            closeEditor (evt) {
-                this.intro = evt.content
-                this.richEditorOpened = false
-            },
-        },
-        mounted () {
-        },
-        components: {
-            RichEditor
-        },
+export default {
+  data: function() {
+    return {
+      title: "",
+      value: "",
+      checkList: [],
+      coinSearchContent: "",
+      selectedCurrencyList: [],
+      checkbox1: false,
+      checkbox2: false,
+      intro: null,
+      //富文本信息编辑器状态
+      richEditorOpened: false,
+      dateTimeA: "",
+      dateTimeB: ""
+    };
+  },
+  methods: {
+    coinSearch(value, cb) {
+      let url = config.PYTHONBASEDOMAIN + "/currency/search";
+      let succ = res => {
+        cb(res.data);
+      };
+      let fail = res => {
+        this.$message({
+          type: "error",
+          message: res.responseJSON.message || "未知错误"
+        });
+      };
+      net_util.getRequest(url, { keyword: value }, succ, fail);
+    },
+    handleCoinSelect(coin) {
+      let seleted = this.selectedCurrencyList.find(item => {
+        return item.id === coin.id;
+      });
+      if (seleted === undefined) {
+        this.coinSearchContent = "";
+        if (this.selectedCurrencyList.length >= 5) {
+          this.$message({ type: "warning", message: "最多关联五个项目" });
+        } else {
+          this.selectedCurrencyList.push(coin);
+        }
+      }
+    },
+    removeCoin(index) {
+      this.selectedCurrencyList.splice(index, 1);
+    },
+    tijiao(tt) {
+      var self = this;
+      var url = config.JAVABASEDOMAIN + "/event/add";
+      var data = {
+        type: this.value,
+        title: this.title,
+        urlPath: tt,
+        trueFalse: this.checkbox1 ? 1 : 0,
+        roseFall: this.checkbox2 ? 1 : 0,
+        voteStartTime: this.dateTimeA.getTime(),
+        voteEndTime: this.dateTimeB.getTime()
+      };
+      data.proList = this.selectedCurrencyList.map(item => {
+        return item["id"];
+      });
+      var succ = function success(data) {
+        if (data.errorCode == 0) {
+          self.$message({ type: "success", message: "已提交！" });
+        } else {
+          self.$message({ type: "error", message: "提交出现异常！" });
+        }
+      };
+      var fail = function error(data) {
+        self.$message({ type: "error", message: data.errorMsg });
+      };
+      net_util.postRequest(url, data, succ, fail, this);
+    },
+    up() {
+      if (!this.checkParams()) {
+        return;
+      }
+      var self = this;
+      var url = config.JAVABASEDOMAIN + "/upload/file/txt";
+      var data = {
+        textType: "txt",
+        content: this.intro
+      };
+      var succ = function success(data) {
+        if (data.errorCode === 0) {
+          self.tijiao(data.result);
+        } else {
+          self.$message({ type: "error", message: "上传事件内容出错" });
+        }
+      };
+      var fail = function error(data) {
+        self.$message({ type: "error", message: "上传事件内容出错" });
+      };
+      net_util.postRequest(url, data, succ, fail, this);
+    },
+    checkParams() {
+      let msg = "";
+      if (this.type === "") {
+        msg = "请选择事件类型";
+      } else if (this.title === "") {
+        msg = "请填写title";
+      } else if (this.intro === null) {
+        msg = "请填写事件内容";
+      } else if (this.checkbox1 === false && this.checkbox2 === false) {
+        msg = "请选择权限";
+      } else if (this.dateTimeA === "" || this.dateTimeB === "") {
+        msg = "请选择开始时间或结束时间";
+      } else if (this.selectedCurrencyList.length === 0) {
+        msg = "请选择关联项目";
+      }
+      if (msg !== "") {
+        this.$message({ type: "warning", message: msg });
+        return false;
+      }
+      return true;
+    },
+    //打开富文本编辑器
+    showEditor() {
+      this.richEditorOpened = true;
+      this.$nextTick(() => {
+        this.$refs.editor.setContent(this.intro);
+      });
+      setInterval(function() {
+        $(" #edit-container .editor-tool li ").css("width", "auto");
+      }, 300);
+    },
+    //关闭富文本编辑器
+    closeEditor(evt) {
+      this.intro = evt.content;
+      this.richEditorOpened = false;
     }
+  },
+  mounted() {},
+  components: {
+    RichEditor
+  }
+};
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-    @import "../../../static/css/base.styl"
+@import '../../../static/css/base.styl';
 
-    .paramA {
-        font-family: AvenirNext-Bold;
-        font-size: 12px;
-        color: #4a4a4a;
-        font-weight: bold;
-        width: 100px;
-        margin-top: 35px;
-        clear: both
-    }
+.paramA {
+    font-family: AvenirNext-Bold;
+    font-size: 12px;
+    color: #4a4a4a;
+    font-weight: bold;
+    width: 100px;
+    margin-top: 35px;
+    clear: both;
+}
 
-    .paramB {
-        width: 100%;
-        border-radius: 12px;
-        height: 40px;
-        margin-top: 15px;
-    }
+.paramB {
+    width: 100%;
+    border-radius: 12px;
+    height: 40px;
+    margin-top: 15px;
+}
 
-    .el-input__inner {
-        border-radius: 12px !important;
-        background: #F6F6F6;
-        border-radius: 12px;
-    }
+.el-input__inner {
+    border-radius: 12px !important;
+    background: #F6F6F6;
+    border-radius: 12px;
+}
 
-    .el-textarea__inner {
-        background-color: #F6F6F6;
-        border-radius: 12px;
-        height: 160px !important;
-        border: 1px solid #E8E8E8 !important;
-    }
+.el-textarea__inner {
+    background-color: #F6F6F6;
+    border-radius: 12px;
+    height: 160px !important;
+    border: 1px solid #E8E8E8 !important;
+}
 
-    .fengeXian {
-        width: 100%;
-        height: 10px;
-        clear: both;
-        border-bottom: 1px #E8E8E8 solid;
-        float: left
-    }
+.fengeXian {
+    width: 100%;
+    height: 10px;
+    clear: both;
+    border-bottom: 1px #E8E8E8 solid;
+    float: left;
+}
 
-    .el-checkbox__input {
-        display: block !important;
-        position: absolute;
-        bottom: 0px;
-        left: 49%;
-    }
+.el-checkbox__input {
+    display: block !important;
+    position: absolute;
+    bottom: 0px;
+    left: 49%;
+}
 
-    .ballA {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: #D0D0D0;
-        border: 1px solid #979797;
-    }
+.ballA {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #D0D0D0;
+    border: 1px solid #979797;
+}
 
-    .el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-        background-color: #38435B;
-    }
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+    background-color: #38435B;
+}
 
-    .el-checkbox__input.is-checked .el-checkbox__label {
-        background-color: #38435B;
-    }
+.el-checkbox__input.is-checked .el-checkbox__label {
+    background-color: #38435B;
+}
 
-    .el-checkbox__input.is-checked + .el-checkbox__label {
-        font-weight: bold;
-        color: black
-    }
+.el-checkbox__input.is-checked + .el-checkbox__label {
+    font-weight: bold;
+    color: black;
+}
 
-    .el-checkbox__inner {
-        width: 20px;
-        height: 20px;
-    }
+.el-checkbox__inner {
+    width: 20px;
+    height: 20px;
+}
 
-    .el-checkbox__input.is-checked .el-checkbox__inner::after {
-        width: 7px;
-        height: 10px;
-    }
+.el-checkbox__input.is-checked .el-checkbox__inner::after {
+    width: 7px;
+    height: 10px;
+}
 
-    .coin-search{
-        display: inline-block;
-        float: right;
-        margin-top: 30px;
-    }
+.coin-search {
+    display: inline-block;
+    float: right;
+    margin-top: 30px;
+}
 
-    .coin-select li{
-        position: relative;
-        text-align: center;
-        display: inline-block;
-        width: 150px;
-        height: 150px;
-        border: 1px solid #ebebeb;
-        border-radius: 3px;
-        transition: .2s;
-        margin-left: 20px;
-    }
+.coin-select li {
+    position: relative;
+    text-align: center;
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    border: 1px solid #ebebeb;
+    border-radius: 3px;
+    transition: 0.2s;
+    margin-left: 20px;
+}
 
-    .coin-select li:first-child{
-        margin-left: 0;
-    }
+.coin-select li:first-child {
+    margin-left: 0;
+}
 
-    .coin-select li img{
-        height: 42px;
-        width: 42px;
-        margin: 16px auto;
-    }
+.coin-select li img {
+    height: 42px;
+    width: 42px;
+    margin: 16px auto;
+}
 
-    .coin-select li p{
-        color: #409EFF;
-        font-size:14px;
-        line-height: 25px;
-    }
+.coin-select li p {
+    color: #409EFF;
+    font-size: 14px;
+    line-height: 25px;
+}
 
-    .coin-select i{
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        font-size: 20px;
-        cursor: pointer;
-    }
+.coin-select i {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 20px;
+    cursor: pointer;
+}
 
-    .coin-select i:hover{
-        color: #409EFF;
-    }
+.coin-select i:hover {
+    color: #409EFF;
+}
 
-    .tip{
-        margin: 20px 0;
-        font-size: 14px;
-        color: #909399;
-    }
-
+.tip {
+    margin: 20px 0;
+    font-size: 14px;
+    color: #909399;
+}
 </style>

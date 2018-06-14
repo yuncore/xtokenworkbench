@@ -147,9 +147,10 @@ module.exports = {
             th15: 'Type',
             th16: 'State',
             th17: 'Real',
-            th18: 'Fake',
+            th18: 'Not Real',
             th19: 'Raise',
             th20: 'Fall',
+            th21: 'Posts',
 
             l1: 'Posts',
             l2: 'User',

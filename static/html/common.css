@@ -15,7 +15,7 @@
 	padding-left: 60px;
 
 
-	background-color: #646D80;
+	background-color: #232a3a;
 	height:70px;
 	font-family:PingFangSC-Medium;
 font-size:26px;
@@ -62,7 +62,7 @@ vertical-align: middle;
 .calendar-btn{
 	text-decoration:none;
 	font-size:22px;
-	color:#979797;
+	color: #979797;
 }
 .calendar-btn:hover{
 	color:#2f87c1
@@ -71,7 +71,7 @@ vertical-align: middle;
 	float:left;
 	/* margin-left: -10px;	 */
 	padding: 5px 3px 5px 10px;
-	background-color: #646D80;
+	background-color: #232a3a;
 	width: 18px;
 	padding-top: 15px;
     padding-bottom: 11px;
@@ -80,7 +80,7 @@ vertical-align: middle;
 	float:right;
 	/* margin-right: -10px; */
 	padding: 5px 10px 5px 0px;
-	background-color: #646D80;
+	background-color: #232a3a;
 	width: 18px;
 	padding-top: 15px;
     padding-bottom: 11px;
@@ -130,7 +130,7 @@ vertical-align: middle;
 .week-hd {
 	height: 35px;
 	line-height: 35px;
-	background-color: #646D80;
+	background-color: #232a3a;
 }
 .week-hd li {
 	color: white;

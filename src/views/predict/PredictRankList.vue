@@ -50,81 +50,91 @@
     </div>
 </template>
 <script>
-    import net_util from '../../assets/js/net_utils'
-    import config from '../../assets/js/config'
-    import utils from '../../assets/js/utils'
-    import consts from '../../assets/js/consts'
+import net_util from "../../assets/js/net_utils";
+import config from "../../assets/js/config";
+import utils from "../../assets/js/utils";
+import consts from "../../assets/js/consts";
 
-    export default {
-        data: function () {
-            return {
-                predictList: [],
-                currentPage: 1,
-                currentNum: 10,
-            }
-        },
-        methods:{
-            getPredictList(page, num){
-                let url = config.JAVABASEDOMAIN + '/predict/rank/list'
-                let data = {
-                    page: page,
-                    num: num
-                }
-                let succ = res => {
-                    if (!res.errorMsg) {
-                        if(res.result.length === 0){
-                            this.$message({type: 'info', message: '已是最后一页！'})
-                            return null
-                        }else{
-                            this.currentPage = page;
-                            this.currentNum = num
-                            this.predictList = res.result
-                        }
-                    } else {
-                        this.$message({type: 'error', message: res.errorMsg})
-                    }
-                }
-                let fail = res => {
-                    this.$message({type: 'error', message: '获取列表失败！'})
-                }
-                net_util.getRequest(url, data, succ, fail)
-            },
-            next(){
-                this.getPredictList(this.currentPage + 1, this.currentNum)
-            },
-            last(){
-                if(this.currentPage === 1){
-                    return null
-                }else{
-                    this.getPredictList(this.currentPage - 1, this.currentNum)
-                }
-            },
-            goDetail(id){
-                this.$router.push({path: '/predictDetail', query:{id: id}})
-            }
-        },
-        mounted(){
-            this.getPredictList(this.currentPage, this.currentNum)
+export default {
+  data: function() {
+    return {
+      predictList: [],
+      currentPage: 1,
+      currentNum: 10
+    };
+  },
+  methods: {
+    getPredictList(page, num) {
+      let url = config.JAVABASEDOMAIN + "/predict/rank/list";
+      let data = {
+        page: page,
+        num: num
+      };
+      let succ = res => {
+        if (!res.errorMsg) {
+          if (res.result.length === 0) {
+            this.$message({ type: "info", message: "已是最后一页！" });
+            return null;
+          } else {
+            this.currentPage = page;
+            this.currentNum = num;
+            this.predictList = res.result;
+          }
+        } else {
+          this.$message({ type: "error", message: res.errorMsg });
         }
+      };
+      let fail = res => {
+        this.$message({ type: "error", message: "获取列表失败！" });
+      };
+      net_util.getRequest(url, data, succ, fail);
+    },
+    next() {
+      this.getPredictList(this.currentPage + 1, this.currentNum);
+    },
+    last() {
+      if (this.currentPage === 1) {
+        return null;
+      } else {
+        this.getPredictList(this.currentPage - 1, this.currentNum);
+      }
+    },
+    goDetail(id) {
+      this.$router.push({ name: "predict_detail", query: { id: id } });
     }
+  },
+  mounted() {
+    this.getPredictList(this.currentPage, this.currentNum);
+  }
+};
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-    @import "../../../static/css/base.styl"
+@import '../../../static/css/base.styl';
 
-    .title
-        margin-bottom 30px
-    .inline-img
-        position absolute
-        height 30px
-        width 30px
-        left 50%
-        top 50%
-        transform translate(-50%, -50%)
-    .pagination
-        margin-top 20px
-        button
-            &:hover
-                color #409EFF
-        span
-            text-align center
+.title {
+    margin-bottom: 30px;
+}
+
+.inline-img {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.pagination {
+    margin-top: 20px;
+
+    button {
+        &:hover {
+            color: #409EFF;
+        }
+    }
+
+    span {
+        text-align: center;
+    }
+}
 </style>

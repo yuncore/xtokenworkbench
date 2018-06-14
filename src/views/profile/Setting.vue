@@ -1,106 +1,125 @@
 <template>
-    <div id="profile" class="container">
-        <div class="left sidebar-left">
-            <ul class="sidebar-nav pinned">
-                <li v-for="(item, index) in ROUTEITEMS"
-                    :key="index"
-                    :class="{active: routerName === item.pathName}">
-                    <router-link :to="{name: item.pathName}">
-                        {{item.text}}
-                        <i class="el-icon-arrow-right"></i>
-                    </router-link>
-                </li>
-            </ul>
-        </div>
-        <div class="content">
-            <transition mode="out-in" name="el-zoom-in-top">
-                <router-view />
-            </transition>
+    <div>
+        <div id="profile" class="container">
+            <div class="left sidebar-left">
+                <ul class="sidebar-nav">
+                    <li v-for="(item, index) in ROUTEITEMS"
+                        :key="index"
+                        :class="{active: routerName === item.pathName}">
+                        <router-link :to="{name: item.pathName}">
+                            {{item.text}}
+                            <!--<i class="el-icon-arrow-right"></i>-->
+                        </router-link>
+                    </li>
+                </ul>
+            </div>
+            <div class="content">
+                <transition mode="out-in" name="el-zoom-in-top">
+                    <router-view />
+                </transition>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-    const ROUTEITEMS = [
-        {
-            pathName: 'setting-index',
-            text: 'Profile',
-        },
-        {
-            pathName: 'setting-password',
-            text: 'Password',
-        },
-        {
-            pathName: 'setting-apiKey',
-            text: 'Exchange API',
-        },
-    ];
+const ROUTEITEMS = [
+  {
+    pathName: "setting-index",
+    text: "Profile"
+  },
+  {
+    pathName: "setting-password",
+    text: "Password"
+  },
+  {
+    pathName: "setting-apiKey",
+    text: "Exchange API"
+  }
+];
 
-    export default {
-        name: "profile",
-        data(){
-            return {
-                ROUTEITEMS
-            }
-        },
-        computed:{
-           routerName(){
-               return this.$route.name
-           }
-        },
-        mounted(){
-            $(".pinned").pin({padding: {top: 90}})
-        }
+export default {
+  name: "profile",
+  data() {
+    return {
+      ROUTEITEMS
+    };
+  },
+  computed: {
+    routerName() {
+      return this.$route.name;
     }
+  },
+  mounted() {}
+};
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-    #profile
+@import '../../../static/css/base.styl';
 
-        .sidebar-left
-            width 300px
-            text-align right
+#profile {
+    .sidebar-left {
+        width: 160px;
+        text-align: right;
+    }
 
-        .sidebar-nav
-            display inline-block
-            width 200px
-            background-color #FFF
-            border 1px solid #f1f1f1
-            border-radius 5px
+    .sidebar-nav {
+        position: fixed;
+        width: 160px;
+        background-color: #FFF;
+        border: 1px solid #f1f1f1;
+        border-radius: 5px;
+        font-size: 0;
+        box-sizing: border-box;
 
-            .active
-                a
-                    color #333333
+        .active {
+            background-color: rgba(64, 158, 255, 0.06);
+            border-right: 3px solid #409eff;
+            color: #333333;
 
-                i
-                    display block
+            a {
+                color: #333333;
+            }
 
-            li
-                text-align left
-                height 50px
-                padding 0 20px
-                line-height 50px
-                cursor pointer
-                border-bottom 1px solid #f1f1f1
+            i {
+                display: block;
+            }
+        }
 
-                a
-                    color #999999
-                    width 100%
-                    height 100%
-                    display block
+        li {
+            text-align: left;
+            height: 45px;
+            padding: 0 20px;
+            line-height: 45px;
+            font-size: 13px;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f1f1;
 
-                i
-                    display none
-                    vertical-align middle
-                    height 50px
-                    line-height 50px
-                    float right
+            a {
+                color: #999999;
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
 
-                &:last-child
-                    border-bottom none
+            i {
+                display: none;
+                vertical-align: middle;
+                height: 50px;
+                line-height: 50px;
+                float: right;
+            }
 
-        .content
-            margin-left 320px
-            width 700px
-            color #333333
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+    }
+
+    .content {
+        margin-left: 200px;
+        width: 700px;
+        color: #333333;
+    }
+}
 </style>

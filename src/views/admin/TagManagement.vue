@@ -23,7 +23,7 @@
                     </div>
                     <div class="info-tag">
                         <ul>
-                            <li v-for="tag in tags">
+                            <li v-for="(tag, index) in tags" :key=index>
                                 <img src="../../../static/img/red_error.svg" @click="deleteTag(tag)">
                                 {{tag['tag_name']}}
                             </li>
@@ -36,124 +36,154 @@
     </div>
 </template>
 <script>
-    import net_util from '../../assets/js/net_utils'
-    import config from '../../assets/js/config'
-    import utils from '../../assets/js/utils'
-    import consts from '../../assets/js/consts'
+import net_util from "../../assets/js/net_utils";
+import config from "../../assets/js/config";
+import utils from "../../assets/js/utils";
+import consts from "../../assets/js/consts";
 
-    export default {
-        data: function () {
-            return {
-                tagAddForm: {
-                    tag_name: ''
-                },
-                tags: [],
-                loading: false
-            }
-        },
-        methods:{
-            addTag(){
-                if(this.tagAddForm.tag_name === ''){
-                    this.$message({type: 'warning', message: this.$t('page.tagManage.a1')})
-                    return false
-                }
-                let url = config.PYTHONBASEDOMAIN + `/currency/tags`
-                let data = {
-                    tag_name: this.tagAddForm.tag_name
-                }
-                let succ = res => {
-                    this.loading = false
-                    this.$message({type: 'success', message: this.$t('success')})
-                    this.getTagList()
-                }
-                let fail = res => {
-                    this.loading = false
-                    this.$message({type: 'error', message: res.responseJSON.message || this.$t('error')})
-                }
-                this.loading = true
-                net_util.postRequest(url, data, succ, fail)
-            },
-            deleteTag(tag){
-                let url = config.PYTHONBASEDOMAIN + `/currency/tags`
-                let data = {
-                    id: tag['id']
-                }
-                let succ = res => {
-                    this.loading = false
-                    this.$message({type: 'success', message: this.$t('success')})
-                    this.getTagList()
-                }
-                let fail = res => {
-                    this.loading = false
-                    this.$message({type: 'error', message: res.responseJSON.message || this.$t('error')})
-                }
-                this.loading = true
-                net_util.deleteRequest(url, data, succ, fail)
-            },
-            getTagList(){
-                let url = config.PYTHONBASEDOMAIN + `/currency/tags`
-                let data = {}
-                let succ = res => {
-                    this.loading = false
-                    this.tags = (JSON.parse(res)).result
-                }
-                let fail = res => {
-                    this.loading = false
-                    this.$message({type: 'error', message: res.responseJSON.message || this.$t('error')})
-                }
-                this.loading = true
-                net_util.getRequest(url, data, succ, fail)
-            },
-        },
-        mounted(){
-            this.getTagList()
-        }
+export default {
+  data: function() {
+    return {
+      tagAddForm: {
+        tag_name: ""
+      },
+      tags: [],
+      loading: false
+    };
+  },
+  methods: {
+    addTag() {
+      if (this.tagAddForm.tag_name === "") {
+        this.$message({
+          type: "warning",
+          message: this.$t("page.tagManage.a1")
+        });
+        return false;
+      }
+      let url = config.PYTHONBASEDOMAIN + `/currency/tags`;
+      let data = {
+        tag_name: this.tagAddForm.tag_name
+      };
+      let succ = res => {
+        this.loading = false;
+        this.$message({ type: "success", message: this.$t("success") });
+        this.getTagList();
+      };
+      let fail = res => {
+        this.loading = false;
+        this.$message({
+          type: "error",
+          message: res.responseJSON.message || this.$t("error")
+        });
+      };
+      this.loading = true;
+      net_util.postRequest(url, data, succ, fail);
+    },
+    deleteTag(tag) {
+      let url = config.PYTHONBASEDOMAIN + `/currency/tags`;
+      let data = {
+        id: tag["id"]
+      };
+      let succ = res => {
+        this.loading = false;
+        this.$message({ type: "success", message: this.$t("success") });
+        this.getTagList();
+      };
+      let fail = res => {
+        this.loading = false;
+        this.$message({
+          type: "error",
+          message: res.responseJSON.message || this.$t("error")
+        });
+      };
+      this.loading = true;
+      net_util.deleteRequest(url, data, succ, fail);
+    },
+    getTagList() {
+      let url = config.PYTHONBASEDOMAIN + `/currency/tags`;
+      let data = {};
+      let succ = res => {
+        this.loading = false;
+        this.tags = JSON.parse(res).result;
+      };
+      let fail = res => {
+        this.loading = false;
+        this.$message({
+          type: "error",
+          message: res.responseJSON.message || this.$t("error")
+        });
+      };
+      this.loading = true;
+      net_util.getRequest(url, data, succ, fail);
     }
+  },
+  mounted() {
+    this.getTagList();
+  }
+};
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-    @import "../../../static/css/base.styl"
+@import '../../../static/css/base.styl';
 
-    .card
-        padding 0
-        .collapse-head
-            height 72px
-            background-color #fafafa
-            h3
-                line-height 72px
-                padding-left 20px
-        .collapse-body
-            min-height 200px
-            padding 20px
-            .info-tag
-                ul
-                    border-top 1px solid #E4E7ED
-                    margin-top 10px
-                    li
-                        position relative
-                        display inline-block
-                        padding 0 20px
-                        margin-right 40px
-                        margin-top 40px
-                        line-height 32px
-                        background rgba(42,154,225,0.05)
-                        border 1px solid #2a9ae1
-                        border-radius 5px
-                        color #2a9ae1
-                        font-size 13px
-                        min-width 120px
-                        text-align center
-                        &:hover
-                            img
-                                display block
-                        img
-                            display none
-                            position absolute
-                            top: -10px
-                            right -10px
-                            width 20px
-                            height 20px
-                            cursor pointer
-                            &:hover
-                                opacity 0.8
+.card {
+    padding: 0;
 
+    .collapse-head {
+        height: 72px;
+        background-color: #fafafa;
+
+        h3 {
+            line-height: 72px;
+            padding-left: 20px;
+        }
+    }
+
+    .collapse-body {
+        min-height: 200px;
+        padding: 20px;
+
+        .info-tag {
+            ul {
+                border-top: 1px solid #E4E7ED;
+                margin-top: 10px;
+
+                li {
+                    position: relative;
+                    display: inline-block;
+                    padding: 0 20px;
+                    margin-right: 40px;
+                    margin-top: 40px;
+                    line-height: 32px;
+                    background: rgba(42, 154, 225, 0.05);
+                    border: 1px solid #2a9ae1;
+                    border-radius: 5px;
+                    color: #2a9ae1;
+                    font-size: 13px;
+                    min-width: 120px;
+                    text-align: center;
+
+                    &:hover {
+                        img {
+                            display: block;
+                        }
+                    }
+
+                    img {
+                        display: none;
+                        position: absolute;
+                        top: -10px;
+                        right: -10px;
+                        width: 20px;
+                        height: 20px;
+                        cursor: pointer;
+
+                        &:hover {
+                            opacity: 0.8;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 </style>
