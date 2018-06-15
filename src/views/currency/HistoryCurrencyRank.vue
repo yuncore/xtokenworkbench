@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div id="history-rank" class="container">
+        <div id="history-rank"
+            class="container">
             <transition mode="out-in" name="el-zoom-in-top">
                 <div v-show="t === 1">
                     <div class="chart" ref="marketcap_chart" style="height: 600px"></div>
@@ -143,6 +144,7 @@ export default {
       currency_data: [],
       coindesk_news: [],
       dateSelectShow: false,
+      historyRankLoading: false,
       market_cap_total: "",
       volume_usd_total: ""
     };
@@ -200,9 +202,14 @@ export default {
           time: time_long
         };
         let succ = res => {
+          this.historyRankLoading = false;
           resolve(res);
         };
-        net_util.getRequest(url, data, succ, reject);
+        let fail = res => {
+          this.historyRankLoading = false;
+        }
+        this.historyRankLoading = true;
+        net_util.getRequest(url, data, succ, fail);
       });
     },
     getTotalMarket() {
@@ -451,151 +458,151 @@ export default {
 @import '../../../static/css/base.styl';
 
 #history-rank {
-    width: 840px;
-    margin: 0 auto;
+  width: 840px;
+  margin: 0 auto;
 
-    .info {
-        .back {
-            margin-bottom: 20px;
-            font-size: 20px;
-            cursor: pointer;
+  .info {
+    .back {
+      margin-bottom: 20px;
+      font-size: 20px;
+      cursor: pointer;
 
-            img {
-                font-size: 20px;
-                vertical-align: middle;
-            }
-        }
-
-        .head {
-            margin-bottom: 20px;
-
-            .date {
-                position: relative;
-                background: #FFF;
-
-                .left {
-                    position: absolute;
-                    left: 10px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    font-size: 20px;
-                    text-align: center;
-                    vertical-align: middle;
-                    cursor: pointer;
-
-                    &:hover {
-                        opacity: 0.8;
-                        color: #409EFF;
-                    }
-                }
-
-                .center {
-                    height: 40px;
-                    padding: 20px 0;
-                    text-align: center;
-                    font-size: 20px;
-                    line-height: 20px;
-                    vertical-align: middle;
-
-                    p {
-                        font-size: 13px;
-                        cursor: pointer;
-                    }
-                }
-
-                .right {
-                    position: absolute;
-                    right: 10px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    font-size: 20px;
-                    text-align: center;
-                    vertical-align: middle;
-                    cursor: pointer;
-
-                    &:hover {
-                        opacity: 0.8;
-                        color: #409EFF;
-                    }
-                }
-            }
-
-            .detail {
-                text-align: center;
-                padding: 20px 0;
-                background: #FFF;
-
-                .title {
-                    font-size: 13px;
-                }
-
-                img {
-                    margin: 0 5px;
-                    vertical-align: middle;
-                }
-            }
-        }
-
-        .news {
-            margin-top: 10px;
-            overflow: auto;
-
-            .post-info {
-                border-bottom: solid 1px #e8e8e8;
-                vertical-align: top;
-                padding: 10px 0;
-                display: table;
-                width: 100%;
-
-                .picture {
-                    display: table-cell;
-                    vertical-align: middle;
-
-                    img {
-                        width: 150px;
-                        margin: 10px;
-                    }
-                }
-
-                .detail {
-                    display: table-cell;
-
-                    .time-author {
-                        color: #888;
-                        font-size: 13px;
-
-                        .author {
-                            color: #888;
-                            font-size: 14px;
-
-                            &:hover {
-                                color: #409EFF;
-                            }
-                        }
-                    }
-
-                    a {
-                        display: inline-block;
-                        color: #353536;
-
-                        &:hover {
-                            color: #409EFF;
-                        }
-                    }
-
-                    p {
-                        margin: 10px 0;
-                        line-height: 20px;
-                        font-size: 13px;
-                    }
-
-                    h3 {
-                        margin: 10px 0;
-                        font-weight: 600;
-                    }
-                }
-            }
-        }
+      img {
+        font-size: 20px;
+        vertical-align: middle;
+      }
     }
+
+    .head {
+      margin-bottom: 20px;
+
+      .date {
+        position: relative;
+        background: #FFF;
+
+        .left {
+          position: absolute;
+          left: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 20px;
+          text-align: center;
+          vertical-align: middle;
+          cursor: pointer;
+
+          &:hover {
+            opacity: 0.8;
+            color: #409EFF;
+          }
+        }
+
+        .center {
+          height: 40px;
+          padding: 20px 0;
+          text-align: center;
+          font-size: 20px;
+          line-height: 20px;
+          vertical-align: middle;
+
+          p {
+            font-size: 13px;
+            cursor: pointer;
+          }
+        }
+
+        .right {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 20px;
+          text-align: center;
+          vertical-align: middle;
+          cursor: pointer;
+
+          &:hover {
+            opacity: 0.8;
+            color: #409EFF;
+          }
+        }
+      }
+
+      .detail {
+        text-align: center;
+        padding: 20px 0;
+        background: #FFF;
+
+        .title {
+          font-size: 13px;
+        }
+
+        img {
+          margin: 0 5px;
+          vertical-align: middle;
+        }
+      }
+    }
+
+    .news {
+      margin-top: 10px;
+      overflow: auto;
+
+      .post-info {
+        border-bottom: solid 1px #e8e8e8;
+        vertical-align: top;
+        padding: 10px 0;
+        display: table;
+        width: 100%;
+
+        .picture {
+          display: table-cell;
+          vertical-align: middle;
+
+          img {
+            width: 150px;
+            margin: 10px;
+          }
+        }
+
+        .detail {
+          display: table-cell;
+
+          .time-author {
+            color: #888;
+            font-size: 13px;
+
+            .author {
+              color: #888;
+              font-size: 14px;
+
+              &:hover {
+                color: #409EFF;
+              }
+            }
+          }
+
+          a {
+            display: inline-block;
+            color: #353536;
+
+            &:hover {
+              color: #409EFF;
+            }
+          }
+
+          p {
+            margin: 10px 0;
+            line-height: 20px;
+            font-size: 13px;
+          }
+
+          h3 {
+            margin: 10px 0;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
 }
 </style>

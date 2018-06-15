@@ -15,7 +15,7 @@
             </div>
         </div>
         <div v-else>
-
+            <img class="empty" src="../../../../static/img/no_data.png">
         </div>
     </div>
 </template>
@@ -421,6 +421,12 @@ export default {
         .history-chart {
             height: 400px;
         }
+    }
+
+    .empty{
+      width: 300px;
+      margin: 0 auto;
+      display: block;
     }
 }
 </style>

@@ -4,6 +4,7 @@
             <div class="left sidebar-left">
                 <ul class="sidebar-nav pinned">
                     <li v-for="(item, index) in ROUTEITEMS"
+                        v-if="!item.admin || (item.admin && admin)"
                         :key="index"
                         :class="{active: routerName === item.pathName}">
                         <router-link :to="{name: item.pathName}">
@@ -25,7 +26,8 @@
 const ROUTEITEMS = [
   {
     pathName: "tag-manage",
-    text: "Tags"
+    text: "Tags",
+    admin: true
   },
   {
     pathName: "group-manage",
@@ -37,7 +39,8 @@ export default {
   name: "Manage",
   data() {
     return {
-      ROUTEITEMS
+      ROUTEITEMS,
+      admin: sessionStorage.getItem('admin')
     };
   },
   computed: {

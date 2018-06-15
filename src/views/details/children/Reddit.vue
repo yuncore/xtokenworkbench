@@ -75,10 +75,10 @@
                 </div>
                 <ul class="table">
                     <li v-for="(item, index) in redditLink" :key="index" class="table-item">
-                        <div class="logo">
+                        <div class="logo" v-if="postItemThumbnail(item.thumbnail)">
                             <img :src="postItemThumbnail(item.thumbnail)">
                         </div>
-                        <div class="content">
+                        <div class="content" :style="{'margin-left': postItemThumbnail(item.thumbnail) ? '100px' : '0'}">
                             <p class="title">
                                 <a :href="item['url']" target="_blank">
                                     {{item.title.length > 160 ? `${item.title.slice(0, 160)}...` : item.title}}
@@ -191,7 +191,7 @@
             </div>
         </div>
         <div v-else>
-            暂无数据
+            <img class="empty" src='../../../../static/img/no_data.png'>
         </div>
     </div>
 </template>
@@ -247,12 +247,6 @@ export default {
   watch: {
     redditPostCurrentDayIndex: function(val) {
       let d = this.REDDITDAYSDROPDOWN[val]["days"];
-      /*try{
-                    this.drawRedditPostTimeDistributeChart()
-                }
-                catch(e){
-                    console.log(e)
-                }*/
       this.getRedditPosts(
         1,
         this.redditPostCurrentNum,
@@ -269,19 +263,6 @@ export default {
         this.redditCurrentPostDays
       );
     }
-    /*redditPostCurrentExpressionIndex: function(val){
-                if(val === 1){
-                    if(this.redditPostTimeDistribution === null){
-                        this.getSubredditTimeDistribute('link').then(res => {
-                            this.drawRedditPostTimeDistributeChart()
-                        })
-                    }else{
-                        this.$nextTick(() => {
-                            this.drawRedditPostTimeDistributeChart()
-                        })
-                    }
-                }
-            },*/
   },
   methods: {
     init() {
@@ -471,11 +452,10 @@ export default {
       });
     },
     postItemThumbnail(url) {
-      if (url === "self") {
-        return "static/img/gtihub.svg";
-      } else {
-        return url;
+      if(url && url.startsWith('http')){
+        return url
       }
+      return null
     },
     getSmpFormatDateByLong: utils.getSmpFormatDateByLong
   },
@@ -565,8 +545,7 @@ export default {
                     }
                 }
 
-                .content {
-                    margin-left: 100px;
+                .content{
                     height: 70px;
                     position: relative;
 
@@ -651,6 +630,12 @@ export default {
         .comment-key-user {
             margin-top: 20px;
         }
+    }
+
+    .empty {
+      width: 300px;
+      display: block;
+      margin: 0 auto
     }
 }
 </style>

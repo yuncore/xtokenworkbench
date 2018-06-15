@@ -1,11 +1,6 @@
 <template>
     <div>
         <div class="eventList" style="overflow: auto; height: 100%"><!--:style="{height: windowsHeight+'px'}"-->
-            <div style="height: 100px; width:100%; background:#38435b; position: fixed; top: 0; z-index: 999;">
-                <router-link to="/index">
-                    <img src="../../../static/img/logo.svg" style="margin-left: 30px;margin-top: 36px; cursor: pointer;-webkit-transition: width 0.5s;transition: width 0.5s;">
-                </router-link>
-            </div>
             <div style=" padding: 40px 50px; overflow: auto; margin-top: 100px"><!--height: calc(100% - 100px);-->
                 <div class="zhuti" style="width: 100%; height: 720px;">
                     <div style="background:#38435b; height:60px; width: calc(100% - 20px); margin:10px 10px; border-radius: 10px; box-shadow: 0 2px 12px 0 #A0A1A2;">

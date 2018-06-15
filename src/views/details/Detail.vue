@@ -118,7 +118,7 @@ export default {
   computed: {
     routeName() {
       return this.$route.name;
-    }
+    },
   },
   methods: {
     // 请求用户订阅货币的id列表，Java端
@@ -187,9 +187,38 @@ export default {
         this.$message({ type: "error", message: this.$t("error") });
       };
       net_util.getRequest(url, data, succ, fail);
-    }
+    },
   },
-  mounted() {}
+  mounted() {
+
+  },
+  beforeRouteEnter (to, from, next){
+    if(!to.query.name){
+      let id = to.query.id;
+      let p = new Promise((resolve, reject) => {
+        let url = config.PYTHONBASEDOMAIN + '/currency'
+        let data = {
+          ids: JSON.stringify([id])
+        };
+        let succ = res => {
+          resolve(res);
+        };
+        net_util.getRequest(url, data, succ, reject)
+      });
+      p.then(res => {
+        if(res && res.length > 0){
+          to.query.name = res[0]["name"]
+        }
+        console.log(res)
+        next()
+      }).catch(e => {
+        console.log(e)
+        next()
+      })
+    }else{
+      next()
+    };
+  }
 };
 </script>
 

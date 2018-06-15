@@ -1,10 +1,5 @@
 <template>
     <div>
-        <div id="head">
-            <router-link :to="{name: 'currencyList', query: {page: this.$route.query.page}}">
-                <img src="../../../static/img/logo.svg" class="logo">
-            </router-link>
-        </div>
         <div id="content">
             <div class="card"
                  v-loading="loading"

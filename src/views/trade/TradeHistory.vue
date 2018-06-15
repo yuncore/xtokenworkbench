@@ -12,6 +12,7 @@
                 </ul>
             </div>
             <div class="content">
+              <div v-if="tradeHistoryList.length > 0" >
                 <el-table :data="tradeHistoryList"
                 :header-cell-style="headCellStyle">
                     <el-table-column label="Time" align="center" width='200'>
@@ -56,6 +57,10 @@
                     @current-change="handlePageChange"
                     @size-change="handleSizeChange">
                 </el-pagination>
+              </div>
+              <div v-else>
+                <img class="empty" src="../../../static/img/trade_empty.png">
+              </div>
             </div>
         </div>
     </div>
@@ -87,11 +92,11 @@ export default {
     };
   },
   methods: {
-    reloadTradeHistory(item, index){
-      if(index === this.activeIndex){
-        return
+    reloadTradeHistory(item, index) {
+      if (index === this.activeIndex) {
+        return;
       }
-      this.getTradeHistoryList(item.type, 1, 10, index)
+      this.getTradeHistoryList(item.type, 1, 10, index);
     },
     getTradeHistoryList(type, page, num, index) {
       let url = config.JAVABASEDOMAIN + `/bourse/binance/trade`;
@@ -104,7 +109,7 @@ export default {
         if (!res.errorMsg) {
           this.tradeHistoryList = res.result;
           this.count = res.size;
-          this.activeIndex = index
+          this.activeIndex = index;
         }
       };
       let fail = res => {};
@@ -145,53 +150,59 @@ export default {
 @import '../../../static/css/base.styl';
 
 #history {
-    .sidebar-left {
-        position: fixed;
-        width: 180px;
-        box-sizing: border-box;
-        background-color: #FFF;
-        border: 1px solid #f1f1f1;
-        border-radius: 5px;
-        font-size: 0;
+  .sidebar-left {
+    position: fixed;
+    width: 180px;
+    box-sizing: border-box;
+    background-color: #FFF;
+    border: 1px solid #f1f1f1;
+    border-radius: 5px;
+    font-size: 0;
 
-        ul {
-            .active {
-                background-color: rgba(64, 158, 255, 0.06);
-                border-right: 3px solid #409eff;
-                color: #333333;
-            }
+    ul {
+      .active {
+        background-color: rgba(64, 158, 255, 0.06);
+        border-right: 3px solid #409eff;
+        color: #333333;
+      }
 
-            li {
-                text-align: left;
-                height: 45px;
-                padding-left: 20px;
-                line-height: 45px;
-                font-size: 13px;
-                cursor: pointer;
-                border-bottom: 1px solid #f1f1f1;
-                color: #999999;
+      li {
+        text-align: left;
+        height: 45px;
+        padding-left: 20px;
+        line-height: 45px;
+        font-size: 13px;
+        cursor: pointer;
+        border-bottom: 1px solid #f1f1f1;
+        color: #999999;
 
-                img {
-                    vertical-align: middle;
-                    width: 20px;
-                    height: 20px;
-                }
-            }
+        img {
+          vertical-align: middle;
+          width: 20px;
+          height: 20px;
         }
+      }
+    }
+  }
+
+  .content {
+    margin-left: 200px;
+    background-color: #FFF;
+
+    .pagination {
+      padding: 5px;
+      background: #FFF;
     }
 
-    .content {
-        margin-left: 200px;
-        background-color: #EDEDED;
-
-        .pagination {
-            padding: 5px;
-            background: #FFF;
-        }
+    .empty {
+      width: 500px;
+      display: block;
+      margin: 0 auto 0 auto;
     }
+  }
 }
 
 .el-table::before {
-    width: 0;
+  width: 0;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div id="footer">
-        <img src="../../static/img/logo.svg">
+        <img src="../../static/img/bottom_logo.svg">
         <span>
             ©2018 All rights reserved
         </span>

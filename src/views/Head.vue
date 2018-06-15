@@ -2,7 +2,7 @@
     <div id="head-nav">
         <h1 class="logo">
             <router-link :to="{name: 'main'}">
-                <img src="../../static/img/logo.svg">
+                <img src="../../static/img/top_logo.svg">
             </router-link>
         </h1>
         <div class="container">
@@ -112,6 +112,8 @@ export default {
     z-index: 999;
     width: 100%;
     position: fixed;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0)
 
     .logo {
         display: inline-block;
