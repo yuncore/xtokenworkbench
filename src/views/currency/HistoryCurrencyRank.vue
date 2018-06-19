@@ -104,7 +104,7 @@
                             <span slot="label"><i class="el-icon-document"></i> Coindesk </span>
                             <div class="news">
                                 <ul>
-                                    <li class="post-info" v-for="(item, index) in coindesk_news" :key=index>d
+                                    <li class="post-info" v-for="(item, index) in coindesk_news" :key=index>
                                         <div class="picture" v-if="item['img'].startsWith('http')">
                                             <img :src="item['img']">
                                         </div>

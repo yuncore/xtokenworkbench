@@ -4,8 +4,8 @@
             <RichEditor ref="editor" @done="closeEditor($event)"></RichEditor>
         </el-dialog>
         <div class="container">
-            <div class="card price" style="border-radius: 10px; overflow: auto; height: 680px;padding: 50px; margin: 0">
-                <div style="width: 75%; float: left;">
+            <div class="card price" style="border-radius: 10px; background: #FFF; height: 680px;padding: 20px; margin: 0">
+                <div style="width: 600px; float: left;">
                     <p class="paramA" style="margin-top: 0px;float: left">类型</p>
                     <br>
                     <el-select v-model="value" placeholder="选择事件类型" style="margin-top: 15px; border-radius:12px; clear: both">
@@ -16,7 +16,7 @@
                     <el-input class="paramB" placeholder="填写事件标题" v-model.trim="title" style=" border-radius:12px;"></el-input>
                     <p class="paramA">内容</p>
                     <div @click="showEditor" v-html="intro"
-                         style="height: 160px; width: 100%; border-radius: 4px; margin-top: 15px; border:1px solid #E8E8E8 !important; overflow: auto;padding: 10px;">
+                         style="height: 160px; border-radius: 4px; margin-top: 15px; border:1px solid #E8E8E8 !important; overflow: auto;padding: 10px;">
                     </div>
                     <br>
                     <p class="paramA" style="float: left">关联项目</p>
