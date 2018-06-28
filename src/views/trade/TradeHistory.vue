@@ -1,69 +1,58 @@
 <template>
-    <div>
-        <div id="history" class="container">
-            <div class="left sidebar-left">
-                <ul>
-                    <li v-for="(item, index) in bindAPIList"
-                      @click='reloadTradeHistory(item, index)'
-                      :key='index'
-                      :class="{active: activeIndex === index}">
-                        {{item.bourseName}}
-                    </li>
-                </ul>
-            </div>
-            <div class="content">
-              <div v-if="tradeHistoryList.length > 0" >
-                <el-table :data="tradeHistoryList"
-                :header-cell-style="headCellStyle">
-                    <el-table-column label="Time" align="center" width='200'>
-                        <template slot-scope="scope">
-                            {{getSmpFormatDateByLong(scope.row.time)}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="Pair" align="center">
-                        <template slot-scope="scope">
-                            {{scope.row.symbol}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="Buy/Sell" align="center">
-                        <template slot-scope="scope">
-                        <span :style="{color: scope.row.buyer ? '#019933' : '#d14836'}">
-                            {{scope.row.buyer ? 'Buy' : 'Sell'}}
-                        </span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="Price" align="center">
-                        <template slot-scope="scope">
-                            {{scope.row.price}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="Filled" align="center">
-                        <template slot-scope="scope">
-                            {{scope.row.qty}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="Fee" align="center">
-                        <template slot-scope="scope">
-                            {{`${scope.row.commission} ${scope.row.commissionAsset}`}}
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <el-pagination
-                    layout="total, prev, pager, next, jumper"
-                    class="pagination"
-                    :total="count"
-                    :current-page="currentPage"
-                    :page-size=currentNum
-                    @current-change="handlePageChange"
-                    @size-change="handleSizeChange">
-                </el-pagination>
-              </div>
-              <div v-else>
-                <img class="empty" src="../../../static/img/trade_empty.png">
-              </div>
-            </div>
+  <div>
+    <div id="history" class="container">
+      <div class="left sidebar-left">
+        <ul>
+          <li v-for="(item, index) in bindAPIList" @click='reloadTradeHistory(item, index)' :key='index' :class="{active: activeIndex === index}">
+            {{item.bourseName}}
+          </li>
+        </ul>
+      </div>
+      <div class="content">
+        <div v-if="tradeHistoryList.length > 0">
+          <el-table :data="tradeHistoryList" :header-cell-style="headCellStyle">
+            <el-table-column label="Time" align="center" width='200'>
+              <template slot-scope="scope">
+                {{getSmpFormatDateByLong(scope.row.time)}}
+              </template>
+            </el-table-column>
+            <el-table-column label="Pair" align="center">
+              <template slot-scope="scope">
+                {{scope.row.symbol}}
+              </template>
+            </el-table-column>
+            <el-table-column label="Buy/Sell" align="center">
+              <template slot-scope="scope">
+                <span :style="{color: scope.row.buyer ? '#019933' : '#d14836'}">
+                  {{scope.row.buyer ? 'Buy' : 'Sell'}}
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column label="Price" align="center">
+              <template slot-scope="scope">
+                {{scope.row.price}}
+              </template>
+            </el-table-column>
+            <el-table-column label="Filled" align="center">
+              <template slot-scope="scope">
+                {{scope.row.qty}}
+              </template>
+            </el-table-column>
+            <el-table-column label="Fee" align="center">
+              <template slot-scope="scope">
+                {{`${scope.row.commission} ${scope.row.commissionAsset}`}}
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination layout="total, prev, pager, next, jumper" class="pagination" :total="count" :current-page="currentPage" :page-size=currentNum @current-change="handlePageChange" @size-change="handleSizeChange">
+          </el-pagination>
         </div>
+        <div v-else>
+          <img class="empty" src="../../../static/img/trade_empty.png">
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -112,7 +101,7 @@ export default {
           this.activeIndex = index;
         }
       };
-      let fail = res => {};
+      let fail = res => { };
       net_util.getRequest(url, data, succ, fail);
     },
     getBindAPIList() {
@@ -147,62 +136,52 @@ export default {
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-@import '../../../static/css/base.styl';
+@import '../../../static/css/base.styl'
 
-#history {
-  .sidebar-left {
-    position: fixed;
-    width: 180px;
-    box-sizing: border-box;
-    background-color: #FFF;
-    border: 1px solid #f1f1f1;
-    border-radius: 5px;
-    font-size: 0;
+#history
+  .sidebar-left
+    position fixed
+    width 180px
+    box-sizing border-box
+    background-color #FFF
+    border 1px solid #f1f1f1
+    border-radius 5px
+    font-size 0
 
-    ul {
-      .active {
-        background-color: rgba(64, 158, 255, 0.06);
-        border-right: 3px solid #409eff;
-        color: #333333;
-      }
+    ul
+      .active
+        background-color rgba(64, 158, 255, 0.06)
+        border-right 3px solid #409eff
+        color #333333
 
-      li {
-        text-align: left;
-        height: 45px;
-        padding-left: 20px;
-        line-height: 45px;
-        font-size: 13px;
-        cursor: pointer;
-        border-bottom: 1px solid #f1f1f1;
-        color: #999999;
+      li
+        text-align left
+        height 45px
+        padding-left 20px
+        line-height 45px
+        font-size 13px
+        cursor pointer
+        border-bottom 1px solid #f1f1f1
+        color #999999
 
-        img {
-          vertical-align: middle;
-          width: 20px;
-          height: 20px;
-        }
-      }
-    }
-  }
+        img
+          vertical-align middle
+          width 20px
+          height 20px
 
-  .content {
-    margin-left: 200px;
-    background-color: #FFF;
+  .content
+    margin-left 200px
+    background-color #FFF
 
-    .pagination {
-      padding: 5px;
-      background: #FFF;
-    }
+    .pagination
+      padding 5px
+      background #FFF
 
-    .empty {
-      width: 500px;
-      display: block;
-      margin: 0 auto 0 auto;
-    }
-  }
-}
+    .empty
+      width 500px
+      display block
+      margin 0 auto 0 auto
 
-.el-table::before {
-  width: 0;
-}
+.el-table::before
+  width 0
 </style>

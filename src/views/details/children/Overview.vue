@@ -1,157 +1,147 @@
 <template>
-    <div id="currency-overview">
-        <el-row class="market-part">
-            <el-col style="width: 260px">
-                <div class="card market-card cap">
-                    <div class="icon">
-                        <img src="../../../../static/img/market_cap.svg">
-                    </div>
-                    <div class="instruction">
-                        <span>
-                            {{customerParseFloat(currencyPrice['market_cap_usd'], '$')}}
-                            <br/>
-                            <em>Market Cap</em>
-                        </span>
-                    </div>
-                </div>
-            </el-col>
-            <el-col style="width: 260px; margin-left: 20px">
-                <div class="card market-card volume">
-                    <div class="icon">
-                        <img src="../../../../static/img/volumn.svg">
-                    </div>
-                    <div class="instruction">
-                        <span>
-                            {{customerParseFloat(currencyPrice['24h_volume_usd'], '$')}}
-                            <br/>
-                            <em>Volume(24H)</em>
-                        </span>
-                    </div>
-                </div>
-            </el-col>
-            <el-col style="width: 260px; margin-left: 20px">
-                <div class="card market-card volume">
-                    <div class="icon">
-                        <img src="../../../../static/img/supply.svg">
-                    </div>
-                    <div class="instruction">
-                        <span>
-                            {{customerParseFloat(currencyPrice['available_supply'])}}
-                            <br/>
-                            <em>Available</em>
-                        </span>
-                    </div>
-                </div>
-            </el-col>
-        </el-row>
-        <el-row class="basic-part">
-            <el-col style="width: 275px">
-                <div class="card basic-card info">
-                    <div class="raise-info">
-                        <p class="label">Project Info</p>
-                        <p class="name">{{currencyPrice.name}}<em>{{` (${currencyPrice.symbol})`}}</em></p>
-                        <div class="raise-detail" v-if="currencyAdditionInfo_myToken">
-                            <p><span class="label">ICO Date </span>{{currencyAdditionInfo_myToken.ico_date_display || '- -'}}</p>
-                            <p><span class="label">ICO Price </span>{{currencyAdditionInfo_myToken.exchange_rate_display || '- -'}}</p>
-                            <p><span class="label">ICO Amount </span>{{currencyAdditionInfo_myToken.raised_amount_display || '- -'}}</p>
-                        </div>
-                        <div v-else>
-                            Temporarily no data
-                        </div>
-                    </div>
-                    <div class="website-button">
-                        <img src="../../../../static/img/detail_website.svg">
-                        <span>Website</span>
-                    </div>
-                </div>
-            </el-col>
-            <el-col style="width: 275px; margin-left: 20px">
-                <div class="card basic-card trend">
-                    <div class="top-wrap">
-                        <el-button @click="predictButtonClick"
-                                   type="primary"
-                                   size="mini"
-                                   class="right predict" round>
-                            Predict
-                        </el-button>
-                        <p class="label">Trend</p>
-                        <p class="price">{{customerParseFloat(currencyPrice['price_usd'], '$')}}</p>
-                        <p v-if="currencyPrice.percent_change_24h"
-                           class="change">
-                            <span :style="{color: currencyPrice['percent_change_24h'] < 0 ? '#d14836' : '#019933'}">
-                                {{`${currencyPrice['percent_change_24h']}(24H)`}}
-                            </span>
-                        </p>
-                    </div>
-                    <div class="charts" ref="priceTrend">
-                    </div>
-                </div>
-            </el-col>
-            <el-col style="width: 230px; margin-left: 20px">
-                <div class="card basic-card tool">
-                    <div class="price-contrast-button">
-                        <img src="../../../../static/img/detail_price_contrast.svg">
-                        <router-link :to="{name: 'price_contrast', query: {id: this.id}}">
-                            Contrast
-                        </router-link>
-                    </div>
-                    <div class="tags">
-                        <ul class="tag-title">
-                            <li :class="{active: tagsOrGroup === 1}"
-                                @click="tagsOrGroup = 1"
-                                class="label">
-                                Tags
-                            </li>
-                            <li :class="{active: tagsOrGroup === 2}"
-                                @click="tagsOrGroup = 2"
-                                class="label">
-                                Group
-                            </li>
-                        </ul>
-                        <ul v-show="tagsOrGroup === 1" class="tag-content">
-                            <li v-for="(item, index) in tags"
-                                :key="index">
-                                {{item.tag_name}}
-                            </li>
-                        </ul>
-                        <ul v-show="tagsOrGroup === 2" class="tag-content">
-                            <li v-for="(item, index) in groups" :key="index">
-                                {{item.name}}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </el-col>
-        </el-row>
-        <div class="card intro-part">
-            <p class="label">Introduce</p>
-            <div class="content">
-                柚子可以理解为Enterprise Operation System，即为商用分布式应用设计的一款区块链操作系统。EOS是EOS软件引入的一种新的区块链架构，旨在实现分布式应用的性能扩展。注意，它并不是像比特币和以太坊那样是货币，而是基于EOS软件项目之上发布的代币，被称为区块链3.0
-            </div>
+  <div id="currency-overview">
+    <el-row class="market-part">
+      <el-col style="width: 260px">
+        <div class="card market-card cap">
+          <div class="icon">
+            <img src="../../../../static/img/market_cap.svg">
+          </div>
+          <div class="instruction">
+            <span>
+              {{customerParseFloat(currencyPrice['market_cap_usd'], '$')}}
+              <br/>
+              <em>Market Cap</em>
+            </span>
+          </div>
         </div>
-        <el-dialog
-            :title="$t('page.currencyList.t2') + ':'"
-            width="50%"
-            :visible.sync="collectorDiaVisible">
-            <el-input-number
-                min="1"
-                max="10000"
-                :controls="false"
-                v-model.trim="expectRank"
-                :placeholder="$t('page.currencyList.ph4')">
-            </el-input-number>
-            <el-checkbox v-model="smsAlert" style="margin-top: 20px; display: block">
-                {{$t('page.currencyList.t3')}}
-            </el-checkbox>
-            <span slot="footer" class="dialog-footer">
-                    <el-button @click="toRankView" style="float: left" type="danger">
-                        {{$t('page.currencyList.b6')}}
-                    </el-button>
-                    <el-button @click="collectorDiaVisible = false">{{$t('cancel')}}</el-button>
-                    <el-button type="primary" @click="collectorConfirm">{{$t('confirm')}}</el-button>
-                </span>
-        </el-dialog>
+      </el-col>
+      <el-col style="width: 260px; margin-left: 20px">
+        <div class="card market-card volume">
+          <div class="icon">
+            <img src="../../../../static/img/volumn.svg">
+          </div>
+          <div class="instruction">
+            <span>
+              {{customerParseFloat(currencyPrice['24h_volume_usd'], '$')}}
+              <br/>
+              <em>Volume(24H)</em>
+            </span>
+          </div>
+        </div>
+      </el-col>
+      <el-col style="width: 260px; margin-left: 20px">
+        <div class="card market-card volume">
+          <div class="icon">
+            <img src="../../../../static/img/supply.svg">
+          </div>
+          <div class="instruction">
+            <span>
+              {{customerParseFloat(currencyPrice['available_supply'])}}
+              <br/>
+              <em>Available</em>
+            </span>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row class="basic-part">
+      <el-col style="width: 275px">
+        <div class="card basic-card info">
+          <div class="raise-info">
+            <p class="label">Project Info</p>
+            <p class="name">{{currencyPrice.name}}
+              <em>{{` (${currencyPrice.symbol})`}}</em>
+            </p>
+            <div class="raise-detail" v-if="currencyAdditionInfo_myToken">
+              <p>
+                <span class="label">ICO Date </span>{{currencyAdditionInfo_myToken.ico_date_display || '- -'}}</p>
+              <p>
+                <span class="label">ICO Price </span>{{currencyAdditionInfo_myToken.exchange_rate_display || '- -'}}</p>
+              <p>
+                <span class="label">ICO Amount </span>{{currencyAdditionInfo_myToken.raised_amount_display || '- -'}}</p>
+            </div>
+            <div v-else>
+              Temporarily no data
+            </div>
+          </div>
+          <div class="related-links">
+            <p class="label">links</p>
+            <div class="link-item" v-if="descAndLink && descAndLink.link">
+              <a v-for="(v, k) in descAndLink.link" :href="v" target="_blank">{{k}}</a>
+              <!-- <a href="www.baidu.com" target="_blank">baidu</a>
+              <a href="www.baidu.com" target="_blank">baidu</a>
+              <a href="www.baidu.com" target="_blank">baidu</a>
+              <a href="www.baidu.com" target="_blank">baidu</a> -->
+            </div>
+          </div>
+        </div>
+      </el-col>
+      <el-col style="width: 275px; margin-left: 20px">
+        <div class="card basic-card trend">
+          <div class="top-wrap">
+            <el-button @click="predictButtonClick" type="primary" size="mini" class="right predict" round>
+              Predict
+            </el-button>
+            <p class="label">Trend</p>
+            <p class="price">{{customerParseFloat(currencyPrice['price_usd'], '$')}}</p>
+            <p v-if="currencyPrice.percent_change_24h" class="change">
+              <span :style="{color: currencyPrice['percent_change_24h'] < 0 ? '#d14836' : '#019933'}">
+                {{`${currencyPrice['percent_change_24h']}(24H)`}}
+              </span>
+            </p>
+          </div>
+          <div class="charts" ref="priceTrend">
+          </div>
+        </div>
+      </el-col>
+      <el-col style="width: 230px; margin-left: 20px">
+        <div class="card basic-card tool">
+          <router-link :to="{name: 'price_contrast', query: {id: id}}" class="price-contrast-button">
+            <img src="../../../../static/img/detail_price_contrast.svg"> Contrast
+          </router-link>
+          <div class="tags">
+            <ul class="tag-title">
+              <li :class="{active: tagsOrGroup === 1}" @click="tagsOrGroup = 1" class="label">
+                Tags
+              </li>
+              <li :class="{active: tagsOrGroup === 2}" @click="tagsOrGroup = 2" class="label">
+                Group
+              </li>
+            </ul>
+            <ul v-show="tagsOrGroup === 1" class="tag-content">
+              <li v-for="(item, index) in tags" :key="index">
+                {{item.tag_name}}
+              </li>
+            </ul>
+            <ul v-show="tagsOrGroup === 2" class="tag-content">
+              <li v-for="(item, index) in groups" :key="index">
+                {{item.name}}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+    <div class="card intro-part">
+      <p class="label">Introduce</p>
+      <div class="content" v-if="descAndLink && descAndLink.description" v-html="descAndLink.description">
+      </div>
     </div>
+    <el-dialog :title="$t('page.currencyList.t2') + ':'" width="50%" :visible.sync="collectorDiaVisible">
+      <el-input-number min="1" max="10000" :controls="false" v-model.trim="expectRank" :placeholder="$t('page.currencyList.ph4')">
+      </el-input-number>
+      <el-checkbox v-model="smsAlert" style="margin-top: 20px; display: block">
+        {{$t('page.currencyList.t3')}}
+      </el-checkbox>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="toRankView" style="float: left" type="danger">
+          {{$t('page.currencyList.b6')}}
+        </el-button>
+        <el-button @click="collectorDiaVisible = false">{{$t('cancel')}}</el-button>
+        <el-button type="primary" @click="collectorConfirm">{{$t('confirm')}}</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -177,13 +167,15 @@ export default {
       predictCurrencyId: "",
       expectRank: 0,
       smsAlert: false,
-      tagsOrGroup: 1
+      tagsOrGroup: 1,
+      descAndLink: '',
     };
   },
   methods: {
     init() {
       this.getCurrencyPrice()
         .then(() => {
+          this.getDescAndLinks(this.currencyPrice['symbol']);
           this.getCurrencyTags();
           this.getAdditionalInfo();
           this.getGroupByCurrencyId();
@@ -197,6 +189,20 @@ export default {
         .catch(e => {
           console.log(e);
         });
+    },
+    // 获取货币的描述和网站链接
+    getDescAndLinks(sym){
+      return new Promise((resolve, reject) => {
+        let url = config.PYTHONBASEDOMAIN + '/currency/link'
+        let data = {
+          symbol: sym
+        }
+        let succ = res => {
+          this.descAndLink = res
+          resolve()
+        }
+        net_util.getRequest(url, data, succ, reject)
+      })
     },
     // 获取货币的价格信息
     getCurrencyPrice() {
@@ -395,233 +401,198 @@ export default {
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-.card {
-    background: #FFF;
-}
+.card
+  background #FFF
 
-.basic-part {
-    height: 300px;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    margin-top: 20px;
+.basic-part
+  height 300px
+  margin-left 0 !important
+  margin-right 0 !important
+  margin-top 20px
 
-    .info {
-        background: none !important;
-        padding: 0 !important;
+  .info
+    background none !important
+    padding 0 !important
 
-        .raise-info {
-            background: #FFF;
-            height: 220px;
-            box-sizing: border-box;
-            padding: 13px 16px;
-            position: relative;
+    .raise-info
+      background #FFF
+      height 160px
+      box-sizing border-box
+      padding 13px 16px
+      position relative
 
-            .raise-detail {
-                position: absolute;
-                font-size: 13px;
-                bottom: 10px;
-            }
-        }
+      .raise-detail
+        position absolute
+        font-size 13px
+        bottom 10px
 
-        .website-button {
-            font-family: PingFangSC-Regular;
-            height: 50px;
-            line-height: 50px;
-            margin-top: 30px;
-            font-size: 14px;
-            color: #FFF;
-            cursor: pointer;
-            text-align: center;
-            background: linear-gradient(-179deg, #78d25e 2%, #42bb77 94%);
+        .label
+          line-height 20px
 
-            &:hover {
-                opacity: 0.8;
-            }
+    .related-links
+      box-sizing border-box
+      background #FFF
+      padding 13px 16px
+      height 110px
+      margin-top 30px
+      font-size 14px
 
-            img {
-                width: 18px;
-                height: 18px;
-                transform: translateY(-3px);
-                vertical-align: middle;
-            }
-        }
-    }
+      .link-item
+        display block
 
-    .trend {
-        padding: 0 !important;
+        a
+          display inline-block
+          color #1c8cff
+          margin-right 5px
 
-        .top-wrap {
-            padding: 13px 16px;
+  .trend
+    padding 0 !important
 
-            .predict {
-                position: absolute;
-                right: 20px;
-                z-index: 99;
-            }
-        }
+    .top-wrap
+      padding 13px 16px
 
-        .price {
-            font-size: 26px;
-            color: #232a3a;
-        }
+      .predict
+        position absolute
+        right 20px
+        z-index 99
 
-        .charts {
-            top: 0;
-            height: 300px;
-            width: 100%;
-            position: absolute;
-        }
-    }
+    .price
+      font-size 26px
+      color #232a3a
 
-    .tool {
-        background: none !important;
-        padding: 0 !important;
+    .charts
+      top 0
+      height 300px
+      width 100%
+      position absolute
 
-        .price-contrast-button {
-            line-height: 50px;
-            font-size: 14px;
-            color: #FFF;
-            cursor: pointer;
-            text-align: center;
-            background-image: linear-gradient(-179deg, #5ebdf9 0%, #61a1f3 94%);
+  .tool
+    background none !important
+    padding 0 !important
 
-            &:hover {
-                opacity: 0.8;
-            }
+    .price-contrast-button
+      display block
+      line-height 50px
+      font-size 14px
+      color #FFF
+      cursor pointer
+      text-align center
+      background-image linear-gradient(-179deg, #5ebdf9 0%, #61a1f3 94%)
 
-            img {
-                width: 18px;
-                height: 18px;
-                transform: translateY(-3px);
-                vertical-align: middle;
-            }
+      &:hover
+        opacity 0.8
 
-            a {
-                color #FFF
-            }
-        }
+      img
+        width 18px
+        height 18px
+        transform translateY(-3px)
+        vertical-align middle
 
-        .tags {
-            margin-top: 30px;
-            height: 220px;
-            box-sizing: border-box;
-            background: #FFF;
+      a
+        color #FFF
 
-            .tag-title {
-                font-size: 0;
+    .tags
+      margin-top 30px
+      height 220px
+      box-sizing border-box
+      background #FFF
 
-                li {
-                    font-size: 13px;
-                    display: inline-block;
-                    width: 50%;
-                    text-align: center;
-                    background: #eee;
-                    cursor: pointer;
-                }
+      .tag-title
+        font-size 0
 
-                .active {
-                    background: #FFF;
-                    color: #61a1f3;
-                }
-            }
+        .label
+          line-height 30px
 
-            .tag-content {
-                padding: 0 13px;
-                font-size: 0;
+        li
+          font-size 13px
+          display inline-block
+          width 50%
+          text-align center
+          background #eee
+          cursor pointer
 
-                li {
-                    font-size: 13px;
-                    padding: 5px 10px;
-                    margin-right: 10px;
-                    margin-top: 10px;
-                    background: #ebf5ff;
-                    color: #409eff;
-                    display: inline-block;
-                }
-            }
-        }
-    }
+        .active
+          background #FFF
+          color #61a1f3
 
-    .basic-card {
-        height: 300px;
-        padding: 20px;
-        background: #FFF;
-        position: relative;
+      .tag-content
+        padding 0 13px
+        font-size 0
 
-        .label {
-            font-size: 13px;
-            line-height: 30px;
-            color: #b7c4d4;
-        }
+        li
+          font-size 13px
+          padding 5px 10px
+          margin-right 10px
+          margin-top 10px
+          background #ebf5ff
+          color #409eff
+          display inline-block
 
-        .name {
-            font-size: 24px;
-            margin: 5px 0;
+  .basic-card
+    height 300px
+    padding 20px
+    background #FFF
+    position relative
 
-            em {
-                font-style: normal;
-                font-size: 16px;
-                color: #b7c4d4;
-            }
-        }
-    }
-}
+    .label
+      font-size 13px
+      line-height 15px
+      color #b7c4d4
 
-.market-part {
-    margin: 0 !important;
-    height: 108px;
+    .name
+      font-size 24px
+      margin 5px 0
 
-    .market-card {
-        height: 108px;
-        padding: 0 20px;
+      em
+        font-style normal
+        font-size 16px
+        color #b7c4d4
 
-        .icon {
-            float: left;
-            line-height: 108px;
-            margin-right: 10px;
+.market-part
+  margin 0 !important
+  height 108px
 
-            img {
-                width: 30px;
-                height: 30px;
-                vertical-align: middle;
-            }
-        }
+  .market-card
+    height 108px
+    padding 0 20px
 
-        .instruction {
-            line-height: 108px;
-            margin-left: 30px;
+    .icon
+      float left
+      line-height 108px
+      margin-right 10px
 
-            span {
-                font-family: PingFangSC-Regular;
-                display: inline-block;
-                font-size: 18px;
-                line-height: 25px;
-                vertical-align: middle;
+      img
+        width 30px
+        height 30px
+        vertical-align middle
 
-                em {
-                    font-style: normal;
-                    font-size: 13px;
-                    color: #999999;
-                }
-            }
-        }
-    }
-}
+    .instruction
+      line-height 108px
+      margin-left 30px
 
-.intro-part {
-    margin-top: 20px;
-    padding: 20px;
-    line-height: 26px;
+      span
+        font-family PingFangSC-Regular
+        display inline-block
+        font-size 18px
+        line-height 25px
+        vertical-align middle
 
-    .label {
-        line-height: 30px;
-        font-size: 13px;
-        color: #b7c4d4;
-    }
+        em
+          font-style normal
+          font-size 13px
+          color #999999
 
-    .content {
-        color: #333333;
-        font-size: 13px;
-    }
-}
+.intro-part
+  margin-top 20px
+  padding 20px
+  line-height 26px
+
+  .label
+    line-height 15px
+    font-size 13px
+    color #b7c4d4
+
+  .content
+    color #333333
+    font-size 13px
 </style>

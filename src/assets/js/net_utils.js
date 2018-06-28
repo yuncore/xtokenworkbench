@@ -31,17 +31,17 @@ function request({
             fail(resMsg)
         }
     };
-    if(dataType){
-        requestObj.dataType = dataType
+    if(dataType && dataType.need){
+        requestObj.dataType = dataType.value
     }
-    if(contentType){
-        requestObj.contentType = contentType
+    if(contentType && contentType.need){
+        requestObj.contentType = contentType.value
     }
-    if (traditional) {
-        requestObj.traditional = true
+    if (traditional && traditional.need) {
+        requestObj.traditional = traditional.value
     }
-    if (processData) {
-        requestObj.processData = true
+    if (processData && processData.need) {
+        requestObj.processData = processData.value
     }
     $.ajax(requestObj)
 }
@@ -52,8 +52,8 @@ function getRequest(url, data, succ, fail) {
         data: data,
         succ: succ,
         fail: fail,
-        dataType: 'json',
-        contentType: 'application/json;charset=UTF-8'
+        dataType: {need: true, value: 'json'},
+        contentType: {need: true, value: 'application/json;charset=UTF-8'}
     })
 }
 
@@ -64,8 +64,8 @@ function postRequest(url, data, succ, fail) {
         data: JSON.stringify(data),
         succ: succ,
         fail: fail,
-        dataType: 'json',
-        contentType: 'application/json;charset=UTF-8'
+        dataType: {need: true, value: 'json'},
+        contentType: {need: true, value: 'application/json;charset=UTF-8'}
     })
 }
 
@@ -76,9 +76,9 @@ function formRequest(url, data, succ, fail) {
         data: data,
         succ: succ,
         fail: fail,
-        dataType: 'json',
-        traditional: true,
-        contentType: 'application/x-www-form-urlencoded;charset=UTF-8'
+        dataType: {need: true, value: 'json'},
+        traditional: {need: true, value: true},
+        contentType: {need: true, value: 'application/x-www-form-urlencoded;charset=UTF-8'}
     })
 }
 
@@ -89,8 +89,8 @@ function deleteRequest(url, data, succ, fail) {
         data: JSON.stringify(data),
         succ: succ,
         fail: fail,
-        dataType: 'json',
-        contentType: 'application/json;charset=UTF-8'
+        dataType: {need: true, value: 'json'},
+        contentType: {need: true, value: 'application/json;charset=UTF-8'}
     })
 }
 
@@ -101,9 +101,8 @@ function formDataRequest(url, data, succ, fail) {
         data: data,
         succ: succ,
         fail: fail,
-        processData: false,
-        dataType: 'json',
-        contentType: 'application/json;charset=UTF-8'
+        processData: {need: true, value: false},
+        contentType: {need: true, value: false}
     })
 }
 

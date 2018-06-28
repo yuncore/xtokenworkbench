@@ -1,58 +1,45 @@
 <template>
-    <div id="profile">
-        <h3>Profile</h3>
-        <p>Modifying your profile will be displayed on your business card and will allow more friends to get to know you.</p>
-        <div class="avatar-setting">
-            <img class="avatar" :src="avatar">
-            <el-button @click="showCroppaDia"
-                       type="primary"
-                       size="mini"
-                       class="upload-button">
-                upload new picture
-            </el-button>
-        </div>
-        <el-form :model="profileForm"
-                 :rules="rules"
-                 ref="profileForm"
-                 label-position="top"
-                 class="profile-form">
-            <el-form-item label="Name" prop="name">
-                <el-input v-model.trim="profileForm.name"></el-input>
-            </el-form-item>
-            <el-form-item label="Email" prop="email">
-                <el-input v-model.trim="profileForm.email" type="email"></el-input>
-            </el-form-item>
-            <el-form-item label="Address" prop="address">
-                <el-input v-model.trim="profileForm.address"></el-input>
-            </el-form-item>
-            <el-form-item label="Personal Page" prop="personalPage">
-                <el-input v-model.trim="profileForm.personalPage"></el-input>
-            </el-form-item>
-            <el-form-item label="Bio" prop="intro">
-                <el-input  type="textarea"
-                           :rows="2"
-                           v-model.trim="profileForm.intro">
-                </el-input>
-            </el-form-item>
-            <el-form-item class="operate-button-group">
-                <el-button type="primary" @click="submitForm('profileForm', updateUserDetail)">
-                    Update Profile
-                </el-button>
-            </el-form-item>
-        </el-form>
-        <el-dialog :visible.sync="avatarDialogVisible" width="400px">
-            <croppa v-model="croppa"
-                    :zoom-speed="10"
-                    :prevent-white-space="true"
-                    initial-size="natural"
-                    class="croppa">
-            </croppa>
-            <span slot="footer" class="dialog-footer">
-                <el-button size="mini" @click="avatarDialogVisible = false">Cancel</el-button>
-                <el-button size="mini" type="success" @click="setNewPicture">Set new picture</el-button>
-            </span>
-        </el-dialog>
+  <div id="profile">
+    <h3>Profile</h3>
+    <p>Modifying your profile will be displayed on your business card and will allow more friends to get to know you.</p>
+    <div class="avatar-setting">
+      <img class="avatar" :src="avatar">
+      <el-button @click="showCroppaDia" type="primary" size="mini" class="upload-button">
+        upload new picture
+      </el-button>
     </div>
+    <el-form :model="profileForm" :rules="rules" ref="profileForm" label-position="top" class="profile-form">
+      <el-form-item label="Name" prop="name">
+        <el-input v-model.trim="profileForm.name"></el-input>
+      </el-form-item>
+      <el-form-item label="Email" prop="email">
+        <el-input v-model.trim="profileForm.email" type="email"></el-input>
+      </el-form-item>
+      <el-form-item label="Address" prop="address">
+        <el-input v-model.trim="profileForm.address"></el-input>
+      </el-form-item>
+      <el-form-item label="Personal Page" prop="personalPage">
+        <el-input v-model.trim="profileForm.personalPage"></el-input>
+      </el-form-item>
+      <el-form-item label="Bio" prop="intro">
+        <el-input type="textarea" :rows="2" v-model.trim="profileForm.intro">
+        </el-input>
+      </el-form-item>
+      <el-form-item class="operate-button-group">
+        <el-button type="primary" @click="submitForm('profileForm', updateUserDetail)">
+          Update Profile
+        </el-button>
+      </el-form-item>
+    </el-form>
+    <el-dialog :visible.sync="avatarDialogVisible" width="400px">
+      <croppa v-model="croppa" :zoom-speed="10" :prevent-white-space="true" initial-size="natural" class="croppa">
+      </croppa>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="avatarDialogVisible = false">Cancel</el-button>
+        <el-button size="mini" type="success" @click="setNewPicture">Set new picture</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -160,10 +147,10 @@ export default {
           .then(res => {
             this.$message({ type: "success", message: this.$t("success") });
             this.avatarDialogVisible = false;
-            this.croppa = {};
             this.getUserDetail();
           })
           .catch(res => {
+            console.log(res)
             this.$message({ type: "error", message: this.$t("error") });
           });
       });
@@ -200,44 +187,35 @@ export default {
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-#profile {
-    h3 {
-        margin: 0;
-        font-size: 20px;
-        font-weight: normal;
-    }
+#profile
+  h3
+    margin 0
+    font-size 20px
+    font-weight normal
 
-    p {
-        margin-top: 5px;
-        margin-bottom: 20px;
-        font-size: 14px;
-    }
+  p
+    margin-top 5px
+    margin-bottom 20px
+    font-size 14px
 
-    .operate-button-group {
-        margin-top: 20px;
-    }
+  .operate-button-group
+    margin-top 20px
 
-    .avatar-setting {
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-        }
+  .avatar-setting
+    .avatar
+      width 100px
+      height 100px
+      border-radius 50%
 
-        .upload-button {
-            margin-left: 10px;
-        }
-    }
+    .upload-button
+      margin-left 10px
 
-    .croppa {
-        margin: 0 auto;
-        width: 200px;
-        height: 200px;
-        display: block;
-    }
+  .croppa
+    margin 0 auto
+    width 200px
+    height 200px
+    display block
 
-    .croppa-container canvas {
-        border-radius: 50% !important;
-    }
-}
+  .croppa-container canvas
+    border-radius 50% !important
 </style>

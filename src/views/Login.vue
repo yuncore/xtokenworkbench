@@ -3,7 +3,7 @@
         <div id="window" class="flip">
             <div class="page page-front">
                 <div class="page-content">
-                    <div class="input-row" style="text-align: center">
+                    <div class="input-row logo" style="text-align: center">
                         <img src="static/img/guan2.svg" :class="[{fadeIn: first}, {delay1: first}]"/>
                     </div>
                     <div class="input-row">
@@ -165,6 +165,10 @@ export default {
   cursor: pointer;
 }
 
+#window .password {
+  margin-bottom: 65px!important;
+}
+
 #window .password .label {
   display: inline-block;
 }
@@ -191,8 +195,8 @@ export default {
   right: 0;
   bottom: 0;
   margin: auto;
-  height: 500px;
-  width: 450px;
+  height: 450px;
+  width: 350px;
   color: #fff;
   -webkit-animation: 1.5s window ease-in-out backwards;
   -moz-animation: 1.5s window ease-in-out backwards;
@@ -294,7 +298,7 @@ export default {
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   border-radius: 6px;
-  padding: 60px;
+  padding: 30px 50px;
 }
 
 #window .page-back {
@@ -339,6 +343,11 @@ export default {
   transform: translateY(-30px);
 }
 
+#window .logo img{
+  width: 45px;
+  height: 45px;
+}
+
 #window .input-row {
   margin: 0 0 30px;
 }
@@ -355,7 +364,6 @@ export default {
 
 #window .label {
   font-family: sans-serif;
-  text-transform: uppercase;
   font-size: 12px;
   margin: 0 0 10px 0;
   color: #fff;
@@ -365,8 +373,8 @@ export default {
 
 #window .input {
   padding: 0 15px;
-  height: 40px;
-  line-height: 40px;
+  height: 35px;
+  line-height: 35px;
   outline: none;
   border: 0;
   background: #fff;
@@ -389,8 +397,9 @@ export default {
 }
 
 #window .button {
-  height: 50px;
-  line-height: 50px;
+  left: 50%;
+  height: 35px;
+  line-height: 35px;
   padding: 0 20px;
   margin: 0;
   text-align: center;
@@ -401,7 +410,7 @@ export default {
   outline: none;
   cursor: pointer;
   overflow: hidden;
-  font-size: 17px;
+  font-size: 14px;
   background: #d85c89;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -615,7 +624,7 @@ export default {
   }
 
   100% {
-    width: 450px;
+    width: 350px;
   }
 }
 
@@ -643,7 +652,7 @@ export default {
   }
 
   100% {
-    width: 450px;
+    width: 350px;
   }
 }
 
@@ -671,7 +680,7 @@ export default {
   }
 
   100% {
-    width: 450px;
+    width: 350px;
   }
 }
 
