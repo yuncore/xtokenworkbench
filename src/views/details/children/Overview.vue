@@ -67,11 +67,7 @@
           <div class="related-links">
             <p class="label">links</p>
             <div class="link-item" v-if="descAndLink && descAndLink.link">
-              <a v-for="(v, k) in descAndLink.link" :href="v" target="_blank">{{k}}</a>
-              <!-- <a href="www.baidu.com" target="_blank">baidu</a>
-              <a href="www.baidu.com" target="_blank">baidu</a>
-              <a href="www.baidu.com" target="_blank">baidu</a>
-              <a href="www.baidu.com" target="_blank">baidu</a> -->
+              <a v-for="link in sortedLink" :href="link.v" target="_blank">{{link.k}}</a>
             </div>
           </div>
         </div>
@@ -79,8 +75,8 @@
       <el-col style="width: 275px; margin-left: 20px">
         <div class="card basic-card trend">
           <div class="top-wrap">
-            <el-button @click="predictButtonClick" type="primary" size="mini" class="right predict" round>
-              Predict
+            <el-button @click="contrastButtonClick" type="primary" size="mini" class="right predict" round>
+              Contrast
             </el-button>
             <p class="label">Trend</p>
             <p class="price">{{customerParseFloat(currencyPrice['price_usd'], '$')}}</p>
@@ -96,9 +92,9 @@
       </el-col>
       <el-col style="width: 230px; margin-left: 20px">
         <div class="card basic-card tool">
-          <router-link :to="{name: 'price_contrast', query: {id: id}}" class="price-contrast-button">
-            <img src="../../../../static/img/detail_price_contrast.svg"> Contrast
-          </router-link>
+          <a @click="predictButtonClick" class="price-contrast-button">
+            <img src="../../../../static/img/detail_price_contrast.svg"> Predict
+          </a>
           <div class="tags">
             <ul class="tag-title">
               <li :class="{active: tagsOrGroup === 1}" @click="tagsOrGroup = 1" class="label">
@@ -149,6 +145,7 @@ import net_util from "../../../assets/js/net_utils";
 import config from "../../../assets/js/config";
 import utils from "../../../assets/js/utils";
 import echarts from "echarts";
+import func from './vue-temp/vue-editor-bridge';
 
 export default {
   name: "overview",
@@ -170,6 +167,26 @@ export default {
       tagsOrGroup: 1,
       descAndLink: '',
     };
+  },
+  computed: {
+    sortedLink: function(){
+      if(descAndLink && descAndLink.link){
+        let linkObj = descAndLink.link
+        let newLinks = []
+        let keyRank = ['Website', 'Reddit', 'Github']
+        for(let k of keyRank){
+          newLinks.push({k: k, v: linkObj[k]})
+        }
+        for(let k in linkObj){
+          if(!(k in keyRank)){
+            newLinks.push({k: k, v: linkObj[k]})
+          }
+        }
+        return newLinks
+      }else{
+        return []
+      }
+    }
   },
   methods: {
     init() {
@@ -340,6 +357,10 @@ export default {
       this.expectRank = this.currencyPrice.rank;
       this.predictCurrencyId = this.id;
       this.collectorDiaVisible = true;
+    },
+    // 点击价格对比按钮的回掉
+    contrastButtonClick(){
+      this.$router.push({name: 'price_contrast', query: {id: this.id}})
     },
     // 前往排行榜列表
     toRankView() {

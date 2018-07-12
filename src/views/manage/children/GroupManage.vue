@@ -1,71 +1,52 @@
 <template>
-    <div>
-        <div id="groupManage">
-            <div class="head">
-                <div class="describe">
-                    <h3>Group Manage</h3>
-                    <p>Add, delete, modify and make association of your own group.</p>
-                </div>
-                <div class="add-tag right">
-                    <el-form :inline="true" :model="groupAddForm" label-width="80px">
-                        <el-form-item>
-                            <el-input v-model.trim="groupAddForm.name" size="small" :placeholder="$t('page.tagManage.ph1')">
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" size="small" @click="addGroup">{{$t('create')}}</el-button>
-                        </el-form-item>
-                    </el-form>
-                </div>
-            </div>
-            <ul class="group-list">
-                <li v-for="(item, index) in groupList" :key="index">
-                    <p class="name">{{item.groupName}}</p>
-                    <p class="describe">{{item.count}} currencies have been linked</p>
-                    <div class="operateBar">
-                        <img @click="renameGroup(item.id, item.groupName)" src="../../../../static/img/tag_rename.svg" title="rename">
-                        <img @click="showEditDia(item.id, index)" src="../../../../static/img/tag_edit.svg" title="edit">
-                        <img @click="deleteGroup(item.id, item.groupName)" src="../../../../static/img/tag_delete.svg" title="delete">
-                    </div>
-                </li>
-            </ul>
-            <el-dialog
-                title="Edit Group"
-                :visible.sync="editDiaVisiable"
-                width="45%"
-                class="edit-tag-dia">
-                <el-select
-                    v-model="chooseCurrencies"
-                    filterable
-                    multiple
-                    remote
-                    reserve-keyword
-                    :remote-method="headSearchMethod"
-                    :loading="headSearchLoading"
-                    placeholder="search"
-                    @change="headSearchChange"
-                    style="width: 350px">
-                    <el-option
-                        v-for="(item, index) in headSearchOptions"
-                        :key="index"
-                        :label="item.name"
-                        :value="item.id">
-                    </el-option>
-                </el-select>
-                <el-button type="primary" @click="addRelation">
-                    Add
-                </el-button>
-                <ul v-if="relatedCurrency.length > 0">
-                    <li v-for="(item, index) in relatedCurrency" :key="index">
-                        <img @click="deleteRelation(item)" class="delete" src="../../../../static/img/tag_currency_delete.svg" alt="">
-                        <img class="logo" :src="`static/img/coinLogos/${item.currency}.png`" alt="">
-                        {{item.currency}}
-                    </li>
-                </ul>
-                <p v-else>No related currencies.</p>
-            </el-dialog>
+  <div>
+    <div id="groupManage">
+      <div class="head">
+        <div class="describe">
+          <h3>Group Manage</h3>
+          <p>Add, delete, modify and make association of your own group.</p>
         </div>
+        <div class="add-tag right">
+          <el-form :inline="true" :model="groupAddForm" label-width="80px">
+            <el-form-item>
+              <el-input v-model.trim="groupAddForm.name" size="small" :placeholder="$t('page.tagManage.ph1')">
+              </el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" size="small" @click="addGroup">{{$t('create')}}</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
+      <ul class="group-list">
+        <li v-for="(item, index) in groupList" :key="index">
+          <p class="name">{{item.groupName}}</p>
+          <p class="describe">{{item.count}} currencies have been linked</p>
+          <div class="operateBar">
+            <img @click="renameGroup(item.id, item.groupName)" src="../../../../static/img/tag_rename.svg" title="rename">
+            <img @click="showEditDia(item.id, index)" src="../../../../static/img/tag_edit.svg" title="edit">
+            <img @click="deleteGroup(item.id, item.groupName)" src="../../../../static/img/tag_delete.svg" title="delete">
+          </div>
+        </li>
+      </ul>
+      <el-dialog :title="groupList[currentGroupIndex] && groupList[currentGroupIndex]['groupName']" :visible.sync="editDiaVisiable" width="45%" class="edit-tag-dia">
+        <el-select v-model="chooseCurrencies" filterable multiple remote reserve-keyword :remote-method="headSearchMethod" :loading="headSearchLoading" placeholder="search" @change="headSearchChange" style="width: 350px">
+          <el-option v-for="(item, index) in headSearchOptions" :key="index" :label="item.name" :value="item.id">
+          </el-option>
+        </el-select>
+        <el-button type="primary" @click="addRelation">
+          Add
+        </el-button>
+        <ul v-if="relatedCurrency.length > 0">
+          <li v-for="(item, index) in relatedCurrency" :key="index">
+            <img @click="deleteRelation(item)" class="delete" src="../../../../static/img/tag_currency_delete.svg" alt="">
+            <img class="logo" :src="`static/img/coinLogos/${item.currency}.png`" alt=""> {{item.currency}}
+          </li>
+        </ul>
+        <p v-else>No related currencies.</p>
+      </el-dialog>
     </div>
+  </div>
 </template>
 
 <script>
@@ -184,31 +165,31 @@ export default {
           this.relatedCurrency = res;
         })
         .then(() => {
-          this.getTagList();
+          this.getGroupList();
         });
     },
     deleteRelationRequest(id) {
       return new Promise((resolve, reject) => {
-          let url = config.JAVABASEDOMAIN + "/pros/group/cy/del";
-          let data = {
-              id: id
-          };
-          let succ = res => {
-              resolve()
-              if(!res.errorMsg){
-                  this.$message({
-                      type: "success",
-                      message: this.$t("success")
-                  })
-              }else{
-                  reject()
-                  this.$message({
-                      type: "error",
-                      message: this.$t("fail")
-                  })
-              }
+        let url = config.JAVABASEDOMAIN + "/pros/group/cy/del";
+        let data = {
+          id: id
+        };
+        let succ = res => {
+          resolve()
+          if (!res.errorMsg) {
+            this.$message({
+              type: "success",
+              message: this.$t("success")
+            })
+          } else {
+            reject()
+            this.$message({
+              type: "error",
+              message: this.$t("fail")
+            })
           }
-          net_util.getRequest(url, data, succ, reject)
+        }
+        net_util.getRequest(url, data, succ, reject)
       });
     },
     // 添加货币和标签的关联关系
@@ -270,7 +251,7 @@ export default {
         let succ = res => {
           this.headSearchOptions = res.data;
         };
-        let fail = res => {};
+        let fail = res => { };
         net_util.getRequest(url, { keyword: query }, succ, fail);
       } else {
         this.headSearchOptions = [];
@@ -282,7 +263,15 @@ export default {
         let url = config.JAVABASEDOMAIN + `/pros/group/list`;
         let succ = res => {
           if (!res.errorMsg) {
-            this.groupList = res.result;
+            let groupList = res.result;
+            let newGroupList = groupList.sort(
+              (item1, item2) => (item1.count < item2.count ? 1 : -1)
+            );
+            if(this.currentGroupIndex !== ""){
+              let lastChoice = this.groupList[this.currentGroupIndex]
+              this.currentGroupIndex = newGroupList.findIndex(item => item.id === lastChoice.id)
+            }
+            this.groupList = newGroupList
             resolve();
           } else {
             reject();
@@ -357,129 +346,105 @@ export default {
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-#groupManage {
-    .head {
-        .describe {
-            display: inline-block;
+#groupManage
+  .head
+    .describe
+      display inline-block
 
-            h3 {
-                margin: 0;
-                font-size: 20px;
-                font-weight: normal;
-            }
+      h3
+        margin 0
+        font-size 20px
+        font-weight normal
 
-            p {
-                margin-top: 5px;
-                margin-bottom: 20px;
-                font-size: 14px;
-            }
-        }
+      p
+        margin-top 5px
+        margin-bottom 20px
+        font-size 14px
 
-        .add-tag {
-            display: inline-block;
-        }
-    }
+    .add-tag
+      display inline-block
 
-    .group-list {
-        li {
-            display: inline-block;
-            padding: 12px 16px;
-            background: #FFF;
-            margin-right: 20px;
-            margin-top: 20px;
-            width: 260px;
-            box-sizing: border-box;
-            transition: 0.25s;
-            position: relative;
+  .group-list
+    li
+      display inline-block
+      padding 12px 16px
+      background #FFF
+      margin-right 20px
+      margin-top 20px
+      width 260px
+      box-sizing border-box
+      transition 0.25s
+      position relative
 
-            &:hover {
-                box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.1);
+      &:hover
+        box-shadow 0 2px 20px 0 rgba(0, 0, 0, 0.1)
 
-                .operateBar {
-                    opacity: 1;
-                }
-            }
+        .operateBar
+          opacity 1
 
-            &:nth-child(3n+0) {
-                margin-right: 0;
-            }
+      &:nth-child(3n+0)
+        margin-right 0
 
-            .name {
-                font-size: 16px;
-            }
+      .name
+        font-size 16px
 
-            .describe {
-                font-size: 13px;
-            }
+      .describe
+        font-size 13px
 
-            .operateBar {
-                margin-top: 20px;
-                opacity: 0;
-                transition: 0.25s;
-            }
+      .operateBar
+        margin-top 20px
+        opacity 0
+        transition 0.25s
 
-            p {
-                margin: 5px 0;
-            }
+      p
+        margin 5px 0
 
-            img {
-                width: 16px;
-                height: 16px;
-                margin-right: 15px;
-                cursor: pointer;
-            }
-        }
-    }
+      img
+        width 16px
+        height 16px
+        margin-right 15px
+        cursor pointer
 
-    .edit-tag-dia {
-        p {
-            margin-top: 20px;
-        }
+  .edit-tag-dia
+    p
+      margin-top 20px
 
-        ul {
-            font-size: 0;
-            margin-top: 20px;
+    ul
+      font-size 0
+      margin-top 20px
 
-            li {
-                display: inline-block;
-                min-width: 150px;
-                font-size: 14px;
-                line-height: 40px;
-                height: 40px;
-                text-align: center;
-                margin-right: 15px;
-                padding: 0 10px;
-                border: 1px solid #f1f1f1;
-                margin-top: 10px;
-                border-radius: 5px;
-                position: relative;
+      li
+        display inline-block
+        min-width 150px
+        font-size 14px
+        line-height 40px
+        height 40px
+        text-align center
+        margin-right 15px
+        padding 0 10px
+        border 1px solid #f1f1f1
+        margin-top 10px
+        border-radius 5px
+        position relative
 
-                &:hover {
-                    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+        &:hover
+          box-shadow 0 2px 4px 0 rgba(0, 0, 0, 0.1)
 
-                    .delete {
-                        opacity: 1;
-                    }
-                }
+          .delete
+            opacity 1
 
-                .logo {
-                    width: 15px;
-                    margin-right: 5px;
-                    vertical-align: middle;
-                }
+        .logo
+          width 15px
+          margin-right 5px
+          vertical-align middle
 
-                .delete {
-                    width: 16px;
-                    height: 16px;
-                    position: absolute;
-                    top: -8px;
-                    right: -8px;
-                    opacity: 0;
-                    transition: 0.25s;
-                    cursor: pointer;
-                }
-            }
-        }
-    }
-}
+        .delete
+          width 16px
+          height 16px
+          position absolute
+          top -8px
+          right -8px
+          opacity 0
+          transition 0.25s
+          cursor pointer
 </style>

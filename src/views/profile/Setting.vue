@@ -32,10 +32,10 @@ const ROUTEITEMS = [
     pathName: "setting-password",
     text: "Password"
   },
-  {
-    pathName: "setting-apiKey",
-    text: "Exchange API"
-  }
+  // {
+  //   pathName: "setting-apiKey",
+  //   text: "Exchange API"
+  // }
 ];
 
 export default {

@@ -178,10 +178,10 @@ export default new Router({
           name: 'tag_management',
           component: TagManagement
         },
-        {
-          path: 'dummy',
-          component: DummyPage
-        },
+        // {
+        //   path: 'dummy',
+        //   component: DummyPage
+        // },
         {
           path: 'predict',
           name: 'predict',
@@ -233,7 +233,10 @@ export default new Router({
         {
           name: 'manage',
           path: 'manage',
-          redirect: '/index/manage/tag',
+          redirect: () => {
+            let s = sessionStorage.getItem('admin') ? '/index/manage/tag' : '/index/manage/group'
+            return s
+          },
           component: Manage,
           children: [
             {

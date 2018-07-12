@@ -85,7 +85,7 @@
                             </div>
                         </div>-->
                     </div>
-                    <div class="content">
+                    <div class="content" v-if="groupList.length > 0">
                         <!--自定义分组-->
                         <div class="row">
                             <div class="label">

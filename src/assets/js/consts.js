@@ -13,7 +13,6 @@ let currencyFilter = [
         custom: true,
         unit: [{text: 'Thousand', value: THOUSAND} , {text: 'Million', value: MILLION}, {text: 'Billion', value: BILLION}],
         prepend: '$',
-        custom_choice: 'sssss',
     },
     {
         i18n: 'price',
