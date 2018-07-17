@@ -144,8 +144,7 @@
 import net_util from "../../../assets/js/net_utils";
 import config from "../../../assets/js/config";
 import utils from "../../../assets/js/utils";
-import echarts from "echarts";
-import func from './vue-temp/vue-editor-bridge';
+import echarts from "echarts"
 
 export default {
   name: "overview",
@@ -170,10 +169,10 @@ export default {
   },
   computed: {
     sortedLink: function(){
-      if(descAndLink && descAndLink.link){
-        let linkObj = descAndLink.link
+      if(this.descAndLink && this.descAndLink.link){
+        let linkObj = this.descAndLink.link
         let newLinks = []
-        let keyRank = ['Website', 'Reddit', 'Github']
+        let keyRank = ['Website', 'Reddit', 'Github', 'Announcement']
         for(let k of keyRank){
           newLinks.push({k: k, v: linkObj[k]})
         }

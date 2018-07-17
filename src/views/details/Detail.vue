@@ -190,7 +190,7 @@ export default {
     },
   },
   mounted() {
-
+    this.getSubscribeCurrencyList()
   },
   beforeRouteEnter (to, from, next){
     if(!to.query.name){

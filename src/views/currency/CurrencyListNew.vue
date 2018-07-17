@@ -169,6 +169,7 @@ import net_util from "../../assets/js/net_utils";
 import config from "../../assets/js/config";
 import utils from "../../assets/js/utils";
 import consts from "../../assets/js/consts";
+import { mapMutations, mapGetters } from "vuex"
 
 export default {
   data: function () {
@@ -220,7 +221,7 @@ export default {
   },
   watch: {
     filterActiveGroup(val) {
-      if(this.groupSwitch){
+      if (this.groupSwitch) {
         this.groupSwitch = false
         return
       }
@@ -246,7 +247,7 @@ export default {
       }
     },
     filterActiveTag(val) {
-      if(this.tagSwitch){
+      if (this.tagSwitch) {
         this.tagSwitch = false
         return
       }
@@ -258,10 +259,10 @@ export default {
       );
     },
     showSubscribeOnly(val) {
-      if(this.subSwitch){
+      if (this.subSwitch) {
         this.subSwitch = false
         return
-      }else{
+      } else {
         this.clearCurrencyFilter()
         this.clearActiveTag()
         this.clearActiveGroup()
@@ -279,28 +280,29 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(["setCurrencyListPageFilter"]),
     // 在点击Group和subscribe的时候清除选中的其他guolv条件
-    clearCurrencyFilter(){
+    clearCurrencyFilter() {
       this.currencyFilter.forEach(item => {
-        if(item.active_index !== null){
+        if (item.active_index !== null) {
           item.active_index = null
         }
       })
     },
-    clearActiveTag(){
-      if(this.filterActiveTag.length > 0){
+    clearActiveTag() {
+      if (this.filterActiveTag.length > 0) {
         this.tagSwitch = true
         this.filterActiveTag = []
       }
     },
-    clearActiveGroup(){
-      if(this.filterActiveGroup.length > 0){
+    clearActiveGroup() {
+      if (this.filterActiveGroup.length > 0) {
         this.groupSwitch = true
         this.filterActiveGroup = []
       }
     },
-    clearSubscribe(){
-      if(this.showSubscribeOnly){
+    clearSubscribe() {
+      if (this.showSubscribeOnly) {
         this.subSwitch = true
         this.showSubscribeOnly = false
       }
@@ -370,10 +372,10 @@ export default {
     // 点击标签过滤字段的回调
     filterTagLabelClick(id) {
       let index = this.filterActiveTag.indexOf(id);
-      if (index > -1) {
-        this.filterActiveTag.splice(index, 1);
-      } else {
-        this.filterActiveTag.push(id);
+      if(this.filterActiveTag[0] === id){
+        this.filterActiveTag.splice(0, 1);
+      }else{
+        this.filterActiveTag[0] = id
       }
     },
     // 取消选择标签
@@ -475,7 +477,7 @@ export default {
       let fail = res => {
         this.$message({ type: "error", message: "获取订阅列表失败" });
       };
-      net_util.getRequest(url, {}, succ, fail, false);
+      net_util.getRequest(url, {}, succ, fail);
     },
     // 请求货币搜索接口
     headSearchMethod(query) {
@@ -668,9 +670,43 @@ export default {
     } else {
       this.getCurrencyList();
     }
-    this.getSubscribeCurrencyList();
     this.getTagList();
     this.getGroupList();
+  },
+  beforeRouteEnter(to, from, next){
+    let matchFlag = false
+    from.matched.forEach(item => {
+      if(item.name === 'currency_detail'){
+        matchFlag = true
+      }
+    })
+    next(vm => {
+      if(matchFlag){
+        let filters = vm.$store.getters.currencyListPageFilter
+        if(filters.filterActiveGroup){
+          vm.filterActiveGroup = filters.filterActiveGroup
+        }
+        if(filters.filterActiveTag){
+          vm.filterActiveTag = filters.filterActiveTag
+        }
+        if(filters.currencyFilter){
+           vm.currencyFilter = filters.currencyFilter
+        }
+        if(filters.tagsRowExpand){
+          vm.tagsRowExpand = filters.tagsRowExpand
+        }
+      }
+    })
+  },
+  beforeDestroy() {
+    this.setCurrencyListPageFilter({
+      filters: {
+        filterActiveGroup: this.filterActiveGroup,
+        filterActiveTag: this.filterActiveTag,
+        currencyFilter: this.currencyFilter,
+        tagsRowExpand: this.tagsRowExpand
+      }
+    })
   }
 };
 </script>

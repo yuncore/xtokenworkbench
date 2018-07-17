@@ -7,7 +7,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         name: sessionStorage.getItem('name') || '',
-        icon: sessionStorage.getItem('icon') || ''
+        icon: sessionStorage.getItem('icon') || '',
+        currencyListPageFilter: {}
     },
     getters: {
         name: state => {
@@ -23,6 +24,13 @@ export default new Vuex.Store({
             }else{
                 return 'static/img/ava-default.svg'
             }
+        },
+        currencyListPageFilter: state => {
+          if(state.currencyListPageFilter){
+            return state.currencyListPageFilter
+          }else{
+            return null
+          }
         }
     },
     mutations: {
@@ -33,6 +41,9 @@ export default new Vuex.Store({
         setIcon(state, payload){
             sessionStorage.setItem('icon', payload.icon);
             state.icon = payload.icon
+        },
+        setCurrencyListPageFilter(state, payload){
+          state.currencyListPageFilter = payload.filters
         }
     },
 })
