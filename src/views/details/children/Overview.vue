@@ -67,7 +67,7 @@
           <div class="related-links">
             <p class="label">links</p>
             <div class="link-item" v-if="descAndLink && descAndLink.link">
-              <a v-for="link in sortedLink" :href="link.v" target="_blank">{{link.k}}</a>
+              <a v-for="(link,index) in sortedLink" :key="index" :href="link.v" target="_blank">{{link.k}}</a>
             </div>
           </div>
         </div>
