@@ -375,7 +375,8 @@ export default {
       if(this.filterActiveTag[0] === id){
         this.filterActiveTag.splice(0, 1);
       }else{
-        this.filterActiveTag[0] = id
+        this.filterActiveTag.splice(0, 1);
+        this.filterActiveTag.push(id);
       }
     },
     // 取消选择标签
