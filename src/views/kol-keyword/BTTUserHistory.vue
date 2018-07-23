@@ -387,7 +387,7 @@ export default {
         let query = {
           id: res.id
         };
-        this.$router.push({ path: "/currency", query: query });
+        this.$router.push({ name: "currency_detail", query: query });
       };
       let fail = res => {
         this.$message({
