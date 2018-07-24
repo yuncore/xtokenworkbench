@@ -66,8 +66,17 @@
           </div>
           <div class="related-links">
             <p class="label">links</p>
-            <div class="link-item" v-if="descAndLink && descAndLink.link">
-              <a v-for="(link,index) in sortedLink" :key="index" :href="link.v" target="_blank">{{link.k}}</a>
+            <div class="link-item">
+              <!-- <a v-for="(link,index) in sortedLink" :key="index" :href="link.v" target="_blank">{{link.k}}</a> -->
+              <a target="_blank" :href="descAndLink.link.website || 'javascript: void(0)'" :class="{disable: descAndLink.link.website ? false : true}">
+                <img src="../../../../static/img/website2.png">
+              </a>
+              <a target="_blank" :href="descAndLink.link.github || 'javascript: void(0)'" :class="{disable: descAndLink.link.github ? false : true}">
+                <img src="../../../../static/img/github_2.svg">
+              </a>
+              <a target="_blank" :href="descAndLink.link.reddit || 'javascript: void(0)'" :class="{disable: descAndLink.link.reddit ? false : true}">
+                <img src="../../../../static/img/reddit_2.svg">
+              </a>
             </div>
           </div>
         </div>
@@ -459,11 +468,20 @@ export default {
 
       .link-item
         display block
+        margin 20px 0
 
         a
           display inline-block
           color #1c8cff
           margin-right 5px
+
+          &.disable
+            opacity .5
+
+          img
+            width 25px
+            height 25px
+            cursor pointer
 
   .trend
     padding 0 !important

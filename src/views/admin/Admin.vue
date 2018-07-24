@@ -341,6 +341,4 @@ export default {
   clear: both;
 }
 
-.list-top {
-}
 </style>
