@@ -14,6 +14,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "echarts": "^4.1.0",
     "element-ui": "^2.0.8",
     "headroom.js": "^0.9.4",
     "highcharts": "^6.0.4",
