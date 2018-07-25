@@ -1,101 +1,99 @@
 <template>
-    <div id="github">
-        <div v-if="githubProjects.length > 0">
-            <div class="head">
-                <img src="../../../../static/img/detail_github.svg">
-                <a :href="'http://www.github.com/'+githubProjects[0]['full_name']"
-                   target="_blank">
-                    Github<em>({{githubProjects[0]['full_name']}})</em>
+  <div id="github">
+    <div v-if="githubProjects.length > 0">
+      <div class="head">
+        <img src="../../../../static/img/detail_github.svg">
+        <a :href="'http://www.github.com/'+githubProjects[0]['full_name']" target="_blank">
+          Github
+          <em>({{githubProjects[0]['full_name']}})</em>
+        </a>
+        <div class="basic-info right">
+          <ul>
+            <li>
+              <span>
+                {{githubProjects[0]['subscribers_count']}}
+                <em>{{$t('page.currencyDetail.t3')}}</em>
+              </span>
+            </li>
+            <li>
+              <span>
+                {{githubProjects[0]['watchers']}}
+                <em>{{$t('page.currencyDetail.t6')}}</em>
+              </span>
+            </li>
+            <li>
+              <span>
+                {{githubProjects[0]['forks']}}
+                <em>{{$t('page.currencyDetail.t7')}}</em>
+              </span>
+            </li>
+            <li>
+              <span>
+                {{githubProjects[0]['open_issues_count']}}
+                <em>{{$t('page.currencyDetail.t8')}}</em>
+              </span>
+            </li>
+            <li>
+              <span>
+                {{githubProjects[0]['language']}}
+                <em>{{$t('page.currencyDetail.t9')}}</em>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <el-row class="code-chart-area">
+        <el-col class="commit-card">
+          <p class="label">Commits</p>
+          <div ref="commitChart" class="commit-chart"></div>
+        </el-col>
+        <el-col class="code-f-card">
+          <p class="label">Code Frequency</p>
+          <div ref="codeFrequencyChart" class="code-frequency-chart"></div>
+        </el-col>
+      </el-row>
+      <ul class="user-info-area">
+        <li v-for="(user, index) in githubUsers" :key="index" class="github-user">
+          <div class="basic cf">
+            <a class="avatar left" :href="user.author.html_url" target="_blank">
+              <img :src="user.author.avatar_url">
+            </a>
+            <div class="names">
+              <p class="login">
+                <a :href="user.author.html_url" target="_blank">
+                  {{user.author.login}}
                 </a>
-                <div class="basic-info right">
-                    <ul>
-                        <li>
-                            <span>
-                                {{githubProjects[0]['subscribers_count']}}
-                                <em>{{$t('page.currencyDetail.t3')}}</em>
-                            </span>
-                        </li>
-                        <li>
-                            <span>
-                                {{githubProjects[0]['watchers']}}
-                                <em>{{$t('page.currencyDetail.t6')}}</em>
-                            </span>
-                        </li>
-                        <li>
-                            <span>
-                                {{githubProjects[0]['forks']}}
-                                <em>{{$t('page.currencyDetail.t7')}}</em>
-                            </span>
-                        </li>
-                        <li>
-                            <span>
-                                {{githubProjects[0]['open_issues_count']}}
-                                <em>{{$t('page.currencyDetail.t8')}}</em>
-                            </span>
-                        </li>
-                        <li>
-                            <span>
-                                {{githubProjects[0]['language']}}
-                                <em>{{$t('page.currencyDetail.t9')}}</em>
-                            </span>
-                        </li>
-                    </ul>
-                </div>
+              </p>
+              <p class="real-name">
+                <a :href="user.author.html_url" target="_blank">
+                  {{user.author.name}}
+                </a>
+              </p>
             </div>
-            <el-row class="code-chart-area">
-                <el-col class="commit-card">
-                    <p class="label">Commits</p>
-                    <div ref="commitChart" class="commit-chart"></div>
-                </el-col>
-                <el-col class="code-f-card">
-                    <p class="label">Code Frequency</p>
-                    <div ref="codeFrequencyChart" class="code-frequency-chart"></div>
-                </el-col>
-            </el-row>
-            <ul class="user-info-area">
-                <li v-for="(user, index) in githubUsers"
-                    :key="index"
-                    class="github-user">
-                    <div class="basic cf">
-                        <a class="avatar left" :href="user.author.html_url" target="_blank">
-                            <img :src="user.author.avatar_url">
-                        </a>
-                        <div class="names">
-                            <p class="login">
-                                <a :href="user.author.html_url" target="_blank">
-                                    {{user.author.login}}
-                                </a>
-                            </p>
-                            <p class="real-name">
-                                <a :href="user.author.html_url" target="_blank">
-                                    {{user.author.name}}
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                    <ul class="detail">
-                        <li>
-                            <p class="number">{{user.total}}</p>
-                            <p>commits</p>
-                        </li>
-                        <li>
-                            <p class="number">{{user.author.followers}}</p>
-                            <p>followers</p>
-                        </li>
-                        <li>
-                            <p class="number">{{user.author.following}}</p>
-                            <p>following</p>
-                        </li>
-                    </ul>
-                    <div :ref="'user_commit_chart'+index" class="user-commit-chart">
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div v-else>
-            暂无数据
-        </div>
+          </div>
+          <ul class="detail">
+            <li>
+              <p class="number">{{user.total}}</p>
+              <p>commits</p>
+            </li>
+            <li>
+              <p class="number">{{user.author.followers}}</p>
+              <p>followers</p>
+            </li>
+            <li>
+              <p class="number">{{user.author.following}}</p>
+              <p>following</p>
+            </li>
+          </ul>
+          <div :ref="'user_commit_chart'+index" class="user-commit-chart">
+          </div>
+        </li>
+      </ul>
     </div>
+    <div v-else>
+      暂无数据
+    </div>
+  </div>
 </template>
 
 <script>
@@ -299,7 +297,7 @@ export default {
             type: "value",
             show: true,
             axisLabel: {
-              formatter: function(value) {
+              formatter: function (value) {
                 return `${value / 1000}K`;
               },
               textStyle: {
@@ -432,144 +430,123 @@ export default {
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-#github {
-    .head {
-        line-height: 35px;
-        height: 35px;
+#github
+  .head
+    line-height 35px
+    height 35px
 
-        img {
-            height: 25px;
-            width: 25px;
-            vertical-align: middle;
-        }
+    img
+      height 25px
+      width 25px
+      vertical-align middle
 
-        a {
-            font-size: 15px;
-            line-height: 35px;
-            color: #333333;
-            font-weight: bold;
+    a
+      font-size 15px
+      line-height 35px
+      color #333333
+      font-weight bold
 
-            em {
-                font-weight: normal;
-                font-size: 14px;
-                color: #999999;
-                font-style: normal;
-            }
-        }
-    }
+      em
+        font-weight normal
+        font-size 14px
+        color #999999
+        font-style normal
 
-    .basic-info {
-        ul {
-            font-size: 0;
-            display: block;
-            line-height: 35px;
+  .basic-info
+    ul
+      font-size 0
+      display block
+      line-height 35px
 
-            li {
-                font-size: 14px;
-                display: inline-block;
-                font-weight: bold;
-                margin-right: 15px;
+      li
+        font-size 14px
+        display inline-block
+        font-weight bold
+        margin-right 15px
 
-                em {
-                    font-size: 13px;
-                    font-weight: normal;
-                    font-style: normal;
-                }
-            }
-        }
-    }
+        em
+          font-size 13px
+          font-weight normal
+          font-style normal
 
-    .code-chart-area {
-        .label {
-            font-size: 14px;
-            line-height: 35px;
-            color: #b7c4d4;
-        }
+  .code-chart-area
+    .label
+      font-size 14px
+      line-height 35px
+      color #b7c4d4
 
-        .commit-card {
-            width: 400px;
-            padding: 13px 16px;
-            height: 270px;
-            background: #FFF;
+    .commit-card
+      width 400px
+      padding 13px 16px
+      height 270px
+      background #FFF
 
-            .commit-chart {
-                height: 205px;
-            }
-        }
+      .commit-chart
+        height 205px
 
-        .code-f-card {
-            width: 400px;
-            height: 270px;
-            padding: 13px 16px;
-            margin-left: 20px;
-            background: #FFF;
+    .code-f-card
+      width 400px
+      height 270px
+      padding 13px 16px
+      margin-left 20px
+      background #FFF
 
-            .code-frequency-chart {
-                height: 205px;
-            }
-        }
-    }
+      .code-frequency-chart
+        height 205px
 
-    .user-info-area {
-        margin-top: 20px;
-        font-size: 0;
+  .user-info-area
+    margin-top 20px
+    font-size 0
 
-        .github-user {
-            display: inline-block;
-            font-size: 14px;
-            width: 260px;
-            height: 195px;
-            background: #FFF;
-            padding: 15px;
-            margin-top: 20px;
-            margin-right: 20px;
-            box-sizing: border-box;
+    .github-user
+      display inline-block
+      font-size 14px
+      width 260px
+      height 195px
+      background #FFF
+      padding 15px
+      margin-top 20px
+      margin-right 20px
+      box-sizing border-box
 
-            &:nth-child(3n+0) {
-                margin-right: 0;
-            }
+      &:nth-child(3n+0)
+        margin-right 0
 
-            .basic {
-                .avatar {
-                    margin-right: 25px;
+      .basic
+        .avatar
+          margin-right 25px
 
-                    img {
-                        height: 40px;
-                        width: 40px;
-                        border-radius: 5px;
-                    }
-                }
+          img
+            height 40px
+            width 40px
+            border-radius 5px
 
-                .names {
-                    .login {
-                        font-size: 16px;
-                        font-weight: 600;
-                    }
-                }
-            }
+        .names
+          .login
+            font-size 16px
+            font-weight 600
 
-            .detail {
-                display: block;
-                margin-top: 10px;
-                font-size: 0;
+            a
+              overflow hidden
+              white-space nowrap
+              text-overflow ellipsis
+              width 150px
 
-                li {
-                    font-size: 14px;
-                    text-align: center;
-                    display: inline-block;
-                    width: 75px;
+      .detail
+        display block
+        margin-top 10px
+        font-size 0
 
-                    .number {
-                        font-weight: 600;
-                    }
-                }
-            }
+        li
+          font-size 14px
+          text-align center
+          display inline-block
+          width 75px
 
-            .user-commit-chart {
-                margin-top: 10px;
-                height: 70px;
-            }
-        }
-    }
-}
+          .number
+            font-weight 600
+
+      .user-commit-chart
+        margin-top 10px
+        height 70px
 </style>

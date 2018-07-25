@@ -1,3 +1,4 @@
+// old page, last version, unused now.
 <template>
     <div id="currencyList">
         <div class="container">
