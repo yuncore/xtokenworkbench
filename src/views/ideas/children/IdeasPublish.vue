@@ -115,13 +115,14 @@
   #ideasPublish {
     max-width: 1000px;
     margin: 0 auto;
-    padding-top: 60px;
+    padding: 60px 90px 100px 90px;
     background: #ffffff;
   }
 
   .top-search {
     display: flex;
     margin-top: 10px;
+    padding: 0 0;
   }
 
   .page-back{

@@ -138,7 +138,7 @@
             var name=this.getName(this.name);
             var icon=sessionStorage.getItem('icon');
             var com={content,time:new Date().getTime(),name,icon,}
-            this.list.push(com);
+            this.list.unshift(com);
             this.detail.cmmCount=this.detail.cmmCount+1;
             this.$message({type: 'success', message: this.$t("success")})
           } else {
