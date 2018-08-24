@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="all-standpoint">{{detail.agree}}{{$t('page.ideasDetail.t7')}} {{detail.oppose}}{{$t('page.ideasDetail.t8')}}</div>
-    <div class="line margin-90"></div>
+    <div class="line"></div>
     <div class="other" v-for="(item,index) in list">
       <div class="other-info">
         <img style="width: 30px;height: 30px;" :src="item.icon?imgDir+item.icon:'static/img/ava-default.svg'">
@@ -43,7 +43,7 @@
       <div style="width:100%;height: 1px;background: #f1f1f1;"></div>
       <div class="other-content" v-html="item.content"></div>
     </div>
-    <div class="other-line margin-90"></div>
+    <div class="other-line"></div>
     <div style="margin: 0 90px;">
       <textarea class="comment" v-model="comment"></textarea>
     </div>
@@ -348,7 +348,7 @@
   }
 
   .line {
-    margin: 40px 0 10px 0;
+    margin: 40px 90px 10px 90px;
     background: #f1f1f1;
     width: 100%;
     height: 1px;
@@ -388,7 +388,7 @@
   }
 
   .other-line {
-    margin-top: 20px;
+    margin: 20px 90px 0 90px;
     background: #f1f1f1;
     width: 100%;
     height: 1px;
@@ -414,8 +414,7 @@
   }
 
   .send {
-    margin-top: 30px;
-    margin-right: 100px;
+    margin: 30px 100px 100px 0;
     background: #409eff;
     border-radius: 1.55px;
     width: 70px;
