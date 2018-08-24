@@ -74,6 +74,10 @@ const MENUITEMS = [
     text: "History"
   },
   {
+    pathName: "ideas_list",
+    text: "IDEAS"
+  },
+  {
     pathName: "",
     text: "More",
     dropDown: true,

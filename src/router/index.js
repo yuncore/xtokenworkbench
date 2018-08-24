@@ -6,8 +6,8 @@ import Register from '../views/Register.vue'
 /* admin */
 import Admin from '../views/admin/Admin.vue'
 import AdminLogin from '../views/admin/AdminLogin.vue'
-import GroupManagement from '../views/admin/GroupManagement.vue'
-import TagManagement from '../views/admin/TagManagement.vue'
+// import GroupManagement from '../views/admin/GroupManagement.vue'
+// import TagManagement from '../views/admin/TagManagement.vue'
 /* currency detail */
 import CurrencyList from '../views/currency/CurrencyListNew.vue'
 import HistoryCurrencyRank from '../views/currency/HistoryCurrencyRank.vue'
@@ -43,7 +43,13 @@ import GroupManage from '../views/manage/children/GroupManage'
 /* other */
 import KolOverView from '../views/kol-keyword/KolOverView.vue'
 import BttUserHistory from '../views/kol-keyword/BTTUserHistory.vue'
-import DummyPage from '../views/other/DummyPage.vue'
+// import DummyPage from '../views/other/DummyPage.vue'
+/* ideas*/
+import IdeasList from '../views/ideas/ideasList.vue'
+import IdeasDetail from '../views/ideas/children/IdeasDetail.vue'
+import IdeasPublish from '../views/ideas/children/IdeasPublish.vue'
+
+
 import Main from '../views/Main'
 
 Vue.use(Router)
@@ -173,11 +179,11 @@ export default new Router({
           name: 'history_rank',
           component: HistoryCurrencyRank
         },
-        {
-          path: 'tagManagement',
-          name: 'tag_management',
-          component: TagManagement
-        },
+        // {
+        //   path: 'tagManagement',
+        //   name: 'tag_management',
+        //   component: TagManagement
+        // },
         // {
         //   path: 'dummy',
         //   component: DummyPage
@@ -192,11 +198,11 @@ export default new Router({
           name: 'predict_detail',
           component: PredictDetail
         },
-        {
-          path: 'groupManagement',
-          name: 'group_management',
-          component: GroupManagement
-        },
+        // {
+        //   path: 'groupManagement',
+        //   name: 'group_management',
+        //   component: GroupManagement
+        // },
         {
           name: 'trade_history',
           path: 'tradeHistory',
@@ -250,6 +256,21 @@ export default new Router({
               component: GroupManage
             }
           ]
+        },
+        {
+          path: 'ideas/list',
+          name: 'ideas_list',
+          component: IdeasList
+        },
+        {
+          name: 'ideas_detail',
+          path: 'ideas/detail',
+          component: IdeasDetail
+        },
+        {
+          name: 'ideas_publish',
+          path: 'ideas/publish',
+          component: IdeasPublish
         }
       ]
     }

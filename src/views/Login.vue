@@ -81,6 +81,7 @@ export default {
           let token = res.result.token;
           let uid = res.result.id;
           sessionStorage.setItem("token", token);
+          sessionStorage.setItem('phone', this.phone);
           if (res.result.admin) {
             sessionStorage.setItem("admin", true);
           }

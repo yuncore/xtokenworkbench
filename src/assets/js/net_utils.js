@@ -21,6 +21,7 @@ function request({
         url: url,
         data: data,
         async: async,
+        timeout:10000,
         success: function (resMsg) {
             if (resMsg && resMsg.errorCode && resMsg.errorCode === 5101) {
                 window.location.href = ""

@@ -712,7 +712,7 @@ export default {
 };
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-@import '../../../static/css/base.styl'
+@import '../../../static/css/base.styl';
 
 #currencyList
   padding-top 60px !important
