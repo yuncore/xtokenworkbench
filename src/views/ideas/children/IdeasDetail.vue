@@ -350,7 +350,6 @@
   .line {
     margin: 40px 90px 10px 90px;
     background: #f1f1f1;
-    width: 100%;
     height: 1px;
   }
 
@@ -390,7 +389,6 @@
   .other-line {
     margin: 20px 90px 0 90px;
     background: #f1f1f1;
-    width: 100%;
     height: 1px;
   }
 
